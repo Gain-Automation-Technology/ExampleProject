@@ -47,25 +47,25 @@
     <Compile Include="POUs\2_Units\UN_Machine100\UN_Machine100.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample_1\DUTs\E_EM_LogicExample1_Seq_StartingProduction.TcDUT">
+    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs\E_EM_LogicExample1_Seq_StartingProduction.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample_1\DUTs\E_EM_LogicExample1_Seq_StopServos.TcDUT">
+    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs\E_EM_LogicExample1_Seq_StopServos.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample_1\DUTs\E_EM_LogicExample1_Seq_ExecuteProduction.TcDUT">
+    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs\E_EM_LogicExample1_Seq_ExecuteProduction.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample_1\DUTs\ITF_EM_LogicExample1.TcIO">
+    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs\ITF_EM_LogicExample1.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample_1\DUTs\ST_EM_LogicExample1_Config.TcDUT">
+    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs\ST_EM_LogicExample1_Config.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample_1\EM_LogicExample_1.TcPOU">
+    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\EM_LogicExample.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample_1\HMI_EM_LogicExample_1.TcPOU">
+    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\HMI_EM_LogicExample.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3_Equipment_Modules\EM_Template\DUTs\ITF_EM_Template.TcIO">
@@ -144,8 +144,8 @@
     <Folder Include="POUs\2_Units\UN_Machine100" />
     <Folder Include="POUs\2_Units\UN_Machine100\DUTs" />
     <Folder Include="POUs\3_Equipment_Modules" />
-    <Folder Include="POUs\3_Equipment_Modules\EM_LogicExample_1" />
-    <Folder Include="POUs\3_Equipment_Modules\EM_LogicExample_1\DUTs" />
+    <Folder Include="POUs\3_Equipment_Modules\EM_LogicExample" />
+    <Folder Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs" />
     <Folder Include="POUs\3_Equipment_Modules\EM_Template" />
     <Folder Include="POUs\3_Equipment_Modules\EM_Template\DUTs" />
     <Folder Include="POUs\3_Equipment_Modules\EM_Safety" />
@@ -265,185 +265,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderResolution Include="CAA Callback">
-      <Resolution>CAA Callback Extern, 3.5.11.0 (CAA Technical Workgroup)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CAA MemBlockMan">
-      <Resolution>CAA Memory Block Manager Extern, 3.5.13.0 (CAA Technical Workgroup)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CAA ResMan">
-      <Resolution>CAA Ressource Manager Extern, 3.5.11.0 (CAA Technical Workgroup)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CAA Types">
-      <Resolution>CAA Types Extern, 3.5.13.0 (CAA Technical Workgroup)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CmpApp">
-      <Resolution>CmpApp, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CmpBitmapPool">
-      <Resolution>CmpBitmapPool, 3.5.7.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CmpDynamicText">
-      <Resolution>CmpDynamicText, 3.5.9.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CmpEventMgr">
-      <Resolution>CmpEventMgr, 3.5.12.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CmpLog">
-      <Resolution>CmpLog, 3.5.5.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CmpSchedule">
-      <Resolution>CmpSchedule, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CmpTargetVisu">
-      <Resolution>CmpTargetVisu, 3.5.5.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="CmpVisuHandler">
-      <Resolution>CmpVisuHandler, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Collections">
-      <Resolution>Collections, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Component Manager">
-      <Resolution>Component Manager, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="FloatingPointUtils">
-      <Resolution>FloatingPointUtils, 3.5.9.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Gain Beckhoff HMI Library">
-      <Resolution>Gain Beckhoff HMI Library, 1.1.4.0 (Gain Projects B.V.)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Gain Beckhoff Library">
-      <Resolution>Gain Beckhoff Library, 1.1.29.0 (Gain Projects B.V.)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Gain Beckhoff Servo Camming Library">
-      <Resolution>Gain Beckhoff Servo Camming Library, 1.1.7.0 (Gain Projects B.V.)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Gain Beckhoff Servo Flying saw library">
-      <Resolution>Gain Beckhoff Servo Flying saw library, 1.1.7.0 (Gain Projects B.V.)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Standard">
-      <Resolution>Tc2_Standard, 3.3.3.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Standard64">
-      <Resolution>Tc2_Standard, 3.3.3.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="StringUtils">
-      <Resolution>StringUtils, 3.5.13.20 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysCpuHandling">
-      <Resolution>SysCpuHandling, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysDir">
-      <Resolution>SysDir, 3.5.12.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysFile">
-      <Resolution>SysFile, 3.5.9.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysMem">
-      <Resolution>SysMem, 3.5.12.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysProcess">
-      <Resolution>SysProcess, 3.5.7.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysShm">
-      <Resolution>SysShm, 3.5.8.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysTarget">
-      <Resolution>SysTarget, 3.5.5.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="System_VisuElemBase">
-      <Resolution>VisuElemBase, 3.5.13.40 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="System_VisuElemMeter">
-      <Resolution>VisuElemMeter, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="System_VisuElems">
-      <Resolution>VisuElems, 3.5.13.40 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="System_VisuElemsSpecialControls">
-      <Resolution>VisuElemsSpecialControls, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="System_VisuElemsWinControls">
-      <Resolution>VisuElemsWinControls, 3.5.13.20 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="System_VisuElemTextEditor">
-      <Resolution>VisuElemTextEditor, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="System_VisuInputs">
-      <Resolution>VisuInputs, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="system_visuinputs">
-      <Resolution>VisuInputs, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="System_VisuNativeControl">
-      <Resolution>VisuNativeControl, 3.5.13.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysTime">
-      <Resolution>SysTime, 3.5.9.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysTimeCore">
-      <Resolution>SysTimeCore, 3.5.5.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="SysTimeRtc">
-      <Resolution>SysTimeRtc, 3.5.5.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_Drive">
-      <Resolution>Tc2_Drive, 3.3.8.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_EtherCAT">
-      <Resolution>Tc2_EtherCAT, 3.3.19.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_IoFunctions">
-      <Resolution>Tc2_IoFunctions, 3.3.13.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_Math">
-      <Resolution>Tc2_Math, 3.3.1.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_MC2">
-      <Resolution>Tc2_MC2, 3.3.46.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_MC2_Camming">
-      <Resolution>Tc2_MC2_Camming, 3.3.15.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_MC2_Drive">
-      <Resolution>Tc2_MC2_Drive, 3.3.25.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_MC2_FlyingSaw">
-      <Resolution>Tc2_MC2_FlyingSaw, 3.3.3.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_Standard">
-      <Resolution>Tc2_Standard, 3.3.3.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_System">
-      <Resolution>Tc2_System, 3.4.25.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_TcpIp">
-      <Resolution>Tc2_TcpIp, 3.3.6.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_Utilities">
-      <Resolution>Tc2_Utilities, 3.3.50.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_XmlDataSrv">
-      <Resolution>Tc2_XmlDataSrv, 3.3.1.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc3_Module">
-      <Resolution>Tc3_Module, 3.3.21.0 (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Util">
-      <Resolution>Util, 3.5.11.0 (System)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="VisuDialogs">
-      <Resolution>VisuDialogs, 3.5.12.0 (System)</Resolution>
-    </PlaceholderResolution>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="POUs\6_TwinCatChecks\_Documentation\6_TwinCatChecks.md">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <LibraryReference Include="Gain Beckhoff Base Library,1.2.0.0,Gain Projects B.V.">
+    <LibraryReference Include="Gain Beckhoff Base Library,newest,Gain Projects B.V.">
       <Namespace>GBL_Base</Namespace>
     </LibraryReference>
   </ItemGroup>

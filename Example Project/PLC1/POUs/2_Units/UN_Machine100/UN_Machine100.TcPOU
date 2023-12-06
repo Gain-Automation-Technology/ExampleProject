@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="UN_Machine100" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine100 EXTENDS FB_UN_Base IMPLEMENTS ITF_UN_Machine100
 VAR_INPUT
@@ -44,46 +44,37 @@ END_VAR
         <ST><![CDATA[SUPER^._m_Modules();
 
 // Example module
+{warning 'MCO kunnen we hier niets beters voor verzinnen?. Zou dit geen setting kunnen zijn? Je zit nu wel heel diep/indirect te graven in de FB'}
 IF GVL_Area100.g_emLogicExample.p_itfAlarmCollector <> 0
 	AND_THEN __ISVALIDREF(GVL_Area100.g_emLogicExample.p_itfAlarmCollector.p_rstConfig)
 THEN
 	GVL_Area100.g_emLogicExample.p_itfAlarmCollector.p_rstConfig.eSubstituteActionForPackML_Abort := E_Alarm_Actions.Stop;
 END_IF
+
 GVL_Area100.g_emLogicExample(
-	i_bReqEnable		:= TRUE, 
-	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset,
-	i_bStaSafetyOk		:= TRUE,
-	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
-	i_itfPackML_Parent	:= THIS^,
-	i_itfAlarmCollector_Parent := s_fbAlarmCollector,
-	i_stMachineCommands	:= s_stMachineCommands,
-	i_itfPackML_StatusManager	:= i_itfPackML_StatusManager);
+	i_bReqEnable					:= TRUE, 
+	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, 
+	i_bStaSafetyOk					:= GVL_Area100.g_emSafety.q_bStaSafetyOk, 
+	i_bReqSimulationOn				:= s_fbSimulation.q_bStaOn, 
+	i_itfPackML_Parent				:= s_fbPackML, 
+	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, 
+	q_bStaEnabled					=> , 
+	q_stStaAlarms_CollectedAction	=> , 
+	q_stStaPackML					=> , 
+	i_stMachineCommands				:= );
 
-
-
-// Example module
-GVL_Area100.g_emLogicExample2(
-	i_bReqEnable		:= TRUE, 
-	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset,
-	i_bStaSafetyOk		:= TRUE,
-	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
-	i_itfPackML_Parent	:= THIS^,
-	i_itfAlarmCollector_Parent := s_fbAlarmCollector,
-	i_stMachineCommands	:= s_stMachineCommands,
-	i_itfPackML_StatusManager	:= i_itfPackML_StatusManager);
-
-// Safety module
 GVL_Area100.g_emSafety(
-	i_bReqEnable		:= TRUE, 
-	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset,
-	i_bStaSafetyOk		:= TRUE,
-	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
-	i_itfPackML_Parent	:= THIS^,
-	i_itfAlarmCollector_Parent := s_fbAlarmCollector,
-	i_stMachineCommands	:= s_stMachineCommands,
-	i_itfPackML_StatusManager	:= i_itfPackML_StatusManager,
-	q_bStaSafetyOk		=> );
-
+	i_bReqEnable					:= TRUE, 
+	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, 
+	i_bStaSafetyOk					:= TRUE, 
+	i_bReqSimulationOn				:= s_fbSimulation.q_bStaOn, 
+	i_itfPackML_Parent				:= s_fbPackML, 
+	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, 
+	q_bStaEnabled					=> , 
+	q_stStaAlarms_CollectedAction	=> , 
+	q_stStaPackML					=> , 
+	i_stMachineCommands				:= , 
+	q_bStaSafetyOk					=> );	
 ]]></ST>
       </Implementation>
     </Method>
@@ -146,30 +137,14 @@ END_VAR
     <LineIds Name="UN_Machine100._m_Modules">
       <LineId Id="3" Count="0" />
       <LineId Id="61" Count="0" />
-      <LineId Id="92" Count="4" />
-      <LineId Id="7" Count="4" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="85" Count="1" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="48" Count="4" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="17" Count="1" />
-      <LineId Id="31" Count="3" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="19" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="93" Count="3" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="104" Count="10" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="115" Count="11" />
+      <LineId Id="85" Count="0" />
       <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="UN_Machine100.m_Main">

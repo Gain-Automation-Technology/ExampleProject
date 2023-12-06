@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
-  <POU Name="HMI_EM_LogicExample_1" Id="{61d96809-d0b2-4ef1-a07b-28187830b297}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK HMI_EM_LogicExample_1 EXTENDS FB_HMI_Base
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="HMI_EM_LogicExample" Id="{61d96809-d0b2-4ef1-a07b-28187830b297}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK HMI_EM_LogicExample EXTENDS FB_HMI_Base
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -14,9 +14,6 @@ VAR
 	s_hmiCmBelt				: HMI_CM_MotorDol_Gain;
 	s_hmiCmHeightAdjuster	: HMI_CM_MotorDol_AF_Gain;
 	
-// Hmi Alarms
-	s_fbAlarmHandlersHmi	: ARRAY[1..c_nMaxHandlersPerCollector] OF FB_AlarmHandler_HmiGain;		// HMI Alarm handlers
-
 // Other
 	s_fbLedRun				: FB_HmiLed;
 	s_fbBtnStart			: FB_HmiButton;
@@ -32,7 +29,6 @@ END_VAR
       <Declaration><![CDATA[METHOD PUBLIC m_Main]]></Declaration>
       <Implementation>
         <ST><![CDATA[SUPER^.m_Main();
-
 
 // Upgrade the base-interface
 IF NOT __QUERYINTERFACE(i_itfModule, s_itfEmLogicExample1) THEN
@@ -54,24 +50,18 @@ s_hmiCmBelt(i_itfModule := s_itfEmLogicExample1.p_itfCmBelt);
 // Height adjuster motor
 s_hmiCmHeightAdjuster(i_itfModule := s_itfEmLogicExample1.p_itfCmHeightAdjuster);
 
-//Alarms
-FOR s_nIndex := 1 TO s_itfEmLogicExample1.p_itfAlarmCollector.p_nStaNrOfAlarmHandlers DO
-	IF s_itfEmLogicExample1.p_itfAlarmCollector.p_itfAlarmHandlers[s_nIndex] <> 0 THEN
-		s_fbAlarmHandlersHmi[s_nIndex](i_itfAlarmHandler := s_itfEmLogicExample1.p_itfAlarmCollector.p_itfAlarmHandlers[s_nIndex]);
-	END_IF
-END_FOR
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="HMI_EM_LogicExample_1">
+    <LineIds Name="HMI_EM_LogicExample">
       <LineId Id="28" Count="0" />
       <LineId Id="98" Count="0" />
       <LineId Id="97" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
-    <LineIds Name="HMI_EM_LogicExample_1.m_Main">
+    <LineIds Name="HMI_EM_LogicExample.m_Main">
       <LineId Id="5" Count="0" />
-      <LineId Id="11" Count="13" />
+      <LineId Id="12" Count="12" />
       <LineId Id="10" Count="0" />
       <LineId Id="33" Count="0" />
       <LineId Id="32" Count="0" />
@@ -79,8 +69,7 @@ END_FOR
       <LineId Id="37" Count="0" />
       <LineId Id="36" Count="0" />
       <LineId Id="35" Count="0" />
-      <LineId Id="26" Count="5" />
-      <LineId Id="25" Count="0" />
+      <LineId Id="26" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>
