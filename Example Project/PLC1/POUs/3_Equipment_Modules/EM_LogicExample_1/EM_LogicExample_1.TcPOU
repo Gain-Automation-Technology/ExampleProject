@@ -1,0 +1,1696 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="EM_LogicExample_1" Id="{6f2f2bf2-c2da-4416-808c-ed5c6d63cc10}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK EM_LogicExample_1 EXTENDS FB_EM_Base IMPLEMENTS ITF_EM_LogicExample1
+VAR_INPUT	
+	i_stMachineCommands				: ST_UN_Machine100_Cmd;
+END_VAR
+VAR
+// Variables
+	s_bStaStateOfSomething			: BOOL;
+	s_bStaStateOfSomething2			: BOOL;
+	s_bStaStateOfSomething3			: BOOL;
+	s_bStaStateOfSomething4			: BOOL;
+	s_bStaStateOfSomething5			: BOOL;
+	s_bStaStateOfSomething6			: BOOL;
+	s_bStaStateOfSomething7			: BOOL;
+	s_fStaValue						: LREAL;
+	s_fStaValueResult				: LREAL;
+	
+// Config Struct
+	s_stConfig						: ST_EM_LogicExample1_Config;
+	
+// Control modules
+	s_cmVirtualMaster				: CM_Servo_Virtual;
+	s_cmAxis1						: CM_Servo_Virtual;
+	s_cmAxis1Cam					: CM_Servo_CammingAddon(s_cmAxis1);
+	s_cmAxis1Fly					: CM_Servo_FlyingSawAddon(s_cmAxis1);
+	s_cmWaterInlet					: CM_Valve;
+	s_cmBelt						: CM_MotorDol;
+	s_cmHeightAdjuster				: CM_MotorDol_AF;
+	s_cmVentilator					: CM_MotorVFD_Lenze_i5xx;
+	
+// Inputs
+	s_fbDiSensorPos1				: FB_DigitalInput;
+	
+// Outputs
+	s_fbDoMachineX_Start			: FB_DigitalOutput;
+	s_fbAoMachineX_Speed			: FB_AnalogOutput;
+	s_fbRedLight					: FB_Light;
+	s_fbBlueButton					: FB_PushButtonLight;
+	s_fbStackLight					: FB_StackLights;
+	
+// Alarms
+	s_AlmFailure1					: FB_AlarmHandler;
+	s_AlmFailure2					: FB_AlarmHandler;
+	
+// Statistics
+	s_fbRunTime_Belt				: FB_RunningTime;
+	
+END_VAR
+VAR CONSTANT
+	nCamTableIdAxis1			: UINT := 1;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+
+
+]]></ST>
+    </Implementation>
+    <Folder Name="Basic" Id="{4ed3fdc5-bc4f-4446-a28c-bed3cb0c11b8}" />
+    <Folder Name="itfEM_LogicExample1" Id="{0d3fe253-04f5-40ec-ac04-1fbfc387130a}" />
+    <Folder Name="OMAC PackML" Id="{b67bcd5d-8aa8-4ebc-a6e9-981237758fe2}" />
+    <Method Name="_m_Aborting" Id="{42785298-80cd-4aca-b777-b43d3b6adeba}" FolderPath="OMAC PackML\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Aborting
+VAR_INPUT
+	i_rstPML_Status			: REFERENCE TO ST_PackML_Status;
+END_VAR
+VAR_INST
+	
+	s_bStaStateComplete1		: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[i_rstPML_Status.bStateComplete := _m_StopServos(i_bReqStart := i_rstPML_Status.bStateEntry);
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Alarms" Id="{7e41031d-5a41-43de-945e-f69ca97b38b9}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Alarms
+VAR_INST
+	s_tonAlmFailure2_DelayedAutoReset	: TON;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Alarms();
+
+// Failure 1
+s_stConfig.stAlmFailure1.nIDnr		:= 1;
+s_stConfig.stAlmFailure1.eAction	:= E_Alarm_Actions.Abort;
+s_stConfig.stAlmFailure1.tmDelay	:= T#1S;
+s_stConfig.stAlmFailure1.bEnable	:= q_bStaEnabled;
+s_AlmFailure1(
+	i_bCmdSet	:= s_fbDiSensorPos1.q_bStaInput 
+				AND s_bStaStateOfSomething,
+	i_sMsgVar1	:= 'Fault code: ',
+	//i_sMsgVar2	:= TO_STRING(s_nFaultCode),
+	i_rstConfig	:= s_stConfig.stAlmFailure1,
+	i_itfAlarmCollector := s_fbAlarmCollector);
+
+	
+// Failure 2
+s_stConfig.stAlmFailure2.nIDnr	:= 2;
+s_stConfig.stAlmFailure2.eAction := E_Alarm_Actions.Suspend;
+
+// Automatic reset timer
+s_tonAlmFailure2_DelayedAutoReset(IN := s_AlmFailure2.p_bStaActive AND NOT s_AlmFailure2.p_bStaCmdSet, PT := T#5S);
+// Reset the alarm after the delay time
+IF s_tonAlmFailure2_DelayedAutoReset.Q THEN
+	s_AlmFailure2.m_CmdReset();
+END_IF
+
+s_AlmFailure2(
+	i_rstConfig	:= s_stConfig.stAlmFailure2,
+	i_itfAlarmCollector := s_fbAlarmCollector);
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Execute" Id="{0a227c5f-6a54-4d0d-bf27-a184f6b93e6f}" FolderPath="OMAC PackML\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Execute
+VAR_INPUT
+	i_rstPML_Status			: REFERENCE TO ST_PackML_Status;
+END_VAR
+VAR_INST
+	s_eActMode				: E_PackML_Mode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Execute only when in a specific mode
+s_eActMode := i_rstPML_Status.eActMode;
+CASE s_eActMode OF
+	E_PackML_Mode.Production: 
+		// Execute only when in PRODUCTION mode
+		i_rstPML_Status.bStateComplete := _m_Execute_Production(i_bReqStart := i_rstPML_Status.bStateEntry);
+				
+ELSE
+	// Execute in all other modes	
+	i_rstPML_Status.bStateComplete := TRUE;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Execute_Production" Id="{e20eb719-ea1e-47b9-8aa3-fa6245349af8}" FolderPath="OMAC PackML\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Execute_Production : BOOL
+VAR_INPUT
+	i_bReqStart				: BOOL;
+END_VAR
+VAR_INST
+	s_fbSeqControl			: FB_SeqControl;
+	s_eSeqAutoExecute		: E_EM_LogicExample1_Seq_ExecuteProduction;
+	s_stSyncMode			: ST_SyncMode;			// Synchronisation mode
+	
+	
+	s_fCalculatedSpeed		: LREAL;		// Calculated VM speed, based on machine setting
+	s_fShortestPosition		: LREAL;		
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Sequence exceptions
+// n.a.
+
+
+// Sequencer control
+s_fbSeqControl(
+	i_bReqStart		:= i_bReqStart, 
+	i_rnActSeqStep	:= s_eSeqAutoExecute,
+	i_sActSeqStep	:= TO_STRING(s_eSeqAutoExecute));
+	
+// Sequence	
+CASE s_eSeqAutoExecute OF
+	
+	E_EM_LogicExample1_Seq_ExecuteProduction.Idle:
+		;
+			
+	E_EM_LogicExample1_Seq_ExecuteProduction.Start:
+		s_fCalculatedSpeed	:= (360.0 * 1000.0) / 123.4; // 360 degree = 1 product. 
+		IF s_cmVirtualMaster.m_StartFF(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry, 
+			i_fAcceleration	:= s_cmVirtualMaster.q_stParameterSet.fAccelerationMax, 
+			i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax, 
+			i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk, 
+			i_fSpeed		:= s_cmVirtualMaster.q_stParameterSet.fVeloFastManual,
+			i_sLogHint		:= '',
+			i_eBufferMode	:= MC_BufferMode.MC_Aborting) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.StartWait);
+		END_IF
+		
+
+	//Wait for 5 seconds
+	E_EM_LogicExample1_Seq_ExecuteProduction.StartWait:
+		IF s_fbSeqControl.q_tmStepTime> T#5S THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step1);
+		END_IF
+
+		
+	//gear out Slave axis 1 without stopping the axis
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step1:
+		IF s_cmAxis1.m_GearOut(i_bCmdReset:=s_fbSeqControl.q_bStaEntry) THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step1Wait);
+		END_IF
+
+		
+	//Wait for 5 seconds
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step1Wait:
+		IF s_fbSeqControl.q_tmStepTime> T#5S THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step2);
+		END_IF
+		
+		
+	//gear in Slave axis 1 at position
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step2:
+		IF s_fbSeqControl.q_bStaEntry THEN
+			//Enable disable checks. An enabled check gives an NC error when the check condition is true.	
+			s_stSyncMode.GearInSyncMode 						:= E_GearInSyncMode.GEARINSYNCMODE_POSITIONBASED;
+			s_stSyncMode.GearInSync_CheckMask_MinPos 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxPos 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxVelo 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxAcc 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxDec 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxJerk 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_OvershootPos 		:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_UndershootPos 	:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_OvershootVelo 	:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_UndershootVelo 	:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_OvershootVeloZero := FALSE;
+			s_stSyncMode.GearInSync_CheckMask_UndershootVeloZero:= FALSE;
+			
+			//Optimalization methodes
+			s_stSyncMode.GearInSync_OpMask_RollbackLock 		:= TRUE;
+			s_stSyncMode.GearInSync_OpMask_InstantStopOnRollback:= TRUE;
+			s_stSyncMode.GearInSync_OpMask_PreferConstVelo 		:= TRUE;
+			s_stSyncMode.GearInSync_OpMask_IgnoreMasterAcc 		:= TRUE;
+		END_IF
+
+		IF s_cmAxis1Fly.m_GearInPos(
+			i_bCmdReset				:= s_fbSeqControl.q_bStaEntry, 
+			i_fAcceleration			:= s_cmAxis1.q_stParameterSet.fAccelerationMax, 
+			i_fDeceleration			:= s_cmAxis1.q_stParameterSet.fDecelerationMax, 
+			i_fJerk					:= s_cmAxis1.q_stParameterSet.fJerk, 
+			i_fSpeed				:= s_cmAxis1.q_stParameterSet.fVeloMaximum, 
+			i_fMasterSyncPosition	:= s_cmVirtualMaster.q_fActualPos + 1000.0, 
+			i_fSlaveSyncPosition	:= s_cmAxis1.q_fActualPos + 2000.0, 
+			i_stSyncMode			:= s_stSyncMode, 
+			i_fSlaveScale			:= 1.0, 
+			i_fMasterScale			:= 1.0, 
+			i_itfMaster				:= s_cmVirtualMaster) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step2Wait);
+		END_IF
+
+		
+	//Wait till synchronized
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step2Wait:
+		IF s_cmAxis1.q_bStaInSync THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step3);
+		END_IF
+		
+		
+	//gear out Slave axis 1 without stopping the axis when the axis is synchronized
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step3:
+		IF s_cmAxis1.m_GearOut(i_bCmdReset:=s_fbSeqControl.q_bStaEntry) THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step3Wait);
+		END_IF
+
+		
+	//Wait for 5 seconds
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step3Wait:
+		IF s_fbSeqControl.q_tmStepTime> T#5S THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step4);
+		END_IF
+		
+		
+	//gear in Slave axis 1 at speed
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step4:
+		IF s_fbSeqControl.q_bStaEntry THEN
+			//Enable disable checks. An enabled check gives an NC error when the check condition is true.	
+			s_stSyncMode.GearInSyncMode 						:= E_GearInSyncMode.GEARINSYNCMODE_POSITIONBASED;
+			s_stSyncMode.GearInSync_CheckMask_MinPos 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxPos 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxVelo 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxAcc 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxDec 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_MaxJerk 			:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_OvershootPos 		:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_UndershootPos 	:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_OvershootVelo 	:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_UndershootVelo 	:= FALSE;
+			s_stSyncMode.GearInSync_CheckMask_OvershootVeloZero := FALSE;
+			s_stSyncMode.GearInSync_CheckMask_UndershootVeloZero:= FALSE;
+			
+			//Optimalization methodes
+			s_stSyncMode.GearInSync_OpMask_RollbackLock 		:= TRUE;
+			s_stSyncMode.GearInSync_OpMask_InstantStopOnRollback:= TRUE;
+			s_stSyncMode.GearInSync_OpMask_PreferConstVelo 		:= TRUE;
+			s_stSyncMode.GearInSync_OpMask_IgnoreMasterAcc 		:= TRUE;
+		END_IF
+	
+		IF s_cmAxis1Fly.m_GearInSpeed(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry, 
+			i_fSlaveScale	:= 2.0, 
+			i_fMasterScale	:= 1.0, 
+			i_stSyncMode	:= s_stSyncMode, 
+			i_fAcceleration	:= s_cmAxis1.q_stParameterSet.fAccelerationMax, 
+			i_fDeceleration	:= s_cmAxis1.q_stParameterSet.fDecelerationMax, 
+			i_fJerk			:= s_cmAxis1.q_stParameterSet.fJerk, 
+			i_fSpeed		:= s_cmAxis1.q_stParameterSet.fVeloMaximum, 
+			i_itfMaster		:= s_cmVirtualMaster ) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step4Wait);
+		END_IF
+
+		
+	//Wait till synchronized
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step4Wait:
+		IF s_cmAxis1.q_bStaInSync THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step5);
+		END_IF
+		
+		
+	//halt Master and Slave axis => axis will gearout and stopping 
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step5:
+			IF s_cmVirtualMaster.m_Halt(
+				i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+				i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax,
+				i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk,
+				i_eBufferMode	:= MC_BufferMode.MC_Aborting) 
+			AND
+				s_cmAxis1.m_Halt(
+				i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+				i_fDeceleration	:= s_cmAxis1.q_stParameterSet.fDecelerationMax,
+				i_fJerk			:= s_cmAxis1.q_stParameterSet.fJerk, 
+				i_eBufferMode	:= MC_BufferMode.MC_Aborting) 
+			THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step5Wait);
+			END_IF
+
+			
+	//Wait till axis standstill
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step5Wait:
+		IF s_cmAxis1.q_stAxisState.StandStill AND s_cmVirtualMaster.q_stAxisState.StandStill THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step6);
+		END_IF
+			
+		
+	//Gear in dynamic 
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step6:
+		IF s_cmAxis1.m_GearInDyn(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry, 
+			i_fAcceleration	:= s_cmAxis1.q_stParameterSet.fAccelerationMax, 
+			i_fDeceleration	:= s_cmAxis1.q_stParameterSet.fDecelerationMax, 
+			i_fJerk			:= s_cmAxis1.q_stParameterSet.fJerk, 
+			i_fGearRatio	:= 1.0, 
+			i_itfMaster		:= s_cmVirtualMaster) 
+		THEN
+			//No wait step nessary m_GearInDyn give TRUE when axis is coupled
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step7);
+		END_IF
+		
+	//Move master relative 
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step7:
+		IF s_cmVirtualMaster.m_StartRelative(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry, 
+			i_fAcceleration	:= s_cmVirtualMaster.q_stParameterSet.fAccelerationMax, 
+			i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax, 
+			i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk, 
+			i_fSpeed		:= s_cmVirtualMaster.q_stParameterSet.fVeloFastManual, 
+			i_fPosition		:= 1000.0,
+			i_sLogHint		:= '',
+			i_eBufferMode	:= MC_BufferMode.MC_Aborting) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step7Wait);
+		END_IF
+
+		
+	//Wait for 5 seconds
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step7Wait:
+		IF s_fbSeqControl.q_tmStepTime> T#5S THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step8);
+		END_IF
+		
+		
+	//Change gearfactor 
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step8:
+		IF s_cmAxis1.m_GearInDynGearRatio(i_fGearRatio:= 0.5) THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step8Wait);
+		END_IF
+
+		
+	//Wait for 5 seconds
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step8Wait:
+		IF s_fbSeqControl.q_tmStepTime> T#5S THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step9);
+		END_IF
+		
+		
+	//stop Master and Slave axis => axis will gearout and stopping 
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step9:
+		IF s_cmVirtualMaster.m_Stop(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+			i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax,
+			i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk) 
+		AND
+			s_cmAxis1.m_Stop(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+			i_fDeceleration	:= s_cmAxis1.q_stParameterSet.fDecelerationMax,
+			i_fJerk			:= s_cmAxis1.q_stParameterSet.fJerk) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step10Wait);
+		END_IF
+
+		
+	//Wait till axis standstill
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step10Wait:
+		IF s_cmAxis1.q_stAxisState.StandStill AND s_cmVirtualMaster.q_stAxisState.StandStill THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step11);
+		END_IF
+		
+		
+	//Gear in static 
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step11:
+		IF s_cmAxis1.m_GearInStatic(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry, 
+			i_fAcceleration	:= s_cmAxis1.q_stParameterSet.fAccelerationMax, 
+			i_fDeceleration	:= s_cmAxis1.q_stParameterSet.fDecelerationMax, 
+			i_fJerk			:= s_cmAxis1.q_stParameterSet.fJerk, 
+			i_fSlaveScale	:= 1.0,
+			i_fMasterScale	:= 1.0, 
+			i_itfMaster		:= s_cmVirtualMaster) 
+		THEN
+			//No wait step nessary m_GearInStatic give TRUE when axis is coupled
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step12);
+		END_IF
+		
+		
+	//Move master reverse 
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step12:
+		IF s_cmVirtualMaster.m_StartRev(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry, 
+			i_fAcceleration	:= s_cmVirtualMaster.q_stParameterSet.fAccelerationMax, 
+			i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax, 
+			i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk, 
+			i_fSpeed		:= s_cmVirtualMaster.q_stParameterSet.fVeloFastManual,
+			i_sLogHint		:= '',
+			i_eBufferMode	:= MC_BufferMode.MC_Aborting) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step12Wait);
+		END_IF
+
+		
+	//Wait for 5 seconds
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step12Wait:
+		IF s_fbSeqControl.q_tmStepTime> T#5S THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step13);
+		END_IF
+		
+		
+	//stop only the slave axis and move the master axis forward
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step13:
+		IF s_cmAxis1.m_Halt(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+			i_fDeceleration	:= s_cmAxis1.q_stParameterSet.fDecelerationMax,
+			i_fJerk			:= s_cmAxis1.q_stParameterSet.fJerk,
+			i_eBufferMode	:= MC_BufferMode.MC_Aborting) 
+		AND s_cmVirtualMaster.m_StartFF(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry, 
+			i_fAcceleration	:= s_cmVirtualMaster.q_stParameterSet.fAccelerationMax, 
+			i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax, 
+			i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk, 
+			i_fSpeed		:= s_cmVirtualMaster.q_stParameterSet.fVeloFastManual,
+			i_sLogHint		:= '',
+			i_eBufferMode	:= MC_BufferMode.MC_Aborting) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step13Wait);
+		END_IF
+
+		
+	//Wait for 5 seconds
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step13Wait:
+		IF s_fbSeqControl.q_tmStepTime> T#5S THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step14);
+		END_IF
+		
+		
+	//stop master axis
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step14:
+		IF s_cmVirtualMaster.m_Halt(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+			i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax,
+			i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk,
+			i_eBufferMode	:= MC_BufferMode.MC_Aborting) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step14Wait);
+		END_IF
+
+		
+	//Wait till axis standstill
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step14Wait:
+		IF s_cmVirtualMaster.q_stAxisState.StandStill THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step15);
+		END_IF
+		
+		
+	//set both axis to zero
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step15:
+		IF s_cmVirtualMaster.m_SetActualPosition(
+			i_bCmdReset := s_fbSeqControl.q_bStaEntry,
+			i_fPosition	:= 0)
+		AND
+			s_cmAxis1.m_SetActualPosition(
+			i_bCmdReset := s_fbSeqControl.q_bStaEntry,
+			i_fPosition	:= 0)
+		THEN
+			// No Cam-license available
+			//s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_AutoExecute.Step16);
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step17);
+		END_IF
+
+		
+	//Cam in slave to master 
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step16:
+		IF s_cmAxis1Cam.m_CamIn(
+				i_bCmdReset					:= s_fbSeqControl.q_bStaEntry,
+				i_fMasterOffset				:= 0.0,
+				i_fSlaveOffset				:= 0.0,
+				i_fMasterScale				:= 1,
+				i_fSlaveScale				:= 1,
+				i_bMasterOffsetIsRelative	:= FALSE,
+				i_bSlaveOffsetIsRelative	:= FALSE,
+				i_nCamTableId				:= nCamTableIdAxis1, 
+				i_fMasterActivationPos		:= 0, 
+				i_mcCamOperationMode		:= MC_CamOperationMode.CAMOPERATIONMODE_EXCHANGE,
+				i_nReferenceCamTableID		:= 0,
+				i_mcCamActivationMode		:= MC_CamActivationMode.MC_CAMACTIVATION_INSTANTANEOUS,
+				i_mcMasterScalingMode		:= MC_CamScalingMode.MC_CAMSCALING_USERDEFINED,
+				i_mcSlaveScalingMode		:= MC_CamScalingMode.MC_CAMSCALING_USERDEFINED,
+				i_itfMaster					:= s_cmVirtualMaster)
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Step17);
+		END_IF
+
+		
+	//Move absolute
+	E_EM_LogicExample1_Seq_ExecuteProduction.Step17:
+		s_fCalculatedSpeed	:= (360.0 * 100.0) / 123.4; // 360 degree = 1 product. 
+		IF s_cmVirtualMaster.m_StartAbsolute(
+				i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+				i_fAcceleration	:= s_cmVirtualMaster.q_stParameterSet.fAcceleration,
+				i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDeceleration,
+				i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk,
+				i_fSpeed		:= s_fCalculatedSpeed,
+				i_fPosition		:= TO_LREAL(s_cmVirtualMaster.q_nCommandedTurnsModulo+1) * 360.0, //Move 1 modulo position forwards 
+				i_eBufferMode	:= MC_BufferMode.MC_Aborting, 
+				i_sLogHint		:= 'Takt' )
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Start);
+		END_IF
+		
+		
+	//Stop both axis when execute is finished	
+	E_EM_LogicExample1_Seq_ExecuteProduction.StopAxis:
+		IF s_cmVirtualMaster.m_Stop(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+			i_fDeceleration	:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax,
+			i_fJerk			:= s_cmVirtualMaster.q_stParameterSet.fJerk) 
+		AND
+			s_cmAxis1.m_Stop(
+			i_bCmdReset		:= s_fbSeqControl.q_bStaEntry,
+			i_fDeceleration	:= s_cmAxis1.q_stParameterSet.fDecelerationMax,
+			i_fJerk			:= s_cmAxis1.q_stParameterSet.fJerk) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.WaitStopAxis);
+		END_IF
+
+		
+	//Wait till both axis are stopped
+	E_EM_LogicExample1_Seq_ExecuteProduction.WaitStopAxis:	
+		IF s_cmVirtualMaster.q_stAxisState.StandStill AND s_cmAxis1.q_stAxisState.StandStill THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_ExecuteProduction.Ready);
+		END_IF	
+		
+		
+	E_EM_LogicExample1_Seq_ExecuteProduction.Ready:
+		;
+		
+		
+	E_EM_LogicExample1_Seq_ExecuteProduction.Error:
+		;
+END_CASE
+
+// Sequence state to PackML commands
+F_SeqControl_PackMLcommands(
+	i_rnActSeqStep	:= s_eSeqAutoExecute,
+	q_bStaFinished	=> _m_Execute_Production,
+	q_bStaIdle		=> ,
+	q_bStaError		=> );
+	
+	
+	
+	
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Init" Id="{a109f297-b36b-4668-b63d-735900e0aeb6}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Init
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Init();
+
+// Do some initializations here..
+
+
+// Failure 1
+s_stConfig.stAlmFailure1.eAction := E_Alarm_Actions.Abort;
+s_stConfig.stAlmFailure1.tmDelay := T#1S;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Inputs" Id="{77e4728c-ffad-4128-a279-41c2d7615831}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Inputs
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Inputs();
+
+// Simulation
+IF s_fbSimulation.q_bStaOn THEN
+	s_fbDiSensorPos1.m_SimulationOn(i_bValue := TRUE);
+ELSIF s_fbSimulation.q_bStaOsf THEN
+	s_fbDiSensorPos1.m_SimulationOff();
+END_IF
+
+// Sensor at position 1
+s_stConfig.stDiSensorPos1.bCfgInvert	:= TRUE;
+s_stConfig.stDiSensorPos1.tmOnDelay		:= T#50MS;
+s_fbDiSensorPos1(i_rstConfig := s_stConfig.stDiSensorPos1);
+
+// Blue button with light
+s_fbBlueButton(
+	i_bReqLightOn		:= s_fbBlueButton.q_bStaInput, 
+	i_bReqFlashLight	:= s_bStaStateOfSomething, 
+	i_rstConfig			:= s_stConfig.stBlueButton);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Logic" Id="{92a339b3-29f4-4403-8127-08fe7b3359cf}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Logic
+VAR_INST
+	s_osrStateOfSomething	: R_TRIG;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Logic();
+
+// ============ Enable parts of the EM ============
+// Allow manual control from HMI when the actual mode is 'Manual' and actual state is 'Execute'
+s_bAlwManualControl	:= s_stPML.stStatus.eActMode = E_PackML_Mode.Manual 
+					AND s_stPML.stStatus.eActState = E_PackML_State.Execute;
+
+// Allow alarming when module is enabled
+s_bReqAlarmCollector_Enable := s_bStaEnable;
+
+// Allow PackML when module is enabled. 
+s_stPML.stConfig.bEnabled := s_bStaEnable;
+
+// ============ Statusses ============
+// Status updated in every mode and every state
+s_bStaStateOfSomething := s_cmWaterInlet.q_bStaOff AND s_cmAxis1.q_bStaInPos;
+s_osrStateOfSomething(CLK := s_bStaStateOfSomething);
+
+
+// Set alarm when s_bStaStateOfSomething3 is active
+IF s_bStaStateOfSomething3 AND GVL_GBL.g_fbSystem.p_bPulse1Hz THEN
+	s_AlmFailure2.m_CmdSet('Text1','Text2','Text3');
+END_IF
+
+// ============ Logging ============
+// Log state continuously, Fills the log quickly...
+IF s_osrStateOfSomething.Q THEN
+	(* Logging *)
+	g_fbGBL_Logger.m_InitLogString(
+		i_sInstance := s_sInstance, 
+		i_sMethode := 'm_Logic', 
+		i_sFunction := '', 
+		i_sDescription := '');	
+	g_fbGBL_Logger.m_AddBoolParam('s_bStaStateOfSomething',s_bStaStateOfSomething2);
+	g_fbGBL_Logger.m_WriteLogString(i_eSeverity := E_LogSeverity.Fatal);
+END_IF
+
+
+s_fStaValueResult := F_fCalcFloorModuloPosition(i_fActualPosition := s_fStaValue, i_fMod := 360.0);
+
+IF s_bStaStateOfSomething4 THEN
+	F_ProgramError_Set(
+		i_sInstancePath	:= s_sInstance,
+		i_sMsgVar1	:= 'text1',
+		i_sMsgVar2	:= 'text2',
+		i_sMsgVar3	:= 'text3');
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Modules" Id="{69768295-7443-40c1-8644-57ec9b3eff02}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Modules]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Modules();
+
+// Virtual Master
+s_cmVirtualMaster(
+	i_bReqEnable				:= s_bStaEnable, 
+	i_bReqReset					:= s_fbAlarmCollector.q_bReqReset,
+	i_bAlwManualCtrl			:= s_bAlwManualControl,
+	i_bReqSimulationOn			:= s_fbSimulation.q_bStaOn,
+	i_sPostFixAlarmValueMessage	:= 'Virtual master',
+	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector, 
+	i_rstConfig					:= s_stConfig.stCmVirtualMaster, 
+	i_bEmrStopOk				:= i_bStaSafetyOk, 
+	i_fOverride					:= 100.0, 
+	i_bDisableForward			:= FALSE, 
+	i_bDisableReverse			:= FALSE, 
+	i_bDisableAxis				:= FALSE);
+
+
+// Servo axis 1
+s_stConfig.stCmAxis1.tmReferenceTimeOut	:= T#1M;
+s_cmAxis1(
+	i_bReqEnable				:= s_bStaEnable, 
+	i_bReqReset					:= s_fbAlarmCollector.q_bReqReset,
+	i_bAlwManualCtrl			:= s_bAlwManualControl,
+	i_bReqSimulationOn			:= s_fbSimulation.q_bStaOn,
+	i_sPostFixAlarmValueMessage	:= 'Mover axis 1',
+	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
+	i_rstConfig					:= s_stConfig.stCmAxis1, 
+	i_bEmrStopOk				:= i_bStaSafetyOk, 
+	i_fOverride					:= 100.0, 
+	i_bDisableForward			:= FALSE, 
+	i_bDisableReverse			:= FALSE, 
+	i_bDisableAxis				:= FALSE);
+
+// Valve 1
+s_stConfig.stCmValve1.stAlarmCollector.eSubstituteActionForPackML_Abort := E_Alarm_Actions.NoAction;
+s_stConfig.stCmValve1.stHardware.nCfgFeedbackOn := 0;
+s_stConfig.stCmValve1.stHardware.nCfgFeedbackOff := 0;
+s_stConfig.stCmValve1.stAlmBothOn.tmDelay	:= T#100MS;
+s_cmWaterInlet(
+	i_bReqEnable		:= s_bStaEnable, 
+	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset,
+	i_bAlwManualCtrl	:= s_bAlwManualControl,
+	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
+	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
+	i_rstConfig			:= s_stConfig.stCmValve1);
+
+// Motor DOL 1
+s_cmBelt(
+	i_bReqEnable		:= s_bStaEnable, 
+	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset, 
+	i_bAlwManualCtrl	:= s_bAlwManualControl,
+	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
+	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
+	i_rstConfig			:= s_stConfig.stCmMotorDol1);
+	
+// Motor DOL with analog position feedback 1
+s_cmHeightAdjuster(
+	i_bReqEnable		:= s_bStaEnable, 
+	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset, 
+	i_bAlwManualCtrl	:= s_bAlwManualControl, 
+	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
+	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
+	i_rstConfig			:= s_stConfig.stCmMotorDolAF1.stCmMotorDol,
+	i_rstConfig_AF		:= s_stConfig.stCmMotorDolAF1);	
+	
+
+// Ventilator motor with Lenze i550 drive
+s_stConfig.stCmVentilator.bAllowReverse := TRUE;
+// Motor params to drive
+s_stConfig.stCmVentilator.astMotorParameter[0].fLocalPar := 0.81;		// [kW] Rated Power		
+s_stConfig.stCmVentilator.astMotorParameter[1].fLocalPar := 1375.0;     // [rpm] Rated Speed		
+s_stConfig.stCmVentilator.astMotorParameter[2].fLocalPar := 0.51;       // [A] Rated Current		
+s_stConfig.stCmVentilator.astMotorParameter[3].fLocalPar := 400.0;      // [V] Rated Voltage		
+s_stConfig.stCmVentilator.astMotorParameter[4].fLocalPar := 50.0;       // [Hz] Rated Frequency	
+s_stConfig.stCmVentilator.astMotorParameter[5].fLocalPar := 0.65;       // [] Cosine Phi			
+s_stConfig.stCmVentilator.astMotorParameter[6].fLocalPar := 3000.0;     // [rpm] Max Speed			
+// Drive params to drive
+s_stConfig.stCmVentilator.astDriveParameters[4].nData := 49; // Configure Control word bit 1 as "Release Holding Brake"
+s_cmVentilator(
+	i_bReqEnable		:= s_bStaEnable, 
+	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset, 
+	i_bAlwManualCtrl	:= s_bAlwManualControl, 
+	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
+	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
+	i_rstConfig			:= s_stConfig.stCmVentilator);
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Outputs" Id="{46e775c6-9c73-43e1-b271-d1bbfcfc1dff}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Outputs]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Outputs();
+
+// Simulation
+IF s_fbSimulation.q_bStaOsr THEN
+	s_fbDoMachineX_Start.m_SimulationOn();
+	s_fbAoMachineX_Speed.m_SimulationOn();
+ELSIF s_fbSimulation.q_bStaOsf THEN
+	s_fbDoMachineX_Start.m_SimulationOff();
+	s_fbAoMachineX_Speed.m_SimulationOff();
+END_IF
+
+// Machine X: Start signal
+s_stConfig.stDoMachineX_Start.bCfgInvert := FALSE;
+s_fbDoMachineX_Start(
+	//i_bReqOutput	:= , // Set at sequencers 
+	i_rstConfig	:= s_stConfig.stDoMachineX_Start);
+
+// Machine X: Speed signal
+s_fbAoMachineX_Speed(
+	//i_fValue	:= ,// Set at sequencers 
+	i_rstConfig	:= s_stConfig.stAoMachineX_Speed);
+	
+// Red light	
+s_fbRedLight(
+	i_bReqLightOn		:= s_bStaStateOfSomething,
+	i_bReqFlashLight	:= s_bStaStateOfSomething2,
+	i_rstConfig			:= s_stConfig.stRedLight);	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Starting" Id="{74bc4b2f-043a-4038-b439-df9753c56557}" FolderPath="OMAC PackML\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Starting
+VAR_INPUT
+	i_rstPML_Status			: REFERENCE TO ST_PackML_Status;
+END_VAR
+VAR_INST
+	s_fbSeqControl				: FB_SeqControl;
+	s_eSeqAutoStarting			: E_EM_LogicExample1_Seq_StartingProduction;
+	s_eActMode					: E_PackML_Mode;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Execute only when in a specific mode
+s_eActMode := i_rstPML_Status.eActMode;
+IF i_rstPML_Status.eActMode = E_PackML_Mode.Production OR i_rstPML_Status.eActMode = E_PackML_Mode.UserMode1 THEN
+
+	s_fbSeqControl(
+		i_bReqStart		:= i_rstPML_Status.bStateEntry, 
+		i_rnActSeqStep	:= s_eSeqAutoStarting,
+		i_sActSeqStep	:= TO_STRING(s_eSeqAutoStarting));
+	
+		
+	CASE s_eSeqAutoStarting OF
+		E_EM_LogicExample1_Seq_StartingProduction.Idle:
+			;
+	
+			
+		E_EM_LogicExample1_Seq_StartingProduction.Start:	
+			//Enable both axes in one singe sequencer step
+			IF s_cmVirtualMaster.m_Enable() 
+				AND s_cmAxis1.m_Enable()
+			THEN
+				s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StartingProduction.ReferenceAxes);
+			END_IF
+			
+			
+		E_EM_LogicExample1_Seq_StartingProduction.ReferenceAxes:	
+			//Reference when needed both axes in one singe sequencer step
+			//Both methode give a TRUE when the axis is referenced
+			//i_bForceReference := TRUE => The reference routine is allways started even when the axis is allready referenced
+			//i_bForceReference := FALSE => The refference routine is only started when the axis is not already referenced
+			//Recommended is to reference virtual axis allways and real axis only when they has loses the reference state		
+			IF s_cmVirtualMaster.m_ReferenceDrive(i_bCmdReset:= s_fbSeqControl.q_bStaEntry, i_bForceReference:=TRUE)
+				AND s_cmAxis1.m_ReferenceDrive(i_bCmdReset:= s_fbSeqControl.q_bStaEntry, i_bForceReference:=FALSE)
+			THEN
+				// No camming License to store a cam-table
+				//s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_AutoStarting.CamAxis);
+				s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StartingProduction.Ready);
+			END_IF
+		
+			
+		E_EM_LogicExample1_Seq_StartingProduction.CamAxis:
+			//Cam in the slave (real axis) to the master axis
+			//The Cam function is a methode of the camming Addon.
+			//The methode give a TRUE when the Cam In is done.
+			IF s_cmAxis1Cam.m_CamIn(
+					i_bCmdReset					:= s_fbSeqControl.q_bStaEntry,
+					i_fMasterOffset				:= 0.0,
+					i_fSlaveOffset				:= 0.0,
+					i_fMasterScale				:= 1,
+					i_fSlaveScale				:= 1,
+					i_bMasterOffsetIsRelative	:= FALSE,
+					i_bSlaveOffsetIsRelative	:= FALSE,
+					i_nCamTableId				:= nCamTableIdAxis1, 
+					i_fMasterActivationPos		:= 0, 
+					i_mcCamOperationMode		:= MC_CamOperationMode.CAMOPERATIONMODE_EXCHANGE,
+					i_nReferenceCamTableID		:= 0,
+					i_mcCamActivationMode		:= MC_CamActivationMode.MC_CAMACTIVATION_INSTANTANEOUS,
+					i_mcMasterScalingMode		:= MC_CamScalingMode.MC_CAMSCALING_USERDEFINED,
+					i_mcSlaveScalingMode		:= MC_CamScalingMode.MC_CAMSCALING_USERDEFINED,
+					i_itfMaster					:= s_cmVirtualMaster)
+			THEN
+				s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StartingProduction.Ready);
+			END_IF
+			
+			
+		E_EM_LogicExample1_Seq_StartingProduction.Ready:
+			;
+			
+			
+		E_EM_LogicExample1_Seq_StartingProduction.Error:
+			;
+	
+	END_CASE
+		
+	F_SeqControl_PackMLcommands(
+		i_rnActSeqStep	:= s_eSeqAutoStarting,
+		q_bStaFinished	=> i_rstPML_Status.bStateComplete,
+		q_bStaIdle		=> ,
+		q_bStaError		=> i_rstPML_Status.bStateError);
+ELSE
+	i_rstPML_Status.bStateComplete := TRUE;
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Starting_SubStates" Id="{400f85a2-e7d2-4436-aa22-f0a326fd6012}" FolderPath="OMAC PackML\">
+      <Declaration><![CDATA[
+METHOD PROTECTED _m_Starting_SubStates
+VAR_INPUT
+	i_rstPML_Status			: REFERENCE TO ST_PackML_Status;
+END_VAR
+VAR_INST
+	s_fbSeqControl			: FB_SeqControl;
+	s_eSeqAutoStarting		: E_EM_LogicExample1_Seq_StartingProduction;
+	
+	s_bStaDoneThis			: BOOL;
+	s_bStaStateComplete1		: BOOL;
+	s_bStaStateComplete2		: BOOL;
+	s_bStaStateComplete3		: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Execute only when in a specific mode
+CASE i_rstPML_Status.eActMode OF
+	// Execute only when in PRODUCTION mode		
+	E_PackML_Mode.Production: 
+		CASE i_rstPML_Status.nActSubState OF
+			1:
+				s_bStaDoneThis := FALSE;
+				i_rstPML_Status.bStateComplete := s_bStaStateComplete1;
+			2:
+				s_bStaDoneThis := TRUE;
+				i_rstPML_Status.bStateComplete := s_bStaStateComplete2;
+		ELSE
+			i_rstPML_Status.bStateComplete := s_bStaStateComplete3;	
+		END_CASE
+		
+	// Execute only when in MANUAL mode	
+	E_PackML_Mode.Manual:
+		i_rstPML_Status.bStateComplete := TRUE;
+ELSE
+	// Execute in all other modes	
+	i_rstPML_Status.bStateComplete := TRUE;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Statistics" Id="{46f84ba8-ec28-4c72-9159-35409bbaf08f}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Statistics 
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Statistics();
+
+// Do all statistics here... Like fault counters or...
+
+// Running times
+// Belt
+s_fbRunTime_Belt(
+	i_bCmdReset		:= FALSE,
+	i_bStaRunning	:= NOT s_cmBelt.q_bStaStandstill);
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Stopping" Id="{f87d548b-0cad-4916-8130-e1f7b762eb18}" FolderPath="OMAC PackML\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Stopping
+VAR_INPUT
+	i_rstPML_Status			: REFERENCE TO ST_PackML_Status;
+END_VAR
+VAR_INST
+	
+	s_bStaStateComplete1		: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[i_rstPML_Status.bStateComplete := _m_StopServos(i_bReqStart := i_rstPML_Status.bStateEntry);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_StopServos" Id="{5b343d6e-2672-4004-945d-26825f09df86}">
+      <Declaration><![CDATA[METHOD PRIVATE _m_StopServos : BOOL
+VAR_INPUT
+	i_bReqStart				: BOOL;			// Reset sequencer
+END_VAR
+VAR_INST
+	s_fbSeqControl			: FB_SeqControl;
+	s_eSeqCtrl_StopServos	: E_EM_LogicExample1_Seq_StopServos;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_fbSeqControl(
+	i_bReqStart		:= i_bReqStart, 
+	i_rnActSeqStep	:= s_eSeqCtrl_StopServos,
+	i_sActSeqStep	:= TO_STRING(s_eSeqCtrl_StopServos));
+
+	
+CASE s_eSeqCtrl_StopServos OF
+	
+	E_EM_LogicExample1_Seq_StopServos.Idle:
+		;
+		
+	E_EM_LogicExample1_Seq_StopServos.Start:
+		IF s_cmVirtualMaster.m_Stop(
+			i_bCmdReset			:= s_fbSeqControl.q_bStaEntry,
+			i_fDeceleration		:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax,
+			i_fJerk				:= s_cmVirtualMaster.q_stParameterSet.fJerk) 
+		AND
+			s_cmAxis1.m_Stop(
+				i_bCmdReset			:= s_fbSeqControl.q_bStaEntry,
+				i_fDeceleration		:= s_cmAxis1.q_stParameterSet.fDecelerationMax,
+				i_fJerk				:= s_cmAxis1.q_stParameterSet.fJerk) 
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StopServos.Busy);
+		END_IF
+		
+		//Add a time-out to be sure axis is disabled on time
+		IF s_fbSeqControl.q_tmStepTime > T#100MS THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StopServos.Busy);
+		END_IF
+		
+	E_EM_LogicExample1_Seq_StopServos.Busy:	
+		//Wait till axis is stopped. A time-out is added to sure that the axis is always disabled in on time		
+		IF (s_cmVirtualMaster.q_stAxisState.StandStill 
+			AND s_cmAxis1.q_stAxisState.StandStill) 
+			OR s_fbSeqControl.q_tmStepTime > T#500MS 
+		THEN
+			s_cmVirtualMaster.m_Disable();
+			s_cmAxis1.m_Disable();
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StopServos.Ready);
+		END_IF
+	
+	E_EM_LogicExample1_Seq_StopServos.Ready:
+		;
+
+	E_EM_LogicExample1_Seq_StopServos.Error:
+		;	
+
+END_CASE
+
+
+F_SeqControl_PackMLcommands(
+	i_rnActSeqStep	:= s_eSeqCtrl_StopServos,
+	q_bStaFinished	=> _m_StopServos,
+	q_bStaIdle		=> ,
+	q_bStaError		=> );
+	
+	
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="p_bStaMachineX_Start_Active" Id="{133ca14e-251f-40ef-b5a0-a1c8e9b6c38b}" FolderPath="itfEM_LogicExample1\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_bStaMachineX_Start_Active : BOOL]]></Declaration>
+      <Get Name="Get" Id="{65cc60d6-5bff-4829-8e30-d4c564ca0f54}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_bStaMachineX_Start_Active := s_fbDoMachineX_Start.q_bStaOutput;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_bStaSensorPos1" Id="{5e3221d5-a26c-41db-9d99-610f1e5d3adc}" FolderPath="itfEM_LogicExample1\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_bStaSensorPos1 : BOOL]]></Declaration>
+      <Get Name="Get" Id="{0f779ed3-b327-419e-8ba5-ce3548eeb203}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_bStaSensorPos1 := s_fbDiSensorPos1.q_bStaInput;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_itfCmAxis1" Id="{4b75f813-c9e5-4630-b9af-0d70f6f1bd52}" FolderPath="itfEM_LogicExample1\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfCmAxis1 : ITF_CM_ServoBase]]></Declaration>
+      <Get Name="Get" Id="{90e3bac3-f3cf-4fa2-9327-08fa3ec9473d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_itfCmAxis1 := s_cmAxis1;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_itfCmBelt" Id="{443e4b9a-33ef-4c12-a014-d7532db96e52}" FolderPath="itfEM_LogicExample1\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfCmBelt : ITF_CM_MotorDol]]></Declaration>
+      <Get Name="Get" Id="{1231dc3f-7eb7-45bf-9bc9-88d647698073}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_itfCmBelt := s_cmBelt;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_itfCmHeightAdjuster" Id="{c634e908-04ba-406e-9bc5-f977da81e4eb}" FolderPath="itfEM_LogicExample1\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfCmHeightAdjuster : ITF_CM_MotorDol_AF]]></Declaration>
+      <Get Name="Get" Id="{a17d42a9-9ccd-456b-8159-4cd0a81d514e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_itfCmHeightAdjuster := s_cmHeightAdjuster;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_itfCmWaterInlet" Id="{09035550-cd1c-43a8-8c21-a59ee1f9efd0}" FolderPath="itfEM_LogicExample1\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfCmWaterInlet : ITF_CM_Valve]]></Declaration>
+      <Get Name="Get" Id="{9e072766-9ff5-44a2-98a7-6e04b7999869}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_itfCmWaterInlet := s_cmWaterInlet;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_rstConfig" Id="{32e99255-cfbc-4c85-bd78-849b1d6713ae}" FolderPath="itfEM_LogicExample1\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_rstConfig : REFERENCE TO ST_EM_LogicExample1_Config]]></Declaration>
+      <Get Name="Get" Id="{0732c555-1ae1-4488-bcb4-99e18728ae24}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_rstConfig := s_stConfig;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="EM_LogicExample_1">
+      <LineId Id="9" Count="0" />
+      <LineId Id="219" Count="1" />
+      <LineId Id="187" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Aborting">
+      <LineId Id="5" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Alarms">
+      <LineId Id="52" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="176" Count="4" />
+      <LineId Id="105" Count="1" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="84" Count="3" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Execute">
+      <LineId Id="1075" Count="0" />
+      <LineId Id="1115" Count="0" />
+      <LineId Id="948" Count="0" />
+      <LineId Id="1092" Count="2" />
+      <LineId Id="1101" Count="0" />
+      <LineId Id="1095" Count="0" />
+      <LineId Id="1106" Count="0" />
+      <LineId Id="1091" Count="0" />
+      <LineId Id="1090" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Execute_Production">
+      <LineId Id="1168" Count="0" />
+      <LineId Id="1172" Count="0" />
+      <LineId Id="1169" Count="0" />
+      <LineId Id="1166" Count="1" />
+      <LineId Id="989" Count="1" />
+      <LineId Id="994" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="1112" Count="0" />
+      <LineId Id="38" Count="4" />
+      <LineId Id="1224" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="752" Count="5" />
+      <LineId Id="965" Count="0" />
+      <LineId Id="758" Count="1" />
+      <LineId Id="1049" Count="0" />
+      <LineId Id="761" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="776" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="1050" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="1016" Count="0" />
+      <LineId Id="777" Count="2" />
+      <LineId Id="793" Count="0" />
+      <LineId Id="1052" Count="0" />
+      <LineId Id="795" Count="0" />
+      <LineId Id="1015" Count="0" />
+      <LineId Id="796" Count="2" />
+      <LineId Id="800" Count="0" />
+      <LineId Id="1053" Count="0" />
+      <LineId Id="807" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="1014" Count="0" />
+      <LineId Id="175" Count="2" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="218" Count="11" />
+      <LineId Id="235" Count="1" />
+      <LineId Id="232" Count="2" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="180" Count="1" />
+      <LineId Id="195" Count="10" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="574" Count="0" />
+      <LineId Id="1094" Count="0" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="1013" Count="0" />
+      <LineId Id="808" Count="2" />
+      <LineId Id="812" Count="0" />
+      <LineId Id="1084" Count="0" />
+      <LineId Id="819" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="1012" Count="0" />
+      <LineId Id="238" Count="1" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="1246" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="1011" Count="0" />
+      <LineId Id="821" Count="0" />
+      <LineId Id="830" Count="1" />
+      <LineId Id="822" Count="0" />
+      <LineId Id="1083" Count="0" />
+      <LineId Id="829" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="1010" Count="0" />
+      <LineId Id="256" Count="2" />
+      <LineId Id="262" Count="19" />
+      <LineId Id="283" Count="1" />
+      <LineId Id="309" Count="4" />
+      <LineId Id="318" Count="3" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="1092" Count="0" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="1009" Count="0" />
+      <LineId Id="834" Count="2" />
+      <LineId Id="838" Count="0" />
+      <LineId Id="1082" Count="0" />
+      <LineId Id="845" Count="0" />
+      <LineId Id="833" Count="0" />
+      <LineId Id="1007" Count="0" />
+      <LineId Id="322" Count="1" />
+      <LineId Id="330" Count="0" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="337" Count="1" />
+      <LineId Id="846" Count="0" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="348" Count="3" />
+      <LineId Id="847" Count="0" />
+      <LineId Id="345" Count="0" />
+      <LineId Id="1091" Count="0" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="1006" Count="0" />
+      <LineId Id="848" Count="3" />
+      <LineId Id="1081" Count="0" />
+      <LineId Id="859" Count="0" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="1005" Count="0" />
+      <LineId Id="354" Count="1" />
+      <LineId Id="387" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="398" Count="2" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="860" Count="0" />
+      <LineId Id="1080" Count="0" />
+      <LineId Id="1004" Count="0" />
+      <LineId Id="1143" Count="0" />
+      <LineId Id="402" Count="1" />
+      <LineId Id="429" Count="1" />
+      <LineId Id="437" Count="2" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="966" Count="0" />
+      <LineId Id="584" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="1090" Count="0" />
+      <LineId Id="425" Count="0" />
+      <LineId Id="1003" Count="0" />
+      <LineId Id="861" Count="2" />
+      <LineId Id="865" Count="0" />
+      <LineId Id="1079" Count="0" />
+      <LineId Id="872" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="1002" Count="0" />
+      <LineId Id="460" Count="2" />
+      <LineId Id="1089" Count="0" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="1001" Count="0" />
+      <LineId Id="874" Count="2" />
+      <LineId Id="878" Count="0" />
+      <LineId Id="1078" Count="0" />
+      <LineId Id="885" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="1000" Count="0" />
+      <LineId Id="463" Count="1" />
+      <LineId Id="471" Count="3" />
+      <LineId Id="476" Count="4" />
+      <LineId Id="482" Count="0" />
+      <LineId Id="1088" Count="0" />
+      <LineId Id="484" Count="0" />
+      <LineId Id="999" Count="0" />
+      <LineId Id="886" Count="2" />
+      <LineId Id="890" Count="0" />
+      <LineId Id="1077" Count="0" />
+      <LineId Id="897" Count="0" />
+      <LineId Id="492" Count="0" />
+      <LineId Id="998" Count="0" />
+      <LineId Id="493" Count="1" />
+      <LineId Id="501" Count="5" />
+      <LineId Id="517" Count="0" />
+      <LineId Id="507" Count="0" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="898" Count="0" />
+      <LineId Id="1076" Count="0" />
+      <LineId Id="509" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="997" Count="0" />
+      <LineId Id="518" Count="1" />
+      <LineId Id="521" Count="5" />
+      <LineId Id="967" Count="0" />
+      <LineId Id="583" Count="0" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="1087" Count="0" />
+      <LineId Id="529" Count="0" />
+      <LineId Id="996" Count="0" />
+      <LineId Id="899" Count="2" />
+      <LineId Id="903" Count="0" />
+      <LineId Id="1075" Count="0" />
+      <LineId Id="910" Count="0" />
+      <LineId Id="536" Count="0" />
+      <LineId Id="1019" Count="0" />
+      <LineId Id="537" Count="1" />
+      <LineId Id="550" Count="3" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="576" Count="5" />
+      <LineId Id="968" Count="0" />
+      <LineId Id="582" Count="0" />
+      <LineId Id="554" Count="0" />
+      <LineId Id="1086" Count="0" />
+      <LineId Id="556" Count="0" />
+      <LineId Id="1020" Count="0" />
+      <LineId Id="911" Count="2" />
+      <LineId Id="915" Count="0" />
+      <LineId Id="1074" Count="0" />
+      <LineId Id="922" Count="0" />
+      <LineId Id="585" Count="0" />
+      <LineId Id="1021" Count="0" />
+      <LineId Id="615" Count="0" />
+      <LineId Id="586" Count="0" />
+      <LineId Id="593" Count="4" />
+      <LineId Id="605" Count="0" />
+      <LineId Id="1085" Count="0" />
+      <LineId Id="607" Count="0" />
+      <LineId Id="1022" Count="0" />
+      <LineId Id="923" Count="2" />
+      <LineId Id="927" Count="0" />
+      <LineId Id="1073" Count="0" />
+      <LineId Id="934" Count="0" />
+      <LineId Id="616" Count="0" />
+      <LineId Id="1023" Count="0" />
+      <LineId Id="617" Count="1" />
+      <LineId Id="629" Count="0" />
+      <LineId Id="635" Count="2" />
+      <LineId Id="639" Count="2" />
+      <LineId Id="630" Count="0" />
+      <LineId Id="1260" Count="0" />
+      <LineId Id="1072" Count="0" />
+      <LineId Id="1259" Count="0" />
+      <LineId Id="632" Count="0" />
+      <LineId Id="1024" Count="0" />
+      <LineId Id="663" Count="0" />
+      <LineId Id="642" Count="18" />
+      <LineId Id="1071" Count="0" />
+      <LineId Id="662" Count="0" />
+      <LineId Id="1025" Count="0" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="711" Count="1" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="699" Count="9" />
+      <LineId Id="1070" Count="0" />
+      <LineId Id="717" Count="0" />
+      <LineId Id="535" Count="0" />
+      <LineId Id="1026" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="664" Count="9" />
+      <LineId Id="1069" Count="0" />
+      <LineId Id="675" Count="0" />
+      <LineId Id="1027" Count="0" />
+      <LineId Id="676" Count="0" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="1068" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="1028" Count="0" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="1029" Count="0" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="1203" Count="0" />
+      <LineId Id="950" Count="1" />
+      <LineId Id="1142" Count="0" />
+      <LineId Id="1131" Count="0" />
+      <LineId Id="1133" Count="0" />
+      <LineId Id="948" Count="0" />
+      <LineId Id="1137" Count="4" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Init">
+      <LineId Id="96" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="126" Count="2" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Inputs">
+      <LineId Id="5" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Logic">
+      <LineId Id="2" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="60" Count="8" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="99" Count="1" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="104" Count="3" />
+      <LineId Id="109" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Modules">
+      <LineId Id="5" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="105" Count="1" />
+      <LineId Id="199" Count="1" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="110" Count="3" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="197" Count="1" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="29" Count="3" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="195" Count="1" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="169" Count="1" />
+      <LineId Id="193" Count="1" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="180" Count="4" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="239" Count="11" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="222" Count="3" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="189" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Outputs">
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="50" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Starting">
+      <LineId Id="223" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="182" Count="1" />
+      <LineId Id="95" Count="1" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="31" Count="3" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="38" Count="3" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="47" Count="7" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="115" Count="14" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="82" Count="1" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="162" Count="3" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="201" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="185" Count="2" />
+      <LineId Id="184" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Starting_SubStates">
+      <LineId Id="217" Count="1" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="215" Count="1" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="211" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Statistics">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="11" Count="5" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_Stopping">
+      <LineId Id="6" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1._m_StopServos">
+      <LineId Id="166" Count="10" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="178" Count="15" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="195" Count="5" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="201" Count="17" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="219" Count="2" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1.p_bStaMachineX_Start_Active.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1.p_bStaSensorPos1.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1.p_itfCmAxis1.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1.p_itfCmBelt.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1.p_itfCmHeightAdjuster.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1.p_itfCmWaterInlet.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="EM_LogicExample_1.p_rstConfig.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <GVL Name="GVL_Area100" Id="{12fdd4e2-fcb3-4f87-af33-035e124890b0}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+// Management
+	g_fbAlarmManager		: FB_AlarmManager;
+	g_fbMachCtrlsManager	: FB_MachineControlsManager;
+	g_fbHmiMachCtrlsManager	: FB_HMI_MachineControlsManager_2BtnCtrl;
+	g_fbPackMLstatusManager	: FB_PackML_StatusManager;
+	
+// Units
+	g_unMachine100			: UN_Machine100;
+	
+// Units - HMI
+	g_hmiUnMachine100		: HMI_UN_Machine100_Gain;
+	
+	
+// Equipment modules
+	g_emLogicExample		: EM_LogicExample_1;
+	g_emLogicExample2		: EM_LogicExample_1;
+	g_emSafety				: EM_Safety;
+// Equipment Modules - HMI 
+	g_hmiEmLogicExample		: HMI_EM_LogicExample_1;
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="UN_Machine100" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine100 EXTENDS FB_UN_Base IMPLEMENTS ITF_UN_Machine100
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+// Local var
+	s_stMachineCommands				: ST_UN_Machine100_Cmd;	
+
+// Config Struct
+	s_stConfig						: ST_UN_Machine100_Config;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+]]></ST>
+    </Implementation>
+    <Folder Name="Basic" Id="{e89104c0-d33f-460a-aaf2-8953cfda25ab}" />
+    <Folder Name="ITF_UN_Machine100" Id="{993bc94f-48fd-4eea-942a-5c02e6ec715c}" />
+    <Method Name="_m_Alarms" Id="{8fa8464a-636c-46ee-9f13-6e7927953bcd}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Alarms
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Alarms();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Logic" Id="{b95711e4-a3f3-4e91-9f55-7c0e3689d897}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Logic]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Logic();
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Modules" Id="{c15e282d-b76d-440b-8236-902bb4c31743}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Modules
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Modules();
+
+// Example module
+IF GVL_Area100.g_emLogicExample.p_itfAlarmCollector <> 0
+	AND_THEN __ISVALIDREF(GVL_Area100.g_emLogicExample.p_itfAlarmCollector.p_rstConfig)
+THEN
+	GVL_Area100.g_emLogicExample.p_itfAlarmCollector.p_rstConfig.eSubstituteActionForPackML_Abort := E_Alarm_Actions.Stop;
+END_IF
+GVL_Area100.g_emLogicExample(
+	i_bReqEnable		:= TRUE, 
+	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset,
+	i_bStaSafetyOk		:= TRUE,
+	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
+	i_itfPackML_Parent	:= THIS^,
+	i_itfAlarmCollector_Parent := s_fbAlarmCollector,
+	i_stMachineCommands	:= s_stMachineCommands,
+	i_itfPackML_StatusManager	:= i_itfPackML_StatusManager);
+
+
+
+// Example module
+GVL_Area100.g_emLogicExample2(
+	i_bReqEnable		:= TRUE, 
+	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset,
+	i_bStaSafetyOk		:= TRUE,
+	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
+	i_itfPackML_Parent	:= THIS^,
+	i_itfAlarmCollector_Parent := s_fbAlarmCollector,
+	i_stMachineCommands	:= s_stMachineCommands,
+	i_itfPackML_StatusManager	:= i_itfPackML_StatusManager);
+
+// Safety module
+GVL_Area100.g_emSafety(
+	i_bReqEnable		:= TRUE, 
+	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset,
+	i_bStaSafetyOk		:= TRUE,
+	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
+	i_itfPackML_Parent	:= THIS^,
+	i_itfAlarmCollector_Parent := s_fbAlarmCollector,
+	i_stMachineCommands	:= s_stMachineCommands,
+	i_itfPackML_StatusManager	:= i_itfPackML_StatusManager,
+	q_bStaSafetyOk		=> );
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="m_Main" Id="{5738c138-41a1-473c-badd-a5f9691bbc49}">
+      <Declaration><![CDATA[METHOD PUBLIC m_Main]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^.m_Main();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="p_itfEmLogicExample" Id="{26224556-8538-4d9f-bcfc-37014048d854}" FolderPath="ITF_UN_Machine100\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfEmLogicExample : ITF_Hmi_ModuleBase]]></Declaration>
+      <Get Name="Get" Id="{623eaf14-77b2-40e4-839e-b7f0149cc8bb}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_itfEmLogicExample := GVL_Area100.g_emLogicExample;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_itfEmSafety" Id="{14512e0e-efa9-4836-b847-117ef07af89d}" FolderPath="ITF_UN_Machine100\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfEmSafety : ITF_Hmi_ModuleBase]]></Declaration>
+      <Get Name="Get" Id="{71671166-907c-4eeb-aa1b-fc56ebaa0f3e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_itfEmSafety := GVL_Area100.g_emSafety;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_stConfig" Id="{10d73f7a-3734-442c-bff3-b37a394b7208}" FolderPath="ITF_UN_Machine100\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_stConfig : REFERENCE TO ST_UN_Machine100_Config]]></Declaration>
+      <Get Name="Get" Id="{d0ae69ad-c446-4df5-88dc-fd69c355fa21}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_stConfig := s_stConfig;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="UN_Machine100">
+      <LineId Id="54" Count="0" />
+      <LineId Id="67" Count="0" />
+    </LineIds>
+    <LineIds Name="UN_Machine100._m_Alarms">
+      <LineId Id="4" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="UN_Machine100._m_Logic">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="UN_Machine100._m_Modules">
+      <LineId Id="3" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="92" Count="4" />
+      <LineId Id="7" Count="4" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="48" Count="4" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="31" Count="3" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="UN_Machine100.m_Main">
+      <LineId Id="2" Count="1" />
+    </LineIds>
+    <LineIds Name="UN_Machine100.p_itfEmLogicExample.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="UN_Machine100.p_itfEmSafety.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="UN_Machine100.p_stConfig.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

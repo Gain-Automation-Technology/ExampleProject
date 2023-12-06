@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <GVL Name="GVL" Id="{ca8c3cb0-b92b-4ea5-9dfc-8c13386c714b}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	// Simulation on for whole project
+	g_bCmdSimulationOn	: BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

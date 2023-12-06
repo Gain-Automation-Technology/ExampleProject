@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <Itf Name="ITF_UN_Machine100" Id="{6244becc-9361-45aa-94a7-3ef9a598990e}">
+    <Declaration><![CDATA[INTERFACE ITF_UN_Machine100 EXTENDS ITF_UN_Base]]></Declaration>
+    <Property Name="p_itfEmLogicExample" Id="{2d0b2859-ef10-4775-89e5-15f6339bdd88}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfEmLogicExample : ITF_Hmi_ModuleBase]]></Declaration>
+      <Get Name="Get" Id="{e9eff696-8f29-4a70-bf3d-c0f01170e1dc}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="p_itfEmSafety" Id="{e1ad7e5b-6179-4a76-8232-f24a4d9b0c8f}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfEmSafety : ITF_Hmi_ModuleBase]]></Declaration>
+      <Get Name="Get" Id="{2e4d7e6f-7ae8-4a6e-a7de-dd91b73e0dfc}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="p_stConfig" Id="{208e676d-8d0c-4360-a39e-f55b65c0b060}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_stConfig : REFERENCE TO ST_UN_Machine100_Config]]></Declaration>
+      <Get Name="Get" Id="{0f07c94e-18a0-4f59-b8da-dccf45af834c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <Itf Name="ITF_EM_LogicExample1" Id="{b14157e4-4c58-4b88-97ec-0877d783c56e}">
+    <Declaration><![CDATA[INTERFACE ITF_EM_LogicExample1 EXTENDS ITF_EM_Base]]></Declaration>
+    <Property Name="p_bStaMachineX_Start_Active" Id="{e19d499d-4552-4b1b-b2d5-23d30e8b0a09}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_bStaMachineX_Start_Active : BOOL]]></Declaration>
+      <Get Name="Get" Id="{0accc25e-e807-40d8-9aa4-e5f12b51f917}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="p_bStaSensorPos1" Id="{68a2f005-a0ac-4e96-bb17-d821004a4a38}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_bStaSensorPos1 : BOOL]]></Declaration>
+      <Get Name="Get" Id="{78952d21-08f7-426e-8ac9-dff35405f8af}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="p_itfCmAxis1" Id="{c4af8e58-30de-4f85-b6fd-8c06c49f6716}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfCmAxis1 : ITF_CM_ServoBase]]></Declaration>
+      <Get Name="Get" Id="{d8921b99-dd47-4ca3-b1ea-c1ee741ef3d1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="p_itfCmBelt" Id="{10e0e8bf-9f39-4af6-bb67-1b68aff73f0c}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfCmBelt : ITF_CM_MotorDol]]></Declaration>
+      <Get Name="Get" Id="{d6f92e7d-10c6-421f-8703-af6d3964adf3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="p_itfCmHeightAdjuster" Id="{c805a6c0-1a63-4055-91da-81f2a87bb41d}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfCmHeightAdjuster : ITF_CM_MotorDol_AF]]></Declaration>
+      <Get Name="Get" Id="{1ba46062-7713-41d6-b50f-09a58e40c2f1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="p_itfCmWaterInlet" Id="{c2088f57-d595-43af-ba9c-ac208abfbe49}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_itfCmWaterInlet : ITF_CM_Valve]]></Declaration>
+      <Get Name="Get" Id="{7319d4af-0a3e-494c-aea0-a357d1f3598b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="p_rstConfig" Id="{3f19c51a-d8d9-4597-b286-8cdd89efdd65}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_rstConfig : REFERENCE TO ST_EM_LogicExample1_Config]]></Declaration>
+      <Get Name="Get" Id="{a674a742-63e4-422f-b435-2e91efee516c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

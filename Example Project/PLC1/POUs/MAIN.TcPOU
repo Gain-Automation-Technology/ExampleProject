@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="MAIN" Id="{d8cf606a-bd90-4fc1-9637-3e8daf03509a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN 
+VAR
+	s_fb_Main	: FB_Main;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[s_fb_Main();]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="23" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

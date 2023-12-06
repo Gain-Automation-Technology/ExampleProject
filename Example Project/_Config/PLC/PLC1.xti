@@ -1,0 +1,2390 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.25" ClassName="CNestedPlcProjDef">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-000000000041}" TcBaseType="true" HideSubItems="true" CName="AmsNetId">AMSNETID</Name>
+			<BitSize>48</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>6</Elements>
+			</ArrayInfo>
+			<Format>
+				<Printf>%d.%d.%d.%d.%d.%d</Printf>
+				<Parameter>[0]</Parameter>
+				<Parameter>[1]</Parameter>
+				<Parameter>[2]</Parameter>
+				<Parameter>[3]</Parameter>
+				<Parameter>[4]</Parameter>
+				<Parameter>[5]</Parameter>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{3BD42FCA-85FC-C899-2F71-A9346CD54EAB}" Namespace="Tc2_System" AutoDeleteType="true">T_AmsNetIdArr</Name>
+			<Comment><![CDATA[ TwinCAT AMS netID address bytes. ]]></Comment>
+			<BitSize>48</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</BaseType>
+		</DataType>
+		<DataType>
+			<Name GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Operational</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Homed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NotMoving</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InPositionArea</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InTargetPosition</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Protected</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ErrorPropagationDelayed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HasBeenStopped</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HasJob</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PositiveDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>9</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NegativeDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>10</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HomingBusy</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>11</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ConstantVelocity</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Compensating</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetPointGenEnabled</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>14</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PhasingActive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>15</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExternalLatchValid</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NewTargetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>17</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>IsDriveLimitActive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>18</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ContinuousMotion</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>19</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ControlLoopClosed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>20</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamTableQueued</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>21</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamDataQueued</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>22</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamScalingPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>23</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdBuffered</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>24</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PTPmode</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>25</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SoftLimitMinExceeded</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>26</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SoftLimitMaxExceeded</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>27</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>DriveDeviceError</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>28</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MotionCommandsLocked</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>29</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>IoDataInvalid</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>30</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>31</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+			<Relations>
+				<Relation Priority="100">
+					<Type>{4C3FC5AC-D5AA-44C6-AC5A-159774BA0F6D}</Type>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{6BDEED54-7268-405F-A18B-665A0AE0FEE9}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_OPMODE</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>OpModePosAreaMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeTargetPosMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeLoop</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeMotionMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModePEHTimeMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeBacklashCompensation</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeDelayedErrorReaction</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeModulo</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeSimulationAxis</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeStopMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeOutputSmoothingFilter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModePosLagMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeVeloLagMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>17</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeSoftLimitMinMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>18</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeSoftLimitMaxMonitoring</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>19</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModePosCorrection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>20</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeAllowSlaveCommands</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>21</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeAllowExtSetAxisCommands</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>22</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ApplicationRequest</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>23</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{303D9411-849C-467F-8A4C-5C8CD0F3DD46}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE2_FLAGS</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>AvoidingCollision</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{669F3788-48FD-42CF-8A59-2DA946853FB6}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE2</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Flags</Name>
+				<Type GUID="{303D9411-849C-467F-8A4C-5C8CD0F3DD46}" Namespace="MC">NCTOPLC_AXIS_REF_STATE2_FLAGS</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{F7B9FC50-054E-4547-B468-83A9E72D8064}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE3_FLAGS</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>TouchProbe1InputState </Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TouchProbe2InputState </Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{60E203BA-3CEE-4BB0-8728-643B1F529592}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_STATE3</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Flags</Name>
+				<Type GUID="{F7B9FC50-054E-4547-B468-83A9E72D8064}" Namespace="MC">NCTOPLC_AXIS_REF_STATE3_FLAGS</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{BA9D9D0F-1A4A-4A27-A19F-3032626A8491}" Namespace="MC" TcBaseType="true" HideType="true">NCTOPLC_AXIS_REF_CAMCOUPLINGSTATE</Name>
+			<BitSize>8</BitSize>
+			<SubItem>
+				<Name>CamActivationPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamDeactivationPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamActive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamDataQueued</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamScalingPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-000000000039}" TcBaseType="true" HideType="true">UINTARR8</Name>
+			<BitSize>128</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>8</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF</Name>
+			<BitSize>2048</BitSize>
+			<SubItem>
+				<Name>StateDWord</Name>
+				<Type GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC">NCTOPLC_AXIS_REF_STATE</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ErrorCode</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeConfirmation</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HomingState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CoupleState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SvbEntries</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SafEntries</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>224</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeDWord</Name>
+				<Type GUID="{6BDEED54-7268-405F-A18B-665A0AE0FEE9}" Namespace="MC">NCTOPLC_AXIS_REF_OPMODE</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>288</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>320</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloActPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>384</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActiveControlLoopIndex</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ControlLoopIndex</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>464</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloActTurns</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>480</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PosDiff</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>576</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>640</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>704</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>768</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TargetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>832</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloSetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>896</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloSetTurns</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>960</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdNo</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>992</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>1008</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetJerk</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1024</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1088</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1152</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>StateDWord2</Name>
+				<Type GUID="{669F3788-48FD-42CF-8A59-2DA946853FB6}" Namespace="MC">NCTOPLC_AXIS_REF_STATE2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1216</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>StateDWord3</Name>
+				<Type GUID="{60E203BA-3CEE-4BB0-8728-643B1F529592}" Namespace="MC">NCTOPLC_AXIS_REF_STATE3</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1248</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TouchProbeState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1280</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TouchProbeCounter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1312</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamCouplingState</Name>
+				<Type GUID="{BA9D9D0F-1A4A-4A27-A19F-3032626A8491}" Namespace="MC">NCTOPLC_AXIS_REF_CAMCOUPLINGSTATE</Type>
+				<ArrayInfo>
+					<LBound>0</LBound>
+					<Elements>8</Elements>
+				</ArrayInfo>
+				<BitSize>64</BitSize>
+				<BitOffs>1344</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamCouplingTableID</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000039}">UINTARR8</Type>
+				<BitSize>128</BitSize>
+				<BitOffs>1408</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActTorqueDerivative</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1536</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetTorqueDerivative</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1600</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AbsPhasingPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1664</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TorqueOffset</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1728</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActPosWithoutPosCorrection</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1792</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1856</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>DcTimeStamp</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1920</BitOffs>
+			</SubItem>
+			<Properties>
+				<Property>
+					<Name>NcStructType</Name>
+					<Value>2</Value>
+				</Property>
+			</Properties>
+			<Relations>
+				<Relation Priority="100">
+					<Type GUID="{429B767E-373B-40AE-BFA5-E1C08B444DF3}">NCAXLESTRUCT_TOPLC</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{E8DA524A-605F-4879-82E6-B86EF6986572}">NCAXLESTRUCT_TOPLC2</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{B507963E-69F3-4B64-BB8C-2BD7A560976D}">NCAXLESTRUCT_TOPLC3</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{F794B740-82D7-4637-848E-4F74A711D038}">NCAXLESTRUCT_TOPLC4</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{40BD39B0-C3EA-4F74-9F4F-5F1982786F7C}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{40BD39B2-C3EA-4F74-9F4F-5F1982786F7C}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{8CDE0C45-AB9D-42DB-BC94-1CF7521AB268}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}"></Type>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{7761DE0D-A278-D75D-8E1A-8456472022C0}" Namespace="GBL" AutoDeleteType="true">E_CM_MotorVFD_Lenze_i5xx_ErrorList</Name>
+			<Comment><![CDATA[ Enumeration with possible errors of Lenze i5xx VFD ]]></Comment>
+			<BitSize>16</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
+			<EnumInfo>
+				<Text><![CDATA[INV_NO_ERROR]]></Text>
+				<Enum>0</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_POWERMODULE_OVER_CURRENT]]></Text>
+				<Enum>8976</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_SHORT_CIRCUIT_OR_EARTH_LEAKAGE]]></Text>
+				<Enum>8992</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_POWERMODULE_PHASE_SHORT]]></Text>
+				<Enum>9024</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_I2XT_OVER_LOAD]]></Text>
+				<Enum>9040</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_IXT_DEVICE_USAGE_ERROR]]></Text>
+				<Enum>9090</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_IXT_DEVICE_USAGE_WARNING]]></Text>
+				<Enum>9091</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_POWERMODULE_CLAMP_OVERLOAD]]></Text>
+				<Enum>9095</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DC_LINK_RIPPLE_TO_HIGH]]></Text>
+				<Enum>12576</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DCLINK_OVER_VOLTAGE_ERROR]]></Text>
+				<Enum>12816</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DCLINK_OVER_VOLTAGE_WARNING]]></Text>
+				<Enum>12817</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DCLINK_UNDER_VOLTAGE_ERROR]]></Text>
+				<Enum>12832</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DCLINK_UNDER_VOLTAGE_WARNING]]></Text>
+				<Enum>12833</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DC_LINK_VOLTAGE_TO_LOW_FOR_POWER_UP]]></Text>
+				<Enum>12834</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_HEATSINK_OVER_TEMPERATURE]]></Text>
+				<Enum>16912</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_HEATSINK_TEMPSENSOR_FAULT]]></Text>
+				<Enum>17024</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_HEATSINK_FAN_FAULT]]></Text>
+				<Enum>17025</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_HEATSINK_TEMPERATURE_WARNING]]></Text>
+				<Enum>17029</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_OVER_TEMPERATURE]]></Text>
+				<Enum>17168</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_24V_SUPPLY_LEVEL_CRITICAL]]></Text>
+				<Enum>20754</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_WATCHDOG_TIMEOUT_FAULT]]></Text>
+				<Enum>24592</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TASKOVERRUN_125US_TASK]]></Text>
+				<Enum>24961</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TASKOVERRUN_250US_TASK]]></Text>
+				<Enum>24962</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TASKOVERRUN_1MS_TASK]]></Text>
+				<Enum>24963</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TASKOVERRUN_8MS_TASK]]></Text>
+				<Enum>24964</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MATH_ERROR_FAULT]]></Text>
+				<Enum>24968</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_POWERUNIT_PROGRAMMING_FAULT]]></Text>
+				<Enum>24969</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_INTERNAL_FAN_FAULT]]></Text>
+				<Enum>24970</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_PSCOM_PROTOCOL_VERSION_MISMATCH]]></Text>
+				<Enum>24976</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_PSCOM_SYNC_ERROR]]></Text>
+				<Enum>24977</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_PSCOM_OPTION_UNIT_ERROR]]></Text>
+				<Enum>24978</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_PSCOM_DRIVE_UNIT_ERROR]]></Text>
+				<Enum>24979</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_PSCOM_SDO_ABORT]]></Text>
+				<Enum>24980</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_IIC_CONNECTION_LOST]]></Text>
+				<Enum>24981</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_IIC_BUS_ERROR]]></Text>
+				<Enum>24982</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_POWERUNIT_SUPPLY_DROPDOWN]]></Text>
+				<Enum>25008</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_POWERUNIT_GENERIC_FAULT]]></Text>
+				<Enum>25009</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DCL_WRONG_CONNECTED]]></Text>
+				<Enum>25216</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DCL_USER_FAULT_1]]></Text>
+				<Enum>25217</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DCL_USER_FAULT_2]]></Text>
+				<Enum>25218</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_REVERSE_PROTECTION_WARNING]]></Text>
+				<Enum>25232</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MAX_ALLOWED_TROUBLES_EXCEEDED]]></Text>
+				<Enum>25233</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_AC_CONTROL_USER_FAULT]]></Text>
+				<Enum>25248</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_NETWORK_USER_FAULT_1]]></Text>
+				<Enum>25249</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_NETWORK_USER_FAULT_2]]></Text>
+				<Enum>25250</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_NETWORDIN1_SETUP_FAULT]]></Text>
+				<Enum>25265</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_ONBOARD_EEPROM_ACCESS_FAILURE]]></Text>
+				<Enum>25504</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_IDTAG_LOAD_ERROR_CAL_DATA_OU]]></Text>
+				<Enum>25505</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_IDTAG_LOAD_ERROR_CAL_DATA_DU]]></Text>
+				<Enum>25506</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_UNKNOWN_POWER_STAGE_FAULT]]></Text>
+				<Enum>25507</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_OBEE_TIMER_OVERRUN]]></Text>
+				<Enum>25508</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_ASSERTION_LEVEL_FAULT]]></Text>
+				<Enum>28800</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_AIN1_FAULT]]></Text>
+				<Enum>28801</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_AIN2_FAULT]]></Text>
+				<Enum>28802</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_AOUT1_FAULT]]></Text>
+				<Enum>28833</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_AOUT2_FAULT]]></Text>
+				<Enum>28834</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_AXC_POLE_POS_IDENT_ABORTED]]></Text>
+				<Enum>28961</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_OVER_CURRENT]]></Text>
+				<Enum>29056</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_FEEDBACK_SYSTEM_OPEN_CIRCUIT]]></Text>
+				<Enum>29445</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DIAGNOSIS_TX_RINGBUFFER_FAULT]]></Text>
+				<Enum>30080</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_DIAGNOSIS_RX_RINGBUFFER_FAULT]]></Text>
+				<Enum>30081</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_EPM_FULL]]></Text>
+				<Enum>30336</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_EPM_NOT_PRESENT]]></Text>
+				<Enum>30337</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_EPM_INVALID_USER_DATA]]></Text>
+				<Enum>30338</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_EPM_ACCESS_FAILURE]]></Text>
+				<Enum>30339</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_EPM_CHECK_PARAM_DATA]]></Text>
+				<Enum>30340</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_FIELDBUS_NEW_MODULE_DETECTED]]></Text>
+				<Enum>30341</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_FIELDBUS_MODULE_MISMATCH_FAULT]]></Text>
+				<Enum>30342</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_EPM_TIMER_OVERRUN]]></Text>
+				<Enum>30343</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_EPM_IS_BLANK]]></Text>
+				<Enum>30344</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_OFF]]></Text>
+				<Enum>33154</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_WARNING]]></Text>
+				<Enum>33155</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_HEARTBEAT_TIMEOUT_CONSUMER1]]></Text>
+				<Enum>33156</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_HEARTBEAT_TIMEOUT_CONSUMER2]]></Text>
+				<Enum>33157</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_HEARTBEAT_TIMEOUT_CONSUMER3]]></Text>
+				<Enum>33158</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_HEARTBEAT_TIMEOUT_CONSUMER4]]></Text>
+				<Enum>33159</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_FIELDBUS_WATCHDOG_EXPIRED]]></Text>
+				<Enum>33168</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_FIELDBUS_CYCLC_DATA_EXCHANGE_FAULT]]></Text>
+				<Enum>33169</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_FIELDBUS_STACK_INITIALIZATION_FAULT]]></Text>
+				<Enum>33170</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_FIELDBUS_INVALID_CYCLIC_PROCESS_DATA]]></Text>
+				<Enum>33171</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MODBUS_TX_RINGBUFFER_FAULT]]></Text>
+				<Enum>33184</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MODBUS_NETWORK_TIMEOUT]]></Text>
+				<Enum>33185</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MODBUS_WRONG_MASTER_REQUEST]]></Text>
+				<Enum>33186</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_FIELDBUS_PDO_MAPPING_FAULT]]></Text>
+				<Enum>33414</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_TIMEOUT_RXPDO1]]></Text>
+				<Enum>33425</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_TIMEOUT_RXPDO2]]></Text>
+				<Enum>33426</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_CAN_BUS_TIMEOUT_RXPDO3]]></Text>
+				<Enum>33427</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_KEYPAD_REMOVED_FAULT]]></Text>
+				<Enum>36992</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_BRAKE_RESISTOR_ERROR_LEVEL]]></Text>
+				<Enum>65282</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_SAFETY_SUPERVISION_FAULT]]></Text>
+				<Enum>65285</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_OVER_SPEED]]></Text>
+				<Enum>65286</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_PHASE_FAILURE]]></Text>
+				<Enum>65289</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_PHASE_FAILURE_U]]></Text>
+				<Enum>65290</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_PHASE_FAILURE_V]]></Text>
+				<Enum>65291</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_PHASE_FAILURE_W]]></Text>
+				<Enum>65292</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MOTOR_IDENT_FAULT]]></Text>
+				<Enum>65305</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TMO_GENERATED_NO_REACTION]]></Text>
+				<Enum>65328</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TMO_GENERATED_WARNING]]></Text>
+				<Enum>65329</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TMO_GENERATED_TROUBLE]]></Text>
+				<Enum>65330</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TMO_GENERATED_FAULT]]></Text>
+				<Enum>65331</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TMO_GENERATED_FAULT_DELAYED]]></Text>
+				<Enum>65332</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_TMO_GENERATED_FAULT_BLOCKED]]></Text>
+				<Enum>65333</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_BRAKE_RESISTOR_WARNING_LEVEL]]></Text>
+				<Enum>65334</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_AUTOMATIC_START_INHIBITED_FAULT]]></Text>
+				<Enum>65335</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[INV_MAX_OUTPUT_FREQ_REACHED]]></Text>
+				<Enum>65366</Enum>
+			</EnumInfo>
+			<Properties>
+				<Property>
+					<Name>qualified_only</Name>
+				</Property>
+				<Property>
+					<Name>to_string</Name>
+				</Property>
+				<Property>
+					<Name>to_string_function</Name>
+					<Value>__TO_STRING__2740</Value>
+				</Property>
+				<Property>
+					<Name>to_wstring_function</Name>
+					<Value>__TO_WSTRING__2740</Value>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-000000000042}" TcBaseType="true" CName="AmsAddr">AMSADDR</Name>
+			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>netId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
+				<BitSize>48</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>port</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+			<Format>
+				<Printf>%d.%d.%d.%d.%d.%d:%d</Printf>
+				<Parameter>.netId[0]</Parameter>
+				<Parameter>.netId[1]</Parameter>
+				<Parameter>.netId[2]</Parameter>
+				<Parameter>.netId[3]</Parameter>
+				<Parameter>.netId[4]</Parameter>
+				<Parameter>.netId[5]</Parameter>
+				<Parameter>.port</Parameter>
+			</Format>
+			<Format Name="Iec">
+				<Printf>(netId:=[%d.%d.%d.%d.%d.%d], port :=%d)</Printf>
+				<Parameter>.netId[0]</Parameter>
+				<Parameter>.netId[1]</Parameter>
+				<Parameter>.netId[2]</Parameter>
+				<Parameter>.netId[3]</Parameter>
+				<Parameter>.netId[4]</Parameter>
+				<Parameter>.netId[5]</Parameter>
+				<Parameter>.port</Parameter>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{60884996-A95B-5E9C-45F0-572BA70F3335}" Namespace="GBL" AutoDeleteType="true">ST_CM_MotorVFD_Lenze_i5xx_Comm_DriveToPlc</Name>
+			<Comment><![CDATA[ Struct for communication from Drive to PLC of Lenze i5xx VFD ]]></Comment>
+			<BitSize>112</BitSize>
+			<SubItem>
+				<Name>nStatusWord</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[ NetWordOUT1]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nActVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[ Motor Speed]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>eErrorCode</Name>
+				<Type GUID="{7761DE0D-A278-D75D-8E1A-8456472022C0}" Namespace="GBL">E_CM_MotorVFD_Lenze_i5xx_ErrorList</Type>
+				<Comment><![CDATA[ Error Code]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>stAdsAddr</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000042}">AMSADDR</Type>
+				<Comment><![CDATA[ Ads address of Freq. Drive, link to InfoData.AdsAddr]]></Comment>
+				<BitSize>64</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{875D2B22-B7EB-497E-B933-0C004593CCF3}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">PLCTONC_AXIS_REF_CTRL</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Enable</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>FeedEnablePlus</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>FeedEnableMinus</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HomingSensor</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AcceptBlockedDrive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PlcDebugFlag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>30</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NcDebugFlag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>31</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC" TcBaseType="true">PLCTONC_AXIS_REF</Name>
+			<BitSize>1024</BitSize>
+			<SubItem>
+				<Name>ControlDWord</Name>
+				<Type GUID="{875D2B22-B7EB-497E-B933-0C004593CCF3}" Namespace="MC">PLCTONC_AXIS_REF_CTRL</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Override</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeRequest</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeDWord</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeLReal</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PositionCorrection</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>320</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>384</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtControllerOutput</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio1</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>576</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio2</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>640</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio3</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>704</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio4</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>768</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MapState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>832</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PlcCycleControl</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>840</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PlcCycleCount</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>848</BitOffs>
+			</SubItem>
+			<Properties>
+				<Property>
+					<Name>NcStructType</Name>
+					<Value>1</Value>
+				</Property>
+			</Properties>
+			<Relations>
+				<Relation Priority="100">
+					<Type GUID="{60392271-8688-4F4C-B404-618DF106325D}">NCAXLESTRUCT_FROMPLC3</Type>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
+			<Name GUID="{A41802D7-48D3-C503-384E-513A4C8F9F92}" Namespace="GBL" AutoDeleteType="true">ST_CM_MotorVFD_Lenze_i5xx_Comm_PlcToDrive</Name>
+			<Comment><![CDATA[ Struct for communication from PLC to Drive of Lenze i5xx VFD ]]></Comment>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>nControlWord</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[ NetWordIN1]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>nTargetVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<Comment><![CDATA[ Motor speed setpoint]]></Comment>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+		</DataType>
+	</DataTypes>
+	<Project GUID="{93B59E1E-9B9C-4AF4-8B9D-07523266E926}" Name="PLC1" PrjFilePath="..\..\PLC1\PLC1.plcproj" TmcFilePath="..\..\PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC1\PLC1.tmc">
+			<Name>PLC1 Instance</Name>
+			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+			<Vars VarGrpType="1">
+				<Name>PlcTask Inputs</Name>
+				<Var>
+					<Name>GVL_Area100.g_fbAlarmManager.s_fbDiBtnReset[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDiBtnStart[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDiBtnStop[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[1].I_sEcMasterAmsNetId</Name>
+					<Comment><![CDATA[  EtherCAT Master Diagnosis inputs from hardware ]]></Comment>
+					<Type GUID="{3BD42FCA-85FC-C899-2F71-A9346CD54EAB}" Namespace="Tc2_System">T_AmsNetIdArr</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[1].I_nEcMasterDeviceId</Name>
+					<Type>UINT</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[1].I_nEcMasterCfgSlaveCount</Name>
+					<Type>UINT</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[2].I_sEcMasterAmsNetId</Name>
+					<Comment><![CDATA[  EtherCAT Master Diagnosis inputs from hardware ]]></Comment>
+					<Type GUID="{3BD42FCA-85FC-C899-2F71-A9346CD54EAB}" Namespace="Tc2_System">T_AmsNetIdArr</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[2].I_nEcMasterDeviceId</Name>
+					<Type>UINT</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[2].I_nEcMasterCfgSlaveCount</Name>
+					<Type>UINT</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[3].I_sEcMasterAmsNetId</Name>
+					<Comment><![CDATA[  EtherCAT Master Diagnosis inputs from hardware ]]></Comment>
+					<Type GUID="{3BD42FCA-85FC-C899-2F71-A9346CD54EAB}" Namespace="Tc2_System">T_AmsNetIdArr</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[3].I_nEcMasterDeviceId</Name>
+					<Type>UINT</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[3].I_nEcMasterCfgSlaveCount</Name>
+					<Type>UINT</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[4].I_sEcMasterAmsNetId</Name>
+					<Comment><![CDATA[  EtherCAT Master Diagnosis inputs from hardware ]]></Comment>
+					<Type GUID="{3BD42FCA-85FC-C899-2F71-A9346CD54EAB}" Namespace="Tc2_System">T_AmsNetIdArr</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[4].I_nEcMasterDeviceId</Name>
+					<Type>UINT</Type>
+				</Var>
+				<Var>
+					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[4].I_nEcMasterCfgSlaveCount</Name>
+					<Type>UINT</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmVirtualMaster.s_DtReference.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmAxis1.s_DtReference.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[2].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[3].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[4].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[5].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[6].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[7].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[8].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[9].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOn[10].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[2].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[3].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[4].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[5].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[6].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[7].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[8].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[9].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_afbDtFeedbackOff[10].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmBelt.s_fbThThermOk.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmBelt.s_fbFbForward.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmBelt.s_fbFbReverse.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmBelt.s_fbEndSwitchFwd.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmBelt.s_fbEndSwitchRev.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbThThermOk.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbFbForward.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbFbReverse.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbEndSwitchFwd.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbEndSwitchRev.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbActPosition.I_nActValue</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>INT</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbActPosition.I_bStaOverrange</Name>
+					<Comment><![CDATA[ status overrange analogue input ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbActPosition.I_bStaUnderrange</Name>
+					<Comment><![CDATA[ status underrange analogue input ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbActPosition.I_bStaError</Name>
+					<Comment><![CDATA[ status error analogue input ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmVentilator.I_stFreqInvToPLC</Name>
+					<Type GUID="{60884996-A95B-5E9C-45F0-572BA70F3335}" Namespace="GBL">ST_CM_MotorVFD_Lenze_i5xx_Comm_DriveToPlc</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbDiSensorPos1.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbBlueButton.s_fbPushButton.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[2].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[3].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[4].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[5].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[6].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[7].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[8].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[9].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[10].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDiSafetyCommErr.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.s_DtReference.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.NcToPlc</Name>
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmAxis1.s_DtReference.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[2].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[3].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[4].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[5].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[6].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[7].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[8].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[9].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[10].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[2].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[3].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[4].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[5].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[6].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[7].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[8].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[9].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[10].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbThThermOk.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbFbForward.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbFbReverse.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbEndSwitchFwd.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbEndSwitchRev.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbThThermOk.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbFbForward.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbFbReverse.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbEndSwitchFwd.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbEndSwitchRev.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbActPosition.I_nActValue</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>INT</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbActPosition.I_bStaOverrange</Name>
+					<Comment><![CDATA[ status overrange analogue input ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbActPosition.I_bStaUnderrange</Name>
+					<Comment><![CDATA[ status underrange analogue input ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbActPosition.I_bStaError</Name>
+					<Comment><![CDATA[ status error analogue input ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmVentilator.I_stFreqInvToPLC</Name>
+					<Type GUID="{60884996-A95B-5E9C-45F0-572BA70F3335}" Namespace="GBL">ST_CM_MotorVFD_Lenze_i5xx_Comm_DriveToPlc</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbDiSensorPos1.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbBlueButton.s_fbPushButton.I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+			</Vars>
+			<Vars VarGrpType="2" AreaNo="1">
+				<Name>PlcTask Outputs</Name>
+				<Var>
+					<Name>GVL_Area100.g_fbAlarmManager.s_fbDoResetLight[1].Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDoStartButtonLight.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDoStopButtonLight.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoHorn.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Red.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Orange.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Blue.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Green.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_White.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_fbVvOn.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_fbVvOff.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmBelt.s_fbStart.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmBelt.s_fbForward.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmBelt.s_fbReverse.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbStart.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbForward.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmHeightAdjuster.s_fbReverse.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_cmVentilator.Q_stPLCToFreqInv</Name>
+					<Type GUID="{A41802D7-48D3-C503-384E-513A4C8F9F92}" Namespace="GBL">ST_CM_MotorVFD_Lenze_i5xx_Comm_PlcToDrive</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbDoMachineX_Start.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbAoMachineX_Speed.Q_nStaValue</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>INT</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbRedLight.s_fbLight.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbBlueButton.s_fbLight.s_fbLight.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoHorn.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_Red.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_Orange.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_Blue.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_Green.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_White.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDoSafetyPLC_ErrorAck.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDoSafetyPLC_Reset.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDoSafetyPLC_ResetCommErr.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emSafety.s_fbSDoSafetyPLC_Run.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.PlcToNc</Name>
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_fbVvOn.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_fbVvOff.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbStart.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbForward.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbReverse.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbStart.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbForward.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbReverse.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_cmVentilator.Q_stPLCToFreqInv</Name>
+					<Type GUID="{A41802D7-48D3-C503-384E-513A4C8F9F92}" Namespace="GBL">ST_CM_MotorVFD_Lenze_i5xx_Comm_PlcToDrive</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbDoMachineX_Start.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbAoMachineX_Speed.Q_nStaValue</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>INT</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbRedLight.s_fbLight.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbBlueButton.s_fbLight.s_fbLight.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoHorn.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_Red.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_Orange.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_Blue.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_Green.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_White.Q_bOut</Name>
+					<Comment><![CDATA[  IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+			</Vars>
+			<UnrestoredVarLinks ImportTime="2022-05-04T06:29:35">
+				<OwnerA Name="OutputSrc" Prefix="TIPC^PLC1^PLC1 Instance" Type="2">
+					<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
+						<Link VarA="MAIN.s_fb_Main.s_unMachine100.s_emSafety.s_fbDoReset.Q_bOut" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^Standard In Var 3" Size="1" RestoreInfo="ANotFound"/>
+					</OwnerB>
+				</OwnerA>
+			</UnrestoredVarLinks>
+			<UnrestoredVarLinks ImportTime="2022-06-10T15:42:59">
+				<OwnerA Name="InputDst" Prefix="TIPC^PLC1^PLC1 Instance" Type="1">
+					<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
+						<Link VarA="MAIN.s_fb_Main.s_unMachine100.s_emSafety.s_fbSDiEmergencyStopActive[1].I_bIn" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^Standard Out Var 7" Size="1" RestoreInfo="ANotFound"/>
+						<Link VarA="MAIN.s_fb_Main.s_unMachine100.s_emSafety.s_fbSDiEmergencyStopActive[2].I_bIn" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^Standard Out Var 8" Size="1" RestoreInfo="ANotFound"/>
+					</OwnerB>
+				</OwnerA>
+				<OwnerA Name="OutputSrc" Prefix="TIPC^PLC1^PLC1 Instance" Type="2">
+					<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
+						<Link VarA="MAIN.s_fb_Main.s_unMachine100.s_emSafety.s_fbSDoSafetyPLC_ErrorAck.Q_bOut" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^Standard In Var 1" Size="1" RestoreInfo="ANotFound"/>
+						<Link VarA="MAIN.s_fb_Main.s_unMachine100.s_emSafety.s_fbSDoSafetyPLC_Reset.Q_bOut" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^Standard In Var 3" Size="1" RestoreInfo="ANotFound"/>
+						<Link VarA="MAIN.s_fb_Main.s_unMachine100.s_emSafety.s_fbSDoSafetyPLC_ResetCommErr.Q_bOut" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^Standard In Var 5" Size="1" RestoreInfo="ANotFound"/>
+						<Link VarA="MAIN.s_fb_Main.s_unMachine100.s_emSafety.s_fbSDoSafetyPLC_Run.Q_bOut" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^Standard In Var 2" Size="1" RestoreInfo="ANotFound"/>
+					</OwnerB>
+				</OwnerA>
+			</UnrestoredVarLinks>
+			<Contexts>
+				<Context>
+					<Id NeedCalleeCall="true">0</Id>
+					<Name>PlcTask</Name>
+					<ManualConfig>
+						<OTCID>#x02010030</OTCID>
+					</ManualConfig>
+					<Priority>20</Priority>
+					<CycleTime>10000000</CycleTime>
+				</Context>
+			</Contexts>
+			<TaskPouOids>
+				<TaskPouOid Prio="20" OTCID="#x08502001"/>
+			</TaskPouOids>
+		</Instance>
+	</Project>
+	<Mappings>
+		<OwnerA Name="PLC1 Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)">
+				<Link VarA="PlcTask Inputs^GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[1].I_nEcMasterCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
+				<Link VarA="PlcTask Inputs^GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[1].I_nEcMasterDeviceId" VarB="InfoData^DevId"/>
+				<Link VarA="PlcTask Inputs^GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[1].I_sEcMasterAmsNetId" VarB="InfoData^AmsNetId"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_Axis1">
+				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_AxisVM">
+				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample2_Axis1">
+				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample2_AxisVM">
+				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmItem>

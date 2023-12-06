@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="CheckBounds" Id="{2c83090d-ac68-49bf-9892-e36bb0a7ebd7}" SpecialFunc="CheckBounds">
+    <Declaration><![CDATA[// Checkbounds is used to check for range overflows in the project.
+// Implicitly generated code : DO NOT EDIT
+FUNCTION CheckBounds : DINT
+VAR_INPUT
+	index, lower, upper: DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Implicitly generated code : Only an Implementation suggestion
+{noflow}
+IF  index < lower THEN
+	CheckBounds := lower;
+	GVL_TwinCatChecks.CheckBounds_DINT_TooLow := GVL_TwinCatChecks.CheckBounds_DINT_TooLow + 1;
+	
+ELSIF  index > upper THEN
+	CheckBounds := upper;
+	GVL_TwinCatChecks.CheckBounds_DINT_TooHigh := GVL_TwinCatChecks.CheckBounds_DINT_TooHigh + 1;
+	
+ELSE  
+	CheckBounds := index;
+END_IF
+{flow}
+]]></ST>
+    </Implementation>
+    <LineIds Name="CheckBounds">
+      <LineId Id="20" Count="0" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="7" Count="2" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

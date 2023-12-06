@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <Itf Name="ITF_EM_Template" Id="{6c2104cf-2e12-4fb5-af04-a804f5784aaa}">
+    <Declaration><![CDATA[INTERFACE ITF_EM_Template EXTENDS ITF_EM_Base]]></Declaration>
+    <Property Name="p_rstConfig" Id="{fce17ab7-6700-41e2-8106-c8a60c202f59}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY p_rstConfig : REFERENCE TO ST_EM_Template_Config]]></Declaration>
+      <Get Name="Get" Id="{d43d2520-6ed8-453b-b49f-75115fc828f6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

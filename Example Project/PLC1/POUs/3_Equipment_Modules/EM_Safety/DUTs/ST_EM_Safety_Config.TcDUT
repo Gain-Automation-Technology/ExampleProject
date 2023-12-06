@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <DUT Name="ST_EM_Safety_Config" Id="{1e5d69ff-a1a6-48c5-a01a-e2f247b7e1b7}">
+    <Declaration><![CDATA[TYPE ST_EM_Safety_Config :
+STRUCT
+	// Digital inputs
+	stSDiEmergencyStopActive		: ARRAY[1..10] OF ST_DigitalInput_Config;
+	
+	// Digital outputs
+	stSDoSafetyPLC_ErrorAck			: ST_DigitalOutput_Config;
+	stSDoSafetyPLC_Reset			: ST_DigitalOutput_Config;
+	stSDoSafetyPLC_ResetCommErr		: ST_DigitalOutput_Config;
+	stSDoSafetyPLC_Run				: ST_DigitalOutput_Config;
+	
+	// Alarms
+	stAlmFailure1		: ST_AlarmHandler_Config;
+	stAlmFailure2		: ST_AlarmHandler_Config;
+	
+	// CM's
+	//n.a.
+	
+	// Others
+	tmDelayTime			: TIME := T#100MS;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
