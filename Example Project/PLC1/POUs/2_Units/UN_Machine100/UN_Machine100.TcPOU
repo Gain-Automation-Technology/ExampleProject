@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="UN_Machine100" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine100 EXTENDS FB_UN_Base IMPLEMENTS ITF_UN_Machine100
 VAR_INPUT
@@ -43,14 +43,6 @@ END_VAR
       <Implementation>
         <ST><![CDATA[SUPER^._m_Modules();
 
-// Example module
-{warning 'MCO kunnen we hier niets beters voor verzinnen?. Zou dit geen setting kunnen zijn? Je zit nu wel heel diep/indirect te graven in de FB'}
-IF GVL_Area100.g_emLogicExample.p_itfAlarmCollector <> 0
-	AND_THEN __ISVALIDREF(GVL_Area100.g_emLogicExample.p_itfAlarmCollector.p_rstConfig)
-THEN
-	GVL_Area100.g_emLogicExample.p_itfAlarmCollector.p_rstConfig.eSubstituteActionForPackML_Abort := E_Alarm_Actions.Stop;
-END_IF
-
 GVL_Area100.g_emLogicExample(
 	i_bReqEnable					:= TRUE, 
 	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, 
@@ -59,7 +51,6 @@ GVL_Area100.g_emLogicExample(
 	i_itfPackML_Parent				:= s_fbPackML, 
 	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, 
 	q_bStaEnabled					=> , 
-	q_stStaAlarms_CollectedAction	=> , 
 	q_stStaPackML					=> , 
 	i_stMachineCommands				:= );
 
@@ -71,7 +62,6 @@ GVL_Area100.g_emSafety(
 	i_itfPackML_Parent				:= s_fbPackML, 
 	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, 
 	q_bStaEnabled					=> , 
-	q_stStaAlarms_CollectedAction	=> , 
 	q_stStaPackML					=> , 
 	i_stMachineCommands				:= , 
 	q_bStaSafetyOk					=> );	
@@ -121,43 +111,5 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <LineIds Name="UN_Machine100">
-      <LineId Id="54" Count="0" />
-      <LineId Id="67" Count="0" />
-    </LineIds>
-    <LineIds Name="UN_Machine100._m_Alarms">
-      <LineId Id="4" Count="0" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="UN_Machine100._m_Logic">
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="4" Count="0" />
-    </LineIds>
-    <LineIds Name="UN_Machine100._m_Modules">
-      <LineId Id="3" Count="0" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="93" Count="3" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="104" Count="10" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="115" Count="11" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="UN_Machine100.m_Main">
-      <LineId Id="2" Count="1" />
-    </LineIds>
-    <LineIds Name="UN_Machine100.p_itfEmLogicExample.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="UN_Machine100.p_itfEmSafety.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="UN_Machine100.p_stConfig.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

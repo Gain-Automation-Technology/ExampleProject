@@ -8,7 +8,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>PLC1</Name>
-    <ProgramVersion>3.1.4023.0</ProgramVersion>
+    <ProgramVersion>3.1.4026.19</ProgramVersion>
     <Application>{0abfd067-a5d6-4310-9527-3acc5f5f6996}</Application>
     <TypeSystem>{0aee4cf9-4911-4de9-944b-30d68daea538}</TypeSystem>
     <Implicit_Task_Info>{a20e353f-9679-4993-951f-d59d99bc4ed0}</Implicit_Task_Info>
@@ -54,9 +54,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs\E_EM_LogicExample1_Seq_ExecuteProduction.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs\ITF_EM_LogicExample1.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3_Equipment_Modules\EM_LogicExample\DUTs\ST_EM_LogicExample1_Config.TcDUT">
