@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <POU Name="EM_LogicExample" Id="{6f2f2bf2-c2da-4416-808c-ed5c6d63cc10}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK EM_LogicExample EXTENDS FB_EM_Base
+  <POU Name="EM_ServoExample" Id="{6f2f2bf2-c2da-4416-808c-ed5c6d63cc10}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK EM_ServoExample EXTENDS FB_EM_Base
 VAR_INPUT	
 	i_stMachineCommands				: ST_UN_Machine100_Cmd;
 END_VAR
@@ -16,22 +16,16 @@ VAR
 	s_bStaStateOfSomething7			: BOOL;
 	s_fStaValue						: LREAL;
 	s_fStaValueResult				: LREAL;
-	
-// Config Struct
-	s_stConfig						: ST_EM_LogicExample1_Config;
-	
+
 // Control modules
 	s_cmVirtualMaster				: CM_Servo_Virtual;
 	s_cmAxis1						: CM_Servo_Virtual;
 	s_cmAxis1Cam					: CM_Servo_CammingAddon(s_cmAxis1);
 	s_cmAxis1Fly					: CM_Servo_FlyingSawAddon(s_cmAxis1);
-	s_cmWaterInlet					: CM_Valve;
-	s_cmBelt						: CM_MotorDol;
-	s_cmHeightAdjuster				: CM_MotorDol_AF;
-	s_cmVentilator					: CM_MotorVFD_Lenze_i5xx;
 	
 // Inputs
 	s_fbDiSensorPos1				: FB_DigitalInput;
+	s_fbDiSensorPos2				: FB_DigitalInput;
 	
 // Outputs
 	s_fbDoMachineX_Start			: FB_DigitalOutput;
@@ -43,10 +37,7 @@ VAR
 // Alarms
 	s_AlmFailure1					: FB_AlarmHandler;
 	s_AlmFailure2					: FB_AlarmHandler;
-	
-// Statistics
-	s_fbRunTime_Belt				: FB_RunningTime;
-	
+
 END_VAR
 VAR CONSTANT
 	nCamTableIdAxis1			: UINT := 1;
@@ -58,13 +49,20 @@ END_VAR]]></Declaration>
 ]]></ST>
     </Implementation>
     <Folder Name="Basic" Id="{4ed3fdc5-bc4f-4446-a28c-bed3cb0c11b8}" />
-    <Folder Name="itfEM_LogicExample" Id="{0d3fe253-04f5-40ec-ac04-1fbfc387130a}" />
     <Folder Name="OMAC PackML" Id="{b67bcd5d-8aa8-4ebc-a6e9-981237758fe2}" />
     <Method Name="_m_Aborting" Id="{42785298-80cd-4aca-b777-b43d3b6adeba}" FolderPath="OMAC PackML\">
-      <Declaration><![CDATA[METHOD PROTECTED _m_Aborting
-]]></Declaration>
+      <Declaration><![CDATA[METHOD PROTECTED _m_Aborting : BOOL (* Return state complete when state is ready*)
+VAR_INPUT
+	(*First cycle of this state*)
+	i_bCmdRestart	: BOOL;
+	i_eActMode	: GBL.E_PackML_Mode;
+END_VAR
+VAR_INST
+	s_ITFStopState		: ITF_FB_SeqControl;	
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_fbPackML.p_bStateComplete := _m_StopServos(i_bReqStart := s_fbPackML.p_bStateEntry);
+        <ST><![CDATA[s_ITFStopState := _m_StopServos(i_bReqStart := i_bCmdRestart);
+_m_Aborting := s_ITFStopState.p_bStaReady OR s_ITFStopState.p_bStaError;
 
 
 ]]></ST>
@@ -80,59 +78,41 @@ END_VAR
         <ST><![CDATA[SUPER^._m_Alarms();
 
 // Failure 1
-s_stConfig.stAlmFailure1.nIDnr		:= 1;
-s_stConfig.stAlmFailure1.eAction	:= E_Alarm_Actions.Abort;
-s_stConfig.stAlmFailure1.tmDelay	:= T#1S;
-s_stConfig.stAlmFailure1.bEnable	:= q_bStaEnabled;
-s_AlmFailure1(
-	i_bCmdSet	:= s_fbDiSensorPos1.q_bStaInput 
-				AND s_bStaStateOfSomething,
-	i_sMsgVar1	:= 'Fault code: ',
-	//i_sMsgVar2	:= TO_STRING(s_nFaultCode),
-	i_rstConfig	:= s_stConfig.stAlmFailure1,
-	i_itfAlarmCollector := s_fbAlarmCollector);
-
+s_AlmFailure1.m_Update(
+	i_bCmdRaise	:= s_fbDiSensorPos1.p_bStaValue, 
+	i_sMessage	:= ''
+);
 	
 // Failure 2
-s_stConfig.stAlmFailure2.nIDnr	:= 2;
-s_stConfig.stAlmFailure2.eAction := E_Alarm_Actions.Suspend;
-
-// Automatic reset timer
-s_tonAlmFailure2_DelayedAutoReset(IN := s_AlmFailure2.p_bStaActive AND NOT s_AlmFailure2.p_bStaCmdSet, PT := T#5S);
-// Reset the alarm after the delay time
-IF s_tonAlmFailure2_DelayedAutoReset.Q THEN
-	s_AlmFailure2.m_CmdReset();
-END_IF
-
-s_AlmFailure2(
-	i_rstConfig	:= s_stConfig.stAlmFailure2,
-	i_itfAlarmCollector := s_fbAlarmCollector);
-
-
-
-
-
-
+s_AlmFailure2.m_Update(
+	i_bCmdRaise	:= s_fbDiSensorPos2.p_bStaValue, 
+	i_sMessage	:= ''
+);
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Execute" Id="{0a227c5f-6a54-4d0d-bf27-a184f6b93e6f}" FolderPath="OMAC PackML\">
-      <Declaration><![CDATA[METHOD PROTECTED _m_Execute
+      <Declaration><![CDATA[METHOD PROTECTED _m_Execute : BOOL (* Return state complete when state is ready*)
+VAR_INPUT
+	(*First cycle of this state*)
+	i_bCmdRestart	: BOOL;
+	i_eActMode		: GBL.E_PackML_Mode;
+END_VAR
 VAR_INST
-	s_eActMode				: E_PackML_Mode;
+	s_eActMode		: E_PackML_Mode;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Execute only when in a specific mode
-s_eActMode := s_fbPackML.p_eActMode;
+s_eActMode := i_eActMode;
 CASE s_eActMode OF
 	E_PackML_Mode.Production: 
 		// Execute only when in PRODUCTION mode
-		s_fbPackML.p_bStateComplete := _m_Execute_Production(i_bReqStart := s_fbPackML.p_bStateEntry);
-				
+		_m_Execute := _m_Execute_Production(i_bReqStart := i_bCmdRestart).p_bStaReady;
+
 ELSE
 	// Execute in all other modes	
-	s_fbPackML.p_bStateComplete := TRUE;
+	_m_Execute := TRUE;
 END_CASE]]></ST>
       </Implementation>
     </Method>
@@ -143,7 +123,7 @@ VAR_INPUT
 END_VAR
 VAR_INST
 	s_fbSeqControl			: FB_SeqControl;
-	s_eSeqAutoExecute		: E_EM_LogicExample1_Seq_ExecuteProduction;
+	s_eSeq					: E_EM_LogicExample1_Seq_ExecuteProduction;
 	s_stSyncMode			: ST_SyncMode;			// Synchronisation mode
 	
 	
@@ -158,17 +138,20 @@ END_VAR]]></Declaration>
 // Sequencer control
 s_fbSeqControl(
 	i_bReqStart		:= i_bReqStart, 
-	i_rnActSeqStep	:= s_eSeqAutoExecute,
-	i_sActSeqStep	:= TO_STRING(s_eSeqAutoExecute));
+	i_rnActSeqStep	:= s_eSeq,
+	i_sActSeqStep	:= TO_STRING(s_eSeq));
 	
 // Sequence	
-CASE s_eSeqAutoExecute OF
+CASE s_eSeq OF
 	
 	E_EM_LogicExample1_Seq_ExecuteProduction.Idle:
 		;
 			
 	E_EM_LogicExample1_Seq_ExecuteProduction.Start:
-		s_fCalculatedSpeed	:= (360.0 * 1000.0) / 123.4; // 360 degree = 1 product. 
+		IF s_fbSeqControl.p_bStaEntry THEN
+			s_fCalculatedSpeed	:= (360.0 * 1000.0) / 123.4; // 360 degree = 1 product. 
+		END_IF
+		
 		IF s_cmVirtualMaster.m_MoveVelocity(
 			i_bCmdExecute	:= s_fbSeqControl.p_bStaEntry, 
 			i_fAcceleration	:= s_cmVirtualMaster.p_rstAxisParameterSet.fAccelerationMax, 
@@ -589,7 +572,7 @@ CASE s_eSeqAutoExecute OF
 END_CASE
 
 // Sequence state to PackML commands
-_m_Execute_Production := s_fbSeqControl.m_getResult(TO_STRING(s_eSeqAutoExecute));
+_m_Execute_Production := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
 	
 	
 	]]></ST>
@@ -602,12 +585,21 @@ _m_Execute_Production := s_fbSeqControl.m_getResult(TO_STRING(s_eSeqAutoExecute)
       <Implementation>
         <ST><![CDATA[SUPER^._m_Init();
 
-// Do some initializations here..
-
-
 // Failure 1
-s_stConfig.stAlmFailure1.eAction := E_Alarm_Actions.Abort;
-s_stConfig.stAlmFailure1.tmDelay := T#1S;
+s_AlmFailure1.p_itfConfig.p_bCfgAutoReset 	:= TRUE;
+s_AlmFailure1.p_itfConfig.p_bCfgEnable		:= TRUE;
+s_AlmFailure1.p_itfConfig.p_tmCfgDelay		:= T#1S;
+s_AlmFailure1.p_itfConfig.p_eCfgSeverity	:= E_Alarm_Severity.Error;
+s_AlmFailure1.p_itfConfig.p_stCfgEventEntry	:= TC_EVENTS.Alarmen.Alarm_1;
+s_AlmFailure1.p_itfAlarmCollector 			:= s_fbAlarmCollector ;
+
+// Failure 2
+s_AlmFailure2.p_itfConfig.p_bCfgAutoReset 	:= TRUE;
+s_AlmFailure2.p_itfConfig.p_bCfgEnable		:= TRUE;
+s_AlmFailure2.p_itfConfig.p_tmCfgDelay		:= T#1S;
+s_AlmFailure2.p_itfConfig.p_eCfgSeverity	:= E_Alarm_Severity.Error;
+s_AlmFailure2.p_itfConfig.p_stCfgEventEntry	:= TC_EVENTS.Alarmen.Alarm_2;
+s_AlmFailure2.p_itfAlarmCollector 			:= s_fbAlarmCollector ;
 ]]></ST>
       </Implementation>
     </Method>
@@ -617,79 +609,18 @@ s_stConfig.stAlmFailure1.tmDelay := T#1S;
       <Implementation>
         <ST><![CDATA[SUPER^._m_Inputs();
 
-// Simulation
-IF s_fbSimulation.q_bStaOn THEN
-	s_fbDiSensorPos1.m_SimulationOn(i_bValue := TRUE);
-ELSIF s_fbSimulation.q_bStaOsf THEN
-	s_fbDiSensorPos1.m_SimulationOff();
-END_IF
-
-// Sensor at position 1
-s_stConfig.stDiSensorPos1.bCfgInvert	:= TRUE;
-s_stConfig.stDiSensorPos1.tmOnDelay		:= T#50MS;
-s_fbDiSensorPos1(i_rstConfig := s_stConfig.stDiSensorPos1);
-
-// Blue button with light
-s_fbBlueButton(
-	i_bReqLightOn		:= s_fbBlueButton.q_bStaInput, 
-	i_bReqFlashLight	:= s_bStaStateOfSomething, 
-	i_rstConfig			:= s_stConfig.stBlueButton);
+s_fbDiSensorPos1();
+s_fbDiSensorPos2();
+s_fbBlueButton();
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Logic" Id="{92a339b3-29f4-4403-8127-08fe7b3359cf}" FolderPath="Basic\">
       <Declaration><![CDATA[METHOD PROTECTED _m_Logic
-VAR_INST
-	s_osrStateOfSomething	: R_TRIG;
-END_VAR]]></Declaration>
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[SUPER^._m_Logic();
-
-// ============ Enable parts of the EM ============
-// Allow manual control from HMI when the actual mode is 'Manual' and actual state is 'Execute'
-s_bAlwManualControl	:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual 
-					AND s_fbPackML.p_eActState = E_PackML_State.Execute;
-
-// Allow alarming when module is enabled
-s_bReqAlarmCollector_Enable := s_bStaEnable;
-
-// Allow PackML when module is enabled. 
-s_fbPackML.p_bCfgEnable := s_bStaEnable;
-
-// ============ Statusses ============
-// Status updated in every mode and every state
-s_bStaStateOfSomething := s_cmWaterInlet.q_bStaOff AND s_cmAxis1.q_bStaInPos;
-s_osrStateOfSomething(CLK := s_bStaStateOfSomething);
-
-
-// Set alarm when s_bStaStateOfSomething3 is active
-IF s_bStaStateOfSomething3 AND GVL_GBL.g_fbSystem.p_bPulse1Hz THEN
-	s_AlmFailure2.m_CmdSet('Text1','Text2','Text3');
-END_IF
-
-// ============ Logging ============
-// Log state continuously, Fills the log quickly...
-IF s_osrStateOfSomething.Q THEN
-	(* Logging *)
-	g_fbGBL_Logger.m_InitLogString(
-		i_sInstance := p_sInstancePath, 
-		i_sMethode := 'm_Logic', 
-		i_sFunction := '', 
-		i_sDescription := '');	
-	g_fbGBL_Logger.m_AddBoolParam('s_bStaStateOfSomething',s_bStaStateOfSomething2);
-	g_fbGBL_Logger.m_WriteLogString(i_eSeverity := E_LogSeverity.Fatal);
-END_IF
-
-
-s_fStaValueResult := F_fCalcFloorModuloPosition(i_fActualPosition := s_fStaValue, i_fMod := 360.0);
-
-IF s_bStaStateOfSomething4 THEN
-	F_ProgramError_Set(
-		i_sInstancePath	:= p_sInstancePath,
-		i_sMsgVar1	:= 'text1',
-		i_sMsgVar2	:= 'text2',
-		i_sMsgVar3	:= 'text3');
-END_IF]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Modules" Id="{69768295-7443-40c1-8644-57ec9b3eff02}" FolderPath="Basic\">
@@ -697,91 +628,37 @@ END_IF]]></ST>
       <Implementation>
         <ST><![CDATA[SUPER^._m_Modules();
 
-// Virtual Master
+s_bAlwManualControl	:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual 
+					AND s_fbPackML.p_eActState = E_PackML_State.Execute;
+
 s_cmVirtualMaster(
 	i_bReqEnable				:= s_bStaEnable, 
-	i_bReqReset					:= s_fbAlarmCollector.q_bReqReset,
-	i_bAlwManualCtrl			:= s_bAlwManualControl,
-	i_bReqSimulationOn			:= s_fbSimulation.q_bStaOn,
-	i_sPostFixAlarmValueMessage	:= 'Virtual master',
+	i_bReqReset					:= s_fbAlarmCollector.q_bReqReset, 
+	i_bAlwManualCtrl			:= s_bAlwManualControl, 
+	i_bReqSimulation			:= s_fbSimulation.q_bStaOn, 
 	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector, 
-	i_rstConfig					:= s_stConfig.stCmVirtualMaster, 
-	i_bEmrStopOk				:= i_bStaSafetyOk, 
+	i_bEmrStopOk				:= TRUE, 
 	i_fOverride					:= 100.0, 
 	i_bDisableForward			:= FALSE, 
 	i_bDisableReverse			:= FALSE, 
-	i_bDisableAxis				:= FALSE);
+	i_bDisableAxis				:= FALSE, 
+	i_bExtReferenceSignal		:= FALSE
+);
 
-
-// Servo axis 1
-s_stConfig.stCmAxis1.tmReferenceTimeOut	:= T#1M;
 s_cmAxis1(
 	i_bReqEnable				:= s_bStaEnable, 
-	i_bReqReset					:= s_fbAlarmCollector.q_bReqReset,
-	i_bAlwManualCtrl			:= s_bAlwManualControl,
-	i_bReqSimulationOn			:= s_fbSimulation.q_bStaOn,
-	i_sPostFixAlarmValueMessage	:= 'Mover axis 1',
-	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
-	i_rstConfig					:= s_stConfig.stCmAxis1, 
-	i_bEmrStopOk				:= i_bStaSafetyOk, 
+	i_bReqReset					:= s_fbAlarmCollector.q_bReqReset, 
+	i_bAlwManualCtrl			:= s_bAlwManualControl, 
+	i_bReqSimulation			:= s_fbSimulation.q_bStaOn, 
+	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector, 
+	i_bEmrStopOk				:= TRUE, 
 	i_fOverride					:= 100.0, 
 	i_bDisableForward			:= FALSE, 
 	i_bDisableReverse			:= FALSE, 
-	i_bDisableAxis				:= FALSE);
-
-// Valve 1
-s_stConfig.stCmValve1.stAlarmCollector.eSubstituteActionForPackML_Abort := E_Alarm_Actions.NoAction;
-s_stConfig.stCmValve1.stHardware.nCfgFeedbackOn := 0;
-s_stConfig.stCmValve1.stHardware.nCfgFeedbackOff := 0;
-s_stConfig.stCmValve1.stAlmBothOn.tmDelay	:= T#100MS;
-s_cmWaterInlet(
-	i_bReqEnable		:= s_bStaEnable, 
-	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset,
-	i_bAlwManualCtrl	:= s_bAlwManualControl,
-	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
-	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
-	i_rstConfig			:= s_stConfig.stCmValve1);
-
-// Motor DOL 1
-s_cmBelt(
-	i_bReqEnable		:= s_bStaEnable, 
-	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset, 
-	i_bAlwManualCtrl	:= s_bAlwManualControl,
-	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
-	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
-	i_rstConfig			:= s_stConfig.stCmMotorDol1);
-	
-// Motor DOL with analog position feedback 1
-s_cmHeightAdjuster(
-	i_bReqEnable		:= s_bStaEnable, 
-	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset, 
-	i_bAlwManualCtrl	:= s_bAlwManualControl, 
-	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
-	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
-	i_rstConfig			:= s_stConfig.stCmMotorDolAF1.stCmMotorDol,
-	i_rstConfig_AF		:= s_stConfig.stCmMotorDolAF1);	
-	
-
-// Ventilator motor with Lenze i550 drive
-s_stConfig.stCmVentilator.bAllowReverse := TRUE;
-// Motor params to drive
-s_stConfig.stCmVentilator.astMotorParameter[0].fLocalPar := 0.81;		// [kW] Rated Power		
-s_stConfig.stCmVentilator.astMotorParameter[1].fLocalPar := 1375.0;     // [rpm] Rated Speed		
-s_stConfig.stCmVentilator.astMotorParameter[2].fLocalPar := 0.51;       // [A] Rated Current		
-s_stConfig.stCmVentilator.astMotorParameter[3].fLocalPar := 400.0;      // [V] Rated Voltage		
-s_stConfig.stCmVentilator.astMotorParameter[4].fLocalPar := 50.0;       // [Hz] Rated Frequency	
-s_stConfig.stCmVentilator.astMotorParameter[5].fLocalPar := 0.65;       // [] Cosine Phi			
-s_stConfig.stCmVentilator.astMotorParameter[6].fLocalPar := 3000.0;     // [rpm] Max Speed			
-// Drive params to drive
-s_stConfig.stCmVentilator.astDriveParameters[4].nData := 49; // Configure Control word bit 1 as "Release Holding Brake"
-s_cmVentilator(
-	i_bReqEnable		:= s_bStaEnable, 
-	i_bReqReset			:= s_fbAlarmCollector.q_bReqReset, 
-	i_bAlwManualCtrl	:= s_bAlwManualControl, 
-	i_bReqSimulationOn	:= s_fbSimulation.q_bStaOn,
-	i_itfAlarmCollector_Parent	:= s_fbAlarmCollector,  
-	i_rstConfig			:= s_stConfig.stCmVentilator);
-	]]></ST>
+	i_bDisableAxis				:= FALSE, 
+	i_bExtReferenceSignal		:= FALSE
+);
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Outputs" Id="{46e775c6-9c73-43e1-b271-d1bbfcfc1dff}" FolderPath="Basic\">
@@ -789,150 +666,115 @@ s_cmVentilator(
       <Implementation>
         <ST><![CDATA[SUPER^._m_Outputs();
 
-// Simulation
-IF s_fbSimulation.q_bStaOsr THEN
-	s_fbDoMachineX_Start.m_SimulationOn();
-	s_fbAoMachineX_Speed.m_SimulationOn();
-ELSIF s_fbSimulation.q_bStaOsf THEN
-	s_fbDoMachineX_Start.m_SimulationOff();
-	s_fbAoMachineX_Speed.m_SimulationOff();
-END_IF
 
-// Machine X: Start signal
-s_stConfig.stDoMachineX_Start.bCfgInvert := FALSE;
-s_fbDoMachineX_Start(
-	//i_bReqOutput	:= , // Set at sequencers 
-	i_rstConfig	:= s_stConfig.stDoMachineX_Start);
-
-// Machine X: Speed signal
-s_fbAoMachineX_Speed(
-	//i_fValue	:= ,// Set at sequencers 
-	i_rstConfig	:= s_stConfig.stAoMachineX_Speed);
+s_fbDoMachineX_Start();
+s_fbAoMachineX_Speed();
 	
 // Red light	
-s_fbRedLight(
-	i_bReqLightOn		:= s_bStaStateOfSomething,
-	i_bReqFlashLight	:= s_bStaStateOfSomething2,
-	i_rstConfig			:= s_stConfig.stRedLight);	
+s_fbRedLight();
+s_fbStackLight();
+
+
+
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Starting" Id="{74bc4b2f-043a-4038-b439-df9753c56557}" FolderPath="OMAC PackML\">
-      <Declaration><![CDATA[METHOD PROTECTED _m_Starting
+      <Declaration><![CDATA[METHOD PROTECTED _m_Starting : BOOL (* Return state complete when state is ready*)
+VAR_INPUT
+	(*First cycle of this state*)
+	i_bCmdRestart	: BOOL;
+	i_eActMode		: GBL.E_PackML_Mode;
+END_VAR
+VAR_INST
+	s_eActMode					: E_PackML_Mode;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Execute only when in a specific mode
+s_eActMode := i_eActMode;
+CASE s_eActMode OF
+	E_PackML_Mode.Production: 
+		// Execute only when in PRODUCTION mode
+		_m_Starting := _m_Starting_Production(i_bReqStart := i_bCmdRestart).p_bStaReady;
+				
+ELSE
+	// Execute in all other modes	
+	_m_Starting := TRUE;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Starting_Production" Id="{400f85a2-e7d2-4436-aa22-f0a326fd6012}" FolderPath="OMAC PackML\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Starting_Production : ITF_FB_SeqControl
+VAR_INPUT
+	i_bReqStart					: BOOL;
+END_VAR
 VAR_INST
 	s_fbSeqControl				: FB_SeqControl;
-	s_eSeqAutoStarting			: E_EM_LogicExample1_Seq_StartingProduction;
+	s_eSeq						: E_EM_LogicExample1_Seq_StartingProduction;
 	s_eActMode					: E_PackML_Mode;
 	s_stHomingOptions			: ST_HomingOptions;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Execute only when in a specific mode
 s_eActMode := s_fbPackML.p_eActMode;
-IF s_eActMode = E_PackML_Mode.Production OR s_eActMode = E_PackML_Mode.UserMode1 THEN
 
-	s_fbSeqControl(
-		i_bReqStart		:= s_fbPackML.p_bStateEntry, 
-		i_rnActSeqStep	:= s_eSeqAutoStarting,
-		i_sActSeqStep	:= TO_STRING(s_eSeqAutoStarting));
+s_fbSeqControl(
+	i_bReqStart		:= i_bReqStart, 
+	i_rnActSeqStep	:= s_eSeq,
+	i_sActSeqStep	:= TO_STRING(s_eSeq));
+
 	
+CASE s_eSeq OF
+	E_EM_LogicExample1_Seq_StartingProduction.Idle:
+		;
+
 		
-	CASE s_eSeqAutoStarting OF
-		E_EM_LogicExample1_Seq_StartingProduction.Idle:
-			;
-	
-			
-		E_EM_LogicExample1_Seq_StartingProduction.Start:	
-			//Enable both axes in one singe sequencer step
-			IF s_cmVirtualMaster.m_PowerOn()
-				AND s_cmAxis1.m_PowerOn()
-			THEN
-				s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StartingProduction.ReferenceAxes);
-			END_IF
-			
-			
-		E_EM_LogicExample1_Seq_StartingProduction.ReferenceAxes:	
-			//Reference when needed both axes in one singe sequencer step
-			//Both methode give a TRUE when the axis is referenced
-			//i_bForceReference := TRUE => The reference routine is allways started even when the axis is allready referenced
-			//i_bForceReference := FALSE => The refference routine is only started when the axis is not already referenced
-			//Recommended is to reference virtual axis allways and real axis only when they has loses the reference state		
-			IF s_cmVirtualMaster.m_Home(
-				i_bCmdExecute			:= s_fbSeqControl.p_bStaEntry,
-				i_bForceReference		:= TRUE,
-				i_eHomingMode			:= MC_HomingMode.MC_DefaultHoming,
-				i_eBufferMode			:= MC_BufferMode.MC_Aborting,
-				i_fPosition				:= 0.0,
-				i_stOptions				:= s_stHomingOptions
-			)
-			AND s_cmAxis1.m_Home(
-				i_bCmdExecute			:= s_fbSeqControl.p_bStaEntry,
-				i_bForceReference		:= TRUE,
-				i_eHomingMode			:= MC_HomingMode.MC_DefaultHoming,
-				i_eBufferMode			:= MC_BufferMode.MC_Aborting,
-				i_fPosition				:= 0.0,
-				i_stOptions				:= s_stHomingOptions
-			)
-			THEN
-				s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StartingProduction.Ready);
-			END_IF
-			
-		E_EM_LogicExample1_Seq_StartingProduction.Ready:
-			;
-			
-			
-		E_EM_LogicExample1_Seq_StartingProduction.Error:
-			;
-	
-	END_CASE
-	
-	s_fbPackML.p_bStateComplete := s_fbSeqControl.m_getResult(TO_STRING(s_eSeqAutoStarting)).p_bStaReady;
-ELSE
-	s_fbPackML.p_bStateComplete := TRUE;
-END_IF
+	E_EM_LogicExample1_Seq_StartingProduction.Start:	
+		//Enable both axes in one singe sequencer step
+		IF s_cmVirtualMaster.m_PowerOn()
+			AND s_cmAxis1.m_PowerOn()
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StartingProduction.ReferenceAxes);
+		END_IF
+		
+		
+	E_EM_LogicExample1_Seq_StartingProduction.ReferenceAxes:	
+		//Reference when needed both axes in one singe sequencer step
+		//Both methode give a TRUE when the axis is referenced
+		//i_bForceReference := TRUE => The reference routine is allways started even when the axis is allready referenced
+		//i_bForceReference := FALSE => The refference routine is only started when the axis is not already referenced
+		//Recommended is to reference virtual axis allways and real axis only when they has loses the reference state		
+		IF s_cmVirtualMaster.m_Home(
+			i_bCmdExecute			:= s_fbSeqControl.p_bStaEntry,
+			i_bForceReference		:= TRUE,
+			i_eHomingMode			:= MC_HomingMode.MC_DefaultHoming,
+			i_eBufferMode			:= MC_BufferMode.MC_Aborting,
+			i_fPosition				:= 0.0,
+			i_stOptions				:= s_stHomingOptions
+		)
+		AND s_cmAxis1.m_Home(
+			i_bCmdExecute			:= s_fbSeqControl.p_bStaEntry,
+			i_bForceReference		:= TRUE,
+			i_eHomingMode			:= MC_HomingMode.MC_DefaultHoming,
+			i_eBufferMode			:= MC_BufferMode.MC_Aborting,
+			i_fPosition				:= 0.0,
+			i_stOptions				:= s_stHomingOptions
+		)
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StartingProduction.Ready);
+		END_IF
+		
+	E_EM_LogicExample1_Seq_StartingProduction.Ready:
+		;
+		
+		
+	E_EM_LogicExample1_Seq_StartingProduction.Error:
+		;
 
+END_CASE
 
-
+_m_Starting_Production := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
 ]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="_m_Starting_SubStates" Id="{400f85a2-e7d2-4436-aa22-f0a326fd6012}" FolderPath="OMAC PackML\">
-      <Declaration><![CDATA[
-METHOD PROTECTED _m_Starting_SubStates
-VAR_INPUT
-	i_rstPML_Status			: REFERENCE TO ST_PackML_Status;
-END_VAR
-VAR_INST
-	s_fbSeqControl			: FB_SeqControl;
-	s_eSeqAutoStarting		: E_EM_LogicExample1_Seq_StartingProduction;
-	
-	s_bStaDoneThis			: BOOL;
-	s_bStaStateComplete1		: BOOL;
-	s_bStaStateComplete2		: BOOL;
-	s_bStaStateComplete3		: BOOL;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// Execute only when in a specific mode
-CASE i_rstPML_Status.eActMode OF
-	// Execute only when in PRODUCTION mode		
-	E_PackML_Mode.Production: 
-		CASE i_rstPML_Status.nActSubState OF
-			1:
-				s_bStaDoneThis := FALSE;
-				i_rstPML_Status.bStateComplete := s_bStaStateComplete1;
-			2:
-				s_bStaDoneThis := TRUE;
-				i_rstPML_Status.bStateComplete := s_bStaStateComplete2;
-		ELSE
-			i_rstPML_Status.bStateComplete := s_bStaStateComplete3;	
-		END_CASE
-		
-	// Execute only when in MANUAL mode	
-	E_PackML_Mode.Manual:
-		i_rstPML_Status.bStateComplete := TRUE;
-ELSE
-	// Execute in all other modes	
-	i_rstPML_Status.bStateComplete := TRUE;
-END_CASE]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Statistics" Id="{46f84ba8-ec28-4c72-9159-35409bbaf08f}" FolderPath="Basic\">
@@ -944,69 +786,86 @@ END_CASE]]></ST>
 // Do all statistics here... Like fault counters or...
 
 // Running times
-// Belt
-s_fbRunTime_Belt(
-	i_bCmdReset		:= FALSE,
-	i_bStaRunning	:= NOT s_cmBelt.q_bStaStandstill);
-	
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Stopping" Id="{f87d548b-0cad-4916-8130-e1f7b762eb18}" FolderPath="OMAC PackML\">
-      <Declaration><![CDATA[METHOD PROTECTED _m_Stopping
-]]></Declaration>
+      <Declaration><![CDATA[METHOD PROTECTED _m_Stopping : BOOL (* Return state complete when state is ready*)
+VAR_INPUT
+	(*First cycle of this state*)
+	i_bCmdRestart	: BOOL;
+	i_eActMode		: GBL.E_PackML_Mode;
+END_VAR
+VAR_INST
+	s_ITFExecutState 	: ITF_FB_SeqControl;
+	s_eActMode			: E_PackML_Mode;
+	s_ITFStopState		: ITF_FB_SeqControl;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_fbPackML.p_bStateComplete := _m_StopServos(i_bReqStart := s_fbPackML.p_bStateEntry);
+        <ST><![CDATA[// Finish Execute only when in a specific mode
+s_eActMode := i_eActMode;
+CASE s_eActMode OF
+	E_PackML_Mode.Production: 
+		// Execute only when in PRODUCTION mode
+		s_ITFExecutState := _m_Execute_Production(i_bReqStart := FALSE);
+		//Stop axes in all modes
+		s_ITFStopState := _m_StopServos(i_bReqStart := s_ITFExecutState.p_bStaReady);
+		_m_Stopping := s_ITFStopState.p_bStaReady OR s_ITFStopState.p_bStaError;
+ELSE
+	s_ITFStopState := _m_StopServos(i_bReqStart := i_bCmdRestart);
+	_m_Stopping := s_ITFStopState.p_bStaReady OR s_ITFStopState.p_bStaError;
+END_CASE
+
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_StopServos" Id="{5b343d6e-2672-4004-945d-26825f09df86}">
-      <Declaration><![CDATA[METHOD PRIVATE _m_StopServos : BOOL
+      <Declaration><![CDATA[METHOD PRIVATE _m_StopServos : ITF_FB_SeqControl
 VAR_INPUT
 	i_bReqStart				: BOOL;			// Reset sequencer
 END_VAR
 VAR_INST
 	s_fbSeqControl			: FB_SeqControl;
-	s_eSeqCtrl_StopServos	: E_EM_LogicExample1_Seq_StopServos;
+	s_eSeq					: E_EM_LogicExample1_Seq_StopServos;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[s_fbSeqControl(
 	i_bReqStart		:= i_bReqStart, 
-	i_rnActSeqStep	:= s_eSeqCtrl_StopServos,
-	i_sActSeqStep	:= TO_STRING(s_eSeqCtrl_StopServos));
+	i_rnActSeqStep	:= s_eSeq,
+	i_sActSeqStep	:= TO_STRING(s_eSeq));
 	
-CASE s_eSeqCtrl_StopServos OF
+CASE s_eSeq OF
 	
 	E_EM_LogicExample1_Seq_StopServos.Idle:
 		;
 		
 	E_EM_LogicExample1_Seq_StopServos.Start:
 		IF s_cmVirtualMaster.m_Stop(
-			i_bCmdReset			:= s_fbSeqControl.q_bStaEntry,
-			i_fDeceleration		:= s_cmVirtualMaster.q_stParameterSet.fDecelerationMax,
-			i_fJerk				:= s_cmVirtualMaster.q_stParameterSet.fJerk) 
+			i_bCmdExecute		:= s_fbSeqControl.p_bStaEntry,
+			i_fDeceleration		:= 0,
+			i_fJerk				:= 0) 
 		AND
 			s_cmAxis1.m_Stop(
-				i_bCmdReset			:= s_fbSeqControl.q_bStaEntry,
-				i_fDeceleration		:= s_cmAxis1.q_stParameterSet.fDecelerationMax,
-				i_fJerk				:= s_cmAxis1.q_stParameterSet.fJerk) 
+				i_bCmdExecute		:= s_fbSeqControl.p_bStaEntry,
+				i_fDeceleration		:= 0,
+				i_fJerk				:= 0) 
 		THEN
 			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StopServos.Busy);
 		END_IF
 		
 		//Add a time-out to be sure axis is disabled on time
-		IF s_fbSeqControl.q_tmStepTime > T#100MS THEN
+		IF s_fbSeqControl.p_tmStepTime > T#100MS THEN
 			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StopServos.Busy);
 		END_IF
 		
 	E_EM_LogicExample1_Seq_StopServos.Busy:	
 		//Wait till axis is stopped. A time-out is added to sure that the axis is always disabled in on time		
-		IF (s_cmVirtualMaster.q_stAxisState.StandStill 
-			AND s_cmAxis1.q_stAxisState.StandStill) 
-			OR s_fbSeqControl.q_tmStepTime > T#500MS 
+		IF (s_cmVirtualMaster.p_rstAxisStatus.StandStill 
+			AND s_cmAxis1.p_rstAxisStatus.StandStill) 
+			OR s_fbSeqControl.p_tmStepTime > T#500MS 
 		THEN
-			s_cmVirtualMaster.m_Disable();
-			s_cmAxis1.m_Disable();
+			s_cmVirtualMaster.m_PowerOff();
+			s_cmAxis1.m_PowerOff();
 			s_fbSeqControl.m_ReqStep(E_EM_LogicExample1_Seq_StopServos.Ready);
 		END_IF
 	
@@ -1018,93 +877,9 @@ CASE s_eSeqCtrl_StopServos OF
 
 END_CASE
 
-_m_StopServos := s_fbSeqControl.p_bStaFinished;
+_m_StopServos := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="p_bStaMachineX_Start_Active" Id="{133ca14e-251f-40ef-b5a0-a1c8e9b6c38b}" FolderPath="itfEM_LogicExample\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_bStaMachineX_Start_Active : BOOL]]></Declaration>
-      <Get Name="Get" Id="{65cc60d6-5bff-4829-8e30-d4c564ca0f54}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_bStaMachineX_Start_Active := s_fbDoMachineX_Start.q_bStaOutput;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="p_bStaSensorPos1" Id="{5e3221d5-a26c-41db-9d99-610f1e5d3adc}" FolderPath="itfEM_LogicExample\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_bStaSensorPos1 : BOOL]]></Declaration>
-      <Get Name="Get" Id="{0f779ed3-b327-419e-8ba5-ce3548eeb203}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_bStaSensorPos1 := s_fbDiSensorPos1.q_bStaInput;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="p_itfCmAxis1" Id="{4b75f813-c9e5-4630-b9af-0d70f6f1bd52}" FolderPath="itfEM_LogicExample\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_itfCmAxis1 : ITF_CM_ServoBase]]></Declaration>
-      <Get Name="Get" Id="{90e3bac3-f3cf-4fa2-9327-08fa3ec9473d}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_itfCmAxis1 := s_cmAxis1;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="p_itfCmBelt" Id="{443e4b9a-33ef-4c12-a014-d7532db96e52}" FolderPath="itfEM_LogicExample\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_itfCmBelt : ITF_CM_MotorDol]]></Declaration>
-      <Get Name="Get" Id="{1231dc3f-7eb7-45bf-9bc9-88d647698073}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_itfCmBelt := s_cmBelt;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="p_itfCmHeightAdjuster" Id="{c634e908-04ba-406e-9bc5-f977da81e4eb}" FolderPath="itfEM_LogicExample\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_itfCmHeightAdjuster : ITF_CM_MotorDol_AF]]></Declaration>
-      <Get Name="Get" Id="{a17d42a9-9ccd-456b-8159-4cd0a81d514e}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_itfCmHeightAdjuster := s_cmHeightAdjuster;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="p_itfCmWaterInlet" Id="{09035550-cd1c-43a8-8c21-a59ee1f9efd0}" FolderPath="itfEM_LogicExample\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_itfCmWaterInlet : ITF_CM_Valve]]></Declaration>
-      <Get Name="Get" Id="{9e072766-9ff5-44a2-98a7-6e04b7999869}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_itfCmWaterInlet := s_cmWaterInlet;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="p_rstConfig" Id="{32e99255-cfbc-4c85-bd78-849b1d6713ae}" FolderPath="itfEM_LogicExample\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_rstConfig : REFERENCE TO ST_EM_LogicExample1_Config]]></Declaration>
-      <Get Name="Get" Id="{0732c555-1ae1-4488-bcb4-99e18728ae24}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_rstConfig := s_stConfig;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
   </POU>
 </TcPlcObject>

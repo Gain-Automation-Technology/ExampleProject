@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
-  <Itf Name="ITF_EM_Safety" Id="{13933a32-f04e-4a3e-b680-bdb10469a6c6}">
-    <Declaration><![CDATA[INTERFACE ITF_EM_Safety EXTENDS ITF_EM_Base]]></Declaration>
-  </Itf>
-</TcPlcObject>

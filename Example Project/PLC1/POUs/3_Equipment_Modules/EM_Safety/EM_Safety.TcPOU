@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="EM_Safety" Id="{1a34d4c1-ad2e-49a3-ac4f-e564b95c5004}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK EM_Safety EXTENDS FB_EM_Base IMPLEMENTS ITF_EM_Safety
+    <Declaration><![CDATA[FUNCTION_BLOCK EM_Safety EXTENDS FB_EM_Base
 VAR_INPUT	
 	i_stMachineCommands				: ST_UN_Machine100_Cmd;
 END_VAR
@@ -12,8 +12,6 @@ VAR
 // Variables
 	s_nIndex				: INT;
 	s_bStaSafetyOk			: BOOL;
-	
-	s_stConfig				: ST_EM_Safety_Config;
 	
 // Control modules
 	//n.a.
@@ -32,10 +30,8 @@ VAR
 	s_fbSDoSafetyPLC_Run			: FB_DigitalOutput;
 	
 // Alarms
-	s_AlmFailure1					: FB_AlarmHandler;
-	s_AlmFailure2					: FB_AlarmHandler;
-	
-	
+	s_AlmSafety						: FB_AlarmHandler;
+	s_AlmCommErr					: FB_AlarmHandler;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[SUPER^();
@@ -53,31 +49,17 @@ END_VAR]]></Declaration>
 (*==========================================================================================================*)
 SUPER^._m_Alarms();
 
-// Failure 1
-s_stConfig.stAlmFailure1.nIDnr	:= 1;
-s_AlmFailure1(
-	i_rstConfig	:= s_stConfig.stAlmFailure1,
-	i_itfAlarmCollector := s_fbAlarmCollector);
-	
-// Failure 2
-s_stConfig.stAlmFailure2.nIDnr	:= 2;
-s_AlmFailure2(
-	i_rstConfig	:= s_stConfig.stAlmFailure2,
-	i_itfAlarmCollector := s_fbAlarmCollector);
+// Safety not ok
+s_AlmSafety.m_Update(
+	i_bCmdRaise	:= NOT q_bStaSafetyOk, 
+	i_sMessage	:= ''
+);
 
-
-//Internal error handling
-//s_fbAlarmCollector.i_stStaAlarmsCollectedFromSlaveCollectors.bHold	:= s_cmValve1.q_stStaAlarmsCollected.bSuspend;	
-//s_fbAlarmCollector.i_stStaAlarmsCollectedFromSlaveCollectors.bStop	:= s_cmValve1.q_stStaAlarmsCollected.bStop;
-//s_fbAlarmCollector.i_stStaAlarmsCollectedFromSlaveCollectors.bAbort := s_cmValve1.q_stStaAlarmsCollected.bAbort
-//																	OR s_cmAxis1.q_stStaAlarmsCollected.bAbort
-//																	OR s_cmVirtualMaster.q_stStaAlarmsCollected.bAbort;
-//
-
-
-
-
-]]></ST>
+//Communication error safety
+s_AlmCommErr.m_Update(
+	i_bCmdRaise	:= s_fbSDiSafetyCommErr.p_bStaValue, 
+	i_sMessage	:= ''
+);]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Init" Id="{c7c4d187-8d33-42e8-98f7-ccb859eb0434}" FolderPath="Basic\">
@@ -89,8 +71,21 @@ END_VAR
       <Implementation>
         <ST><![CDATA[SUPER^._m_Init();
 
+// Failure 1
+s_AlmSafety.p_itfConfig.p_bCfgAutoReset 	:= TRUE;
+s_AlmSafety.p_itfConfig.p_bCfgEnable		:= TRUE;
+s_AlmSafety.p_itfConfig.p_tmCfgDelay		:= T#0S;
+s_AlmSafety.p_itfConfig.p_eCfgSeverity		:= E_Alarm_Severity.Error;
+s_AlmSafety.p_itfConfig.p_stCfgEventEntry	:= TC_EVENTS.Alarmen.Alarm_EmrStop;
+s_AlmSafety.p_itfAlarmCollector 			:= s_fbAlarmCollector ;
 
-
+// Failure 2
+s_AlmCommErr.p_itfConfig.p_bCfgAutoReset 	:= FALSE;
+s_AlmCommErr.p_itfConfig.p_bCfgEnable		:= TRUE;
+s_AlmCommErr.p_itfConfig.p_tmCfgDelay		:= T#0S;
+s_AlmCommErr.p_itfConfig.p_eCfgSeverity		:= E_Alarm_Severity.Error;
+s_AlmCommErr.p_itfConfig.p_stCfgEventEntry	:= TC_EVENTS.Alarmen.Alarm_CommErr;
+s_AlmCommErr.p_itfAlarmCollector 			:= s_fbAlarmCollector ;
 ]]></ST>
       </Implementation>
     </Method>
@@ -100,24 +95,27 @@ END_VAR
       <Implementation>
         <ST><![CDATA[SUPER^._m_Inputs();
 
-
-// Emergenzy stops
+// Emergency stops
 FOR s_nIndex := 1 TO 10 DO
-	s_fbSDiEmergencyStopActive[s_nIndex](i_rstConfig := s_stConfig.stSDiEmergencyStopActive[s_nIndex]);
+	s_fbSDiEmergencyStopActive[s_nIndex]();
 END_FOR
 
-
-
+s_fbSDiSafetyCommErr();
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Logic" Id="{f9389dc6-d3bf-456d-91f3-13e21c1dcac5}" FolderPath="Basic\">
-      <Declaration><![CDATA[METHOD PROTECTED _m_Logic]]></Declaration>
+      <Declaration><![CDATA[METHOD PROTECTED _m_Logic
+VAR_INST
+	s_nIndex	: INT;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[SUPER^._m_Logic();
 
-s_bStaSafetyOk := s_fbSDiEmergencyStopActive[1].q_bStaInput;
-
+q_bStaSafetyOk := FALSE;
+FOR s_nIndex := 1 TO 10 DO
+	q_bStaSafetyOk := q_bStaSafetyOk AND s_fbSDiEmergencyStopActive[s_nIndex].p_bStaValue;
+END_FOR
 ]]></ST>
       </Implementation>
     </Method>
@@ -137,30 +135,20 @@ s_bStaSafetyOk := s_fbSDiEmergencyStopActive[1].q_bStaInput;
 
 // Outputs to safety PLC
 // Error acknowledgement signal
-s_fbSDoSafetyPLC_ErrorAck(
-	i_bReqOutput:= s_fbAlarmCollector.q_bOsrReset, 
-	i_rstConfig	:= s_stConfig.stSDoSafetyPLC_ErrorAck);
+s_fbSDoSafetyPLC_ErrorAck.p_bValue := s_fbAlarmCollector.q_bOsrReset;
+s_fbSDoSafetyPLC_ErrorAck();
 	
 // Reset signal
-s_fbSDoSafetyPLC_Reset(
-	i_bReqOutput:= s_fbAlarmCollector.q_bOsrReset, 
-	i_rstConfig	:= s_stConfig.stSDoSafetyPLC_Reset);
+s_fbSDoSafetyPLC_Reset.p_bValue := s_fbAlarmCollector.q_bOsrReset; 
+s_fbSDoSafetyPLC_Reset();
 	
 // Reset communication errors signal
-s_fbSDoSafetyPLC_ResetCommErr(
-	i_bReqOutput:= s_fbAlarmCollector.q_bOsrReset AND s_fbSDiSafetyCommErr.q_bStaInput, 
-	i_rstConfig	:= s_stConfig.stSDoSafetyPLC_ResetCommErr);
+s_fbSDoSafetyPLC_ResetCommErr.p_bValue := s_fbAlarmCollector.q_bOsrReset AND s_fbSDiSafetyCommErr.p_bStaValue;
+s_fbSDoSafetyPLC_ResetCommErr();
 	
 // Safety PLC Run signal
-s_fbSDoSafetyPLC_Run(
-	//i_bReqOutput	:= , // Set at sequencers 
-	i_rstConfig	:= s_stConfig.stSDoSafetyPLC_Run);
-
-
-	
-// Write outputs
-// Safety ok
-q_bStaSafetyOk := s_bStaSafetyOk;	
+s_fbSDoSafetyPLC_Run.p_bValue := TRUE;
+s_fbSDoSafetyPLC_Run();
 ]]></ST>
       </Implementation>
     </Method>
@@ -173,84 +161,5 @@ q_bStaSafetyOk := s_bStaSafetyOk;
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="EM_Safety">
-      <LineId Id="9" Count="0" />
-      <LineId Id="219" Count="1" />
-      <LineId Id="187" Count="0" />
-    </LineIds>
-    <LineIds Name="EM_Safety._m_Alarms">
-      <LineId Id="36" Count="1" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="96" Count="0" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="95" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="110" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="99" Count="1" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="119" Count="0" />
-      <LineId Id="124" Count="0" />
-      <LineId Id="83" Count="4" />
-      <LineId Id="11" Count="0" />
-    </LineIds>
-    <LineIds Name="EM_Safety._m_Init">
-      <LineId Id="95" Count="0" />
-      <LineId Id="110" Count="1" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="EM_Safety._m_Inputs">
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="18" Count="2" />
-      <LineId Id="17" Count="0" />
-    </LineIds>
-    <LineIds Name="EM_Safety._m_Logic">
-      <LineId Id="5" Count="1" />
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="EM_Safety._m_Modules">
-      <LineId Id="5" Count="0" />
-      <LineId Id="166" Count="0" />
-      <LineId Id="188" Count="1" />
-    </LineIds>
-    <LineIds Name="EM_Safety._m_Outputs">
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="17" Count="2" />
-      <LineId Id="26" Count="4" />
-      <LineId Id="21" Count="4" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="32" Count="2" />
-      <LineId Id="6" Count="0" />
-    </LineIds>
-    <LineIds Name="EM_Safety._m_Statistics">
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="6" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -10,9 +10,6 @@ VAR
 // Local var
 	s_stMachineCommands				: ST_UN_Machine100_Cmd;	
 
-// Config Struct
-	s_stConfig						: ST_UN_Machine100_Config;
-
 END_VAR
 ]]></Declaration>
     <Implementation>
