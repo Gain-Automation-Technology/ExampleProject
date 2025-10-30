@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="UN_Machine100" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine100 EXTENDS FB_UN_Base IMPLEMENTS ITF_UN_Machine100
+    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine100 EXTENDS FB_UN_Base
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -17,7 +17,6 @@ END_VAR
 ]]></ST>
     </Implementation>
     <Folder Name="Basic" Id="{e89104c0-d33f-460a-aaf2-8953cfda25ab}" />
-    <Folder Name="ITF_UN_Machine100" Id="{993bc94f-48fd-4eea-942a-5c02e6ec715c}" />
     <Method Name="_m_Alarms" Id="{8fa8464a-636c-46ee-9f13-6e7927953bcd}" FolderPath="Basic\">
       <Declaration><![CDATA[METHOD PROTECTED _m_Alarms
 ]]></Declaration>
@@ -72,41 +71,5 @@ GVL_Area100.g_emSafety(
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="p_itfEmLogicExample" Id="{26224556-8538-4d9f-bcfc-37014048d854}" FolderPath="ITF_UN_Machine100\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_itfEmLogicExample : ITF_Hmi_ModuleBase]]></Declaration>
-      <Get Name="Get" Id="{623eaf14-77b2-40e4-839e-b7f0149cc8bb}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_itfEmLogicExample := GVL_Area100.g_emLogicExample;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="p_itfEmSafety" Id="{14512e0e-efa9-4836-b847-117ef07af89d}" FolderPath="ITF_UN_Machine100\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_itfEmSafety : ITF_Hmi_ModuleBase]]></Declaration>
-      <Get Name="Get" Id="{71671166-907c-4eeb-aa1b-fc56ebaa0f3e}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_itfEmSafety := GVL_Area100.g_emSafety;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="p_stConfig" Id="{10d73f7a-3734-442c-bff3-b37a394b7208}" FolderPath="ITF_UN_Machine100\">
-      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
-PROPERTY p_stConfig : REFERENCE TO ST_UN_Machine100_Config]]></Declaration>
-      <Get Name="Get" Id="{d0ae69ad-c446-4df5-88dc-fd69c355fa21}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[p_stConfig := s_stConfig;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
   </POU>
 </TcPlcObject>
