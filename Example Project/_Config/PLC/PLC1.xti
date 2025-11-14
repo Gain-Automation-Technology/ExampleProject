@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.25" ClassName="CNestedPlcProjDef">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.47" ClassName="CNestedPlcProjDef">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000041}" TcBaseType="true" HideSubItems="true" CName="AmsNetId">AMSNETID</Name>
@@ -491,7 +491,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF</Name>
+			<Name GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF</Name>
 			<BitSize>2048</BitSize>
 			<SubItem>
 				<Name>StateDWord</Name>
@@ -773,6 +773,12 @@ External Setpoint Generation:
 				<BitSize>32</BitSize>
 				<BitOffs>1920</BitOffs>
 			</SubItem>
+			<SubItem>
+				<Name>UserData</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1984</BitOffs>
+			</SubItem>
 			<Properties>
 				<Property>
 					<Name>NcStructType</Name>
@@ -807,10 +813,13 @@ External Setpoint Generation:
 				<Relation Priority="100">
 					<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}"></Type>
 				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}"></Type>
+				</Relation>
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{7761DE0D-A278-D75D-8E1A-8456472022C0}" Namespace="GBL" AutoDeleteType="true">E_CM_MotorVFD_Lenze_i5xx_ErrorList</Name>
+			<Name GUID="{F8E0F0D2-B2A0-6590-760D-B767A227293A}" Namespace="GBL" AutoDeleteType="true">E_CM_MotorVFD_Lenze_i5xx_ErrorList</Name>
 			<Comment><![CDATA[ Enumeration with possible errors of Lenze i5xx VFD ]]></Comment>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
@@ -1243,11 +1252,11 @@ External Setpoint Generation:
 				</Property>
 				<Property>
 					<Name>to_string_function</Name>
-					<Value>__TO_STRING__2740</Value>
+					<Value>__TO_STRING__3222</Value>
 				</Property>
 				<Property>
 					<Name>to_wstring_function</Name>
-					<Value>__TO_WSTRING__2740</Value>
+					<Value>__TO_WSTRING__3222</Value>
 				</Property>
 			</Properties>
 		</DataType>
@@ -1288,7 +1297,7 @@ External Setpoint Generation:
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{60884996-A95B-5E9C-45F0-572BA70F3335}" Namespace="GBL" AutoDeleteType="true">ST_CM_MotorVFD_Lenze_i5xx_Comm_DriveToPlc</Name>
+			<Name GUID="{260F687C-D3F6-FDB2-A715-25B9005CF1CD}" Namespace="GBL" AutoDeleteType="true">ST_CM_MotorVFD_Lenze_i5xx_Comm_DriveToPlc</Name>
 			<Comment><![CDATA[ Struct for communication from Drive to PLC of Lenze i5xx VFD ]]></Comment>
 			<BitSize>112</BitSize>
 			<SubItem>
@@ -1307,7 +1316,7 @@ External Setpoint Generation:
 			</SubItem>
 			<SubItem>
 				<Name>eErrorCode</Name>
-				<Type GUID="{7761DE0D-A278-D75D-8E1A-8456472022C0}" Namespace="GBL">E_CM_MotorVFD_Lenze_i5xx_ErrorList</Type>
+				<Type GUID="{F8E0F0D2-B2A0-6590-760D-B767A227293A}" Namespace="GBL">E_CM_MotorVFD_Lenze_i5xx_ErrorList</Type>
 				<Comment><![CDATA[ Error Code]]></Comment>
 				<BitSize>16</BitSize>
 				<BitOffs>32</BitOffs>
@@ -1376,7 +1385,7 @@ External Setpoint Generation:
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC" TcBaseType="true">PLCTONC_AXIS_REF</Name>
+			<Name GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC" TcBaseType="true">PLCTONC_AXIS_REF</Name>
 			<BitSize>1024</BitSize>
 			<SubItem>
 				<Name>ControlDWord</Name>
@@ -1486,6 +1495,12 @@ External Setpoint Generation:
 				<BitSize>8</BitSize>
 				<BitOffs>848</BitOffs>
 			</SubItem>
+			<SubItem>
+				<Name>ExtTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>896</BitOffs>
+			</SubItem>
 			<Properties>
 				<Property>
 					<Name>NcStructType</Name>
@@ -1494,7 +1509,10 @@ External Setpoint Generation:
 			</Properties>
 			<Relations>
 				<Relation Priority="100">
-					<Type GUID="{60392271-8688-4F4C-B404-618DF106325D}">NCAXLESTRUCT_FROMPLC3</Type>
+					<Type GUID="{60392271-8688-4F4C-B404-618DF106325D}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}"></Type>
 				</Relation>
 			</Relations>
 		</DataType>
@@ -1519,26 +1537,11 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{93B59E1E-9B9C-4AF4-8B9D-07523266E926}" Name="PLC1" PrjFilePath="..\..\PLC1\PLC1.plcproj" TmcFilePath="..\..\PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC1\PLC1.tmc">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC1\PLC1.tmc" TmcHash="{7967D6C6-55D6-E581-66D4-C39C3032C70F}">
 			<Name>PLC1 Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="1">
 				<Name>PlcTask Inputs</Name>
-				<Var>
-					<Name>GVL_Area100.g_fbAlarmManager.s_fbDiBtnReset[1].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDiBtnStart[1].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDiBtnStop[1].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
 				<Var>
 					<Name>GBL.GVL_GBL.g_fbSystem.s_fbEthercatMasterInfo[1].I_sEcMasterAmsNetId</Name>
 					<Comment><![CDATA[  EtherCAT Master Diagnosis inputs from hardware ]]></Comment>
@@ -1592,8 +1595,23 @@ External Setpoint Generation:
 					<Type>UINT</Type>
 				</Var>
 				<Var>
+					<Name>GVL_Area100.g_fbAlarmManager.s_fbDiBtnReset[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDiBtnStart[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDiBtnStop[1].I_bIn</Name>
+					<Comment><![CDATA[ IO var ]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.NcToPlc</Name>
-					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_cmVirtualMaster.s_DtReference.I_bIn</Name>
@@ -1602,7 +1620,7 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.NcToPlc</Name>
-					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_cmAxis1.s_DtReference.I_bIn</Name>
@@ -1781,7 +1799,7 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_cmVentilator.I_stFreqInvToPLC</Name>
-					<Type GUID="{60884996-A95B-5E9C-45F0-572BA70F3335}" Namespace="GBL">ST_CM_MotorVFD_Lenze_i5xx_Comm_DriveToPlc</Type>
+					<Type GUID="{260F687C-D3F6-FDB2-A715-25B9005CF1CD}" Namespace="GBL">ST_CM_MotorVFD_Lenze_i5xx_Comm_DriveToPlc</Type>
 				</Var>
 				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_fbDiSensorPos1.I_bIn</Name>
@@ -1848,208 +1866,6 @@ External Setpoint Generation:
 					<Comment><![CDATA[ IO var ]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.NcToPlc</Name>
-					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.s_DtReference.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.NcToPlc</Name>
-					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmAxis1.s_DtReference.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[1].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[2].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[3].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[4].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[5].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[6].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[7].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[8].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[9].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOn[10].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[1].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[2].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[3].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[4].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[5].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[6].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[7].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[8].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[9].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_afbDtFeedbackOff[10].I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbThThermOk.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbFbForward.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbFbReverse.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbEndSwitchFwd.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbEndSwitchRev.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbThThermOk.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbFbForward.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbFbReverse.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbEndSwitchFwd.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbEndSwitchRev.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbActPosition.I_nActValue</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbActPosition.I_bStaOverrange</Name>
-					<Comment><![CDATA[ status overrange analogue input ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbActPosition.I_bStaUnderrange</Name>
-					<Comment><![CDATA[ status underrange analogue input ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbActPosition.I_bStaError</Name>
-					<Comment><![CDATA[ status error analogue input ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmVentilator.I_stFreqInvToPLC</Name>
-					<Type GUID="{60884996-A95B-5E9C-45F0-572BA70F3335}" Namespace="GBL">ST_CM_MotorVFD_Lenze_i5xx_Comm_DriveToPlc</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbDiSensorPos1.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbBlueButton.s_fbPushButton.I_bIn</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
 			</Vars>
 			<Vars VarGrpType="2" AreaNo="1">
 				<Name>PlcTask Outputs</Name>
@@ -2100,11 +1916,11 @@ External Setpoint Generation:
 				</Var>
 				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.PlcToNc</Name>
-					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.PlcToNc</Name>
-					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
 					<Name>GVL_Area100.g_emLogicExample.s_cmWaterInlet.s_fbVvOn.Q_bOut</Name>
@@ -2220,108 +2036,6 @@ External Setpoint Generation:
 					<Comment><![CDATA[  IO var ]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.PlcToNc</Name>
-					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.PlcToNc</Name>
-					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_fbVvOn.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmWaterInlet.s_fbVvOff.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbStart.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbForward.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmBelt.s_fbReverse.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbStart.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbForward.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmHeightAdjuster.s_fbReverse.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_cmVentilator.Q_stPLCToFreqInv</Name>
-					<Type GUID="{A41802D7-48D3-C503-384E-513A4C8F9F92}" Namespace="GBL">ST_CM_MotorVFD_Lenze_i5xx_Comm_PlcToDrive</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbDoMachineX_Start.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbAoMachineX_Speed.Q_nStaValue</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
-					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbRedLight.s_fbLight.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbBlueButton.s_fbLight.s_fbLight.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoHorn.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_Red.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_Orange.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_Blue.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_Green.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample2.s_fbStackLight.s_fbDoStackLight_White.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
 			</Vars>
 			<UnrestoredVarLinks ImportTime="2022-05-04T06:29:35">
 				<OwnerA Name="OutputSrc" Prefix="TIPC^PLC1^PLC1 Instance" Type="2">
@@ -2346,9 +2060,27 @@ External Setpoint Generation:
 					</OwnerB>
 				</OwnerA>
 			</UnrestoredVarLinks>
+			<UnrestoredVarLinks ImportTime="2023-12-06T20:36:59">
+				<OwnerA Name="InputDst" Prefix="TIPC^PLC1^PLC1 Instance" Type="1">
+					<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample2_Axis1">
+						<Link VarA="GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+					</OwnerB>
+					<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample2_AxisVM">
+						<Link VarA="GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+					</OwnerB>
+				</OwnerA>
+				<OwnerA Name="OutputSrc" Prefix="TIPC^PLC1^PLC1 Instance" Type="2">
+					<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample2_Axis1">
+						<Link VarA="GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+					</OwnerB>
+					<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample2_AxisVM">
+						<Link VarA="GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+					</OwnerB>
+				</OwnerA>
+			</UnrestoredVarLinks>
 			<Contexts>
 				<Context>
-					<Id NeedCalleeCall="true">0</Id>
+					<Id>0</Id>
 					<Name>PlcTask</Name>
 					<ManualConfig>
 						<OTCID>#x02010030</OTCID>
@@ -2376,14 +2108,6 @@ External Setpoint Generation:
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_AxisVM">
 				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample2_Axis1">
-				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample2.s_cmAxis1.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample2_AxisVM">
-				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample2.s_cmVirtualMaster.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

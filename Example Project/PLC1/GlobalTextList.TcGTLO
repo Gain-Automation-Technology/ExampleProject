@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <GlobalTextList Name="GlobalTextList" Id="{e1d0d5a7-4047-4e63-886a-c028bd7f42e7}">
     <XmlArchive>
       <Data>

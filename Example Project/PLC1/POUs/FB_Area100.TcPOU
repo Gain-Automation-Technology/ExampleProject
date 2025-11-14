@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="FB_Area100" Id="{68d93498-5c7b-0e17-2bf9-5079bfd3f919}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Area100 EXTENDS FB_ProgramBase
 VAR_INPUT
@@ -12,8 +12,6 @@ END_VAR
     <Implementation>
       <ST><![CDATA[SUPER^();
 // Management
-	// Alarm management
-	GVL_Area100.g_fbAlarmManager(i_bCmdResetFromHmi:= );
 	
 	// PackML status manager
 	GVL_Area100.g_fbPackMLstatusManager();
@@ -21,73 +19,23 @@ END_VAR
 	// Machine controls manager
 	GVL_Area100.g_fbMachCtrlsManager(
 		i_eCfgCtrlType				:= E_MachineControlsManager_Type.StartBtnAndStopBtnAndModeSelector,
-		i_bReqStartBtnFromHmi		:= GVL_Area100.g_fbHmiMachCtrlsManager.q_bReqStart,
-		i_bReqStopBtnFromHmi		:= GVL_Area100.g_fbHmiMachCtrlsManager.q_bReqStop,
-		i_eReqModeFromHmi			:= GVL_Area100.g_fbHmiMachCtrlsManager.q_eReqMode,
-		//i_astPackML_Status		:= , // Array entry set at unit
 		i_nCfgNrOfUsedUnits			:= 1,
-		i_stStackLightPackML_Status	:= GVL_Area100.g_unMachine100.q_stPackML_Status,
+		i_stStackLightPackML_Status	:= GVL_Area100.g_unMachine100.q_stStaPackML,
 		i_bStaDownStream_NotRunning	:= ,
 		i_bStaUpStream_NotRunning	:= ,
 		i_bStaLowOnMaterials		:= );
-	// Machine controls manager - HMI
-	GVL_Area100.g_fbHmiMachCtrlsManager(
-		i_itfModule	:= , 
-		q_bReqStart	=> , 
-		q_bReqStop	=> , 
-		q_eReqMode	=> );
-
-	
 	
 // Units
 	// PLC units
 	GVL_Area100.g_unMachine100(
-		i_bReqEnable		:= TRUE, 
-		i_bReqReset			:= GVL_Area100.g_fbAlarmManager.q_bCmdReset, 
-		i_bReqSimulationOn	:= GVL.g_bCmdSimulationOn,
-		i_stPackML_Command	:= GVL_Area100.g_fbMachCtrlsManager.q_stPackML_Command, 
+		i_bReqEnable				:= TRUE, 
+		i_bReqReset					:= , 
+		i_bReqSimulationOn			:= GVL.g_bCmdSimulationOn,
+		i_stPackML_Command			:= GVL_Area100.g_fbMachCtrlsManager.q_stPackML_Command, 
 		i_itfPackML_StatusManager	:= GVL_Area100.g_fbPackMLstatusManager,
-		q_stPackML_Status	=> GVL_Area100.g_fbMachCtrlsManager.i_astPackML_Status[1]);
-	
-	// HMI units
-	GVL_Area100.g_hmiUnMachine100(i_itfModule := GVL_Area100.g_unMachine100);
-
-
+		i_itfAlarmManager			:= ,
+		q_stStaPackML				=> GVL_Area100.g_fbMachCtrlsManager.i_astPackML_Status[1]);
 ]]></ST>
     </Implementation>
-    <LineIds Name="FB_Area100">
-      <LineId Id="10" Count="0" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="143" Count="1" />
-      <LineId Id="169" Count="1" />
-      <LineId Id="168" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="68" Count="1" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="72" Count="1" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="118" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="157" Count="0" />
-      <LineId Id="95" Count="0" />
-      <LineId Id="159" Count="1" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="89" Count="3" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="87" Count="1" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="76" Count="2" />
-      <LineId Id="156" Count="0" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="171" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="53" Count="1" />
-      <LineId Id="52" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

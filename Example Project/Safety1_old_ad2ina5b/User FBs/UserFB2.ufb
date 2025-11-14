@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<safetyApplication Crc="4173463347" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.4.0.0" Id="82f2bc1f-6a68-41e6-9ba0-6a1dc39deb5f" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="82f2bc1f-6a68-41e6-9ba0-6a1dc39deb5f" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+  <networks>
+    <safetyApplicationHasNetworks Id="77b31dfa-782c-4357-93c4-93d06de914ca">
+      <Network Id="d18a1a3f-04e5-46f3-8c0b-44ef855a1f53" name="Network1" networkName="Network1" intId="1" networkOrderId="1" />
+    </safetyApplicationHasNetworks>
+  </networks>
+</safetyApplication>
