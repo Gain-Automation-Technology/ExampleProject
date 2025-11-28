@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="UN_Machine100" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine100 EXTENDS FB_UN_Base
+    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine100 EXTENDS FB_UN_PackML_Base
 VAR_INPUT
 END_VAR
 VAR_OUTPUT

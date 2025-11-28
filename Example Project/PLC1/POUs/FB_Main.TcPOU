@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="FB_Main" Id="{ce4e8b74-9023-48c1-875b-79162c03d5fc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Main
 VAR_INPUT
@@ -12,20 +12,10 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// License required input
-GVL_GBL_License.g_sFingerPrintGUID := '89A9F3FE-957D-B436-ACA1-E91C8DD62B8F';		// Code gain
-
-// Areas
+      <ST><![CDATA[// Areas
 s_fbArea100();
 
 ]]></ST>
     </Implementation>
-    <LineIds Name="FB_Main">
-      <LineId Id="64" Count="1" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="53" Count="1" />
-      <LineId Id="52" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

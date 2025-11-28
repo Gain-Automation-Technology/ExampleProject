@@ -120,27 +120,21 @@
     <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderReference Include="Gain Beckhoff HMI Library">
-      <DefaultResolution>Gain Beckhoff HMI Library, * (Gain Projects B.V.)</DefaultResolution>
-      <Namespace>GBL_HMI</Namespace>
+    <PlaceholderReference Include="GSBF_Camming">
+      <DefaultResolution>GSBF_Camming, * (Gain Automation Technology B.V.)</DefaultResolution>
+      <Namespace>GSBF_Camming</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="Gain Beckhoff Library">
-      <DefaultResolution>Gain Beckhoff Library, * (Gain Projects B.V.)</DefaultResolution>
-      <Namespace>GBL</Namespace>
-      <Parameters>
-        <Parameter ListName="PARAM_PACKML">
-          <Key>C_NMAXNROFCHILDREN</Key>
-          <Value>10</Value>
-        </Parameter>
-      </Parameters>
+    <PlaceholderReference Include="GSBF_Common">
+      <DefaultResolution>GSBF_Common, * (Gain Automation Technology B.V.)</DefaultResolution>
+      <Namespace>GSBF_Common</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="Gain Beckhoff Servo Camming Library">
-      <DefaultResolution>Gain Beckhoff Servo Camming Library, * (Gain Projects B.V.)</DefaultResolution>
-      <Namespace>GBL_Camming</Namespace>
+    <PlaceholderReference Include="GSBF_FlyingSaw">
+      <DefaultResolution>GSBF_FlyingSaw, * (Gain Automation Technology B.V.)</DefaultResolution>
+      <Namespace>GSBF_FlyingSaw</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="Gain Beckhoff Servo Flying saw library">
-      <DefaultResolution>Gain Beckhoff Servo Flying saw library, * (Gain Projects B.V.)</DefaultResolution>
-      <Namespace>GBL_FlyingSawLibrary</Namespace>
+    <PlaceholderReference Include="GSBF_HMI">
+      <DefaultResolution>GSBF_HMI, * (Gain Automation Technology B.V.)</DefaultResolution>
+      <Namespace>GSBF_HMI</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="System_VisuElemMeter">
       <DefaultResolution>VisuElemMeter, 3.5.13.0 (System)</DefaultResolution>
@@ -232,15 +226,33 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <LibraryReference Include="Gain Beckhoff Base Library,newest,Gain Projects B.V.">
-      <Namespace>GBL_Base</Namespace>
-    </LibraryReference>
+    <PlaceholderResolution Include="System_VisuElemMeter">
+      <Resolution>VisuElemMeter, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElems">
+      <Resolution>VisuElems, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElemsSpecialControls">
+      <Resolution>VisuElemsSpecialControls, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElemsWinControls">
+      <Resolution>VisuElemsWinControls, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuElemTextEditor">
+      <Resolution>VisuElemTextEditor, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuInputs">
+      <Resolution>VisuInputs, * (System)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="System_VisuNativeControl">
+      <Resolution>VisuNativeControl, * (System)</Resolution>
+    </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -304,14 +316,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

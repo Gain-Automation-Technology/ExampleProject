@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="EM_ServoExample" Id="{6f2f2bf2-c2da-4416-808c-ed5c6d63cc10}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK EM_ServoExample EXTENDS FB_EM_Base
+    <Declaration><![CDATA[FUNCTION_BLOCK EM_ServoExample EXTENDS FB_EM_PackML_Base
 VAR_INPUT	
 	i_stMachineCommands				: ST_UN_Machine100_Cmd;
 END_VAR
@@ -18,8 +18,8 @@ VAR
 	s_fStaValueResult				: LREAL;
 
 // Control modules
-	s_cmVirtualMaster				: CM_Servo_Virtual;
-	s_cmAxis1						: CM_Servo_Virtual;
+	s_cmVirtualMaster				: CM_ServoVirtual;
+	s_cmAxis1						: CM_ServoVirtual;
 	s_cmAxis1Cam					: CM_Servo_CammingAddon(s_cmAxis1);
 	s_cmAxis1Fly					: CM_Servo_FlyingSawAddon(s_cmAxis1);
 	
@@ -55,7 +55,7 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	(*First cycle of this state*)
 	i_bCmdRestart	: BOOL;
-	i_eActMode	: GBL.E_PackML_Mode;
+	i_eActMode		: E_PackML_Mode;
 END_VAR
 VAR_INST
 	s_ITFStopState		: ITF_FB_SeqControl;	
@@ -96,7 +96,7 @@ s_AlmFailure2.m_Update(
 VAR_INPUT
 	(*First cycle of this state*)
 	i_bCmdRestart	: BOOL;
-	i_eActMode		: GBL.E_PackML_Mode;
+	i_eActMode		: E_PackML_Mode;
 END_VAR
 VAR_INST
 	s_eActMode		: E_PackML_Mode;
@@ -642,7 +642,6 @@ s_cmVirtualMaster(
 	i_bDisableForward			:= FALSE, 
 	i_bDisableReverse			:= FALSE, 
 	i_bDisableAxis				:= FALSE, 
-	i_bExtReferenceSignal		:= FALSE
 );
 
 s_cmAxis1(
@@ -656,7 +655,6 @@ s_cmAxis1(
 	i_bDisableForward			:= FALSE, 
 	i_bDisableReverse			:= FALSE, 
 	i_bDisableAxis				:= FALSE, 
-	i_bExtReferenceSignal		:= FALSE
 );
 ]]></ST>
       </Implementation>
@@ -684,7 +682,7 @@ s_fbStackLight();
 VAR_INPUT
 	(*First cycle of this state*)
 	i_bCmdRestart	: BOOL;
-	i_eActMode		: GBL.E_PackML_Mode;
+	i_eActMode		: E_PackML_Mode;
 END_VAR
 VAR_INST
 	s_eActMode					: E_PackML_Mode;
@@ -794,7 +792,7 @@ _m_Starting_Production := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
 VAR_INPUT
 	(*First cycle of this state*)
 	i_bCmdRestart	: BOOL;
-	i_eActMode		: GBL.E_PackML_Mode;
+	i_eActMode		: E_PackML_Mode;
 END_VAR
 VAR_INST
 	s_ITFExecutState 	: ITF_FB_SeqControl;
