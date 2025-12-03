@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="E_CM_Door_Seq_Logic" Id="{7f9b7116-86cc-4046-a008-afddb58ea595}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_CM_Door_Seq_Logic :
+(
+	Idle := c_nSeqIdle,
+	Start := c_nSeqStart,
+	
+	Disabled,
+	Operational,
+	
+	Ready := c_nSeqReady,
+	Error := c_nSeqError
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

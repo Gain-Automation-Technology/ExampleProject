@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <POU Name="UN_Machine100" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine100 EXTENDS FB_UN_PackML_Base
+  <POU Name="UN_Machine" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine EXTENDS FB_UN_Base
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
 // Local var
-	s_stMachineCommands				: ST_UN_Machine100_Cmd;	
 
 END_VAR
 ]]></Declaration>
@@ -39,7 +38,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[SUPER^._m_Modules();
 
-GVL_Area100.g_emLogicExample(
+GVL_Modules.g_emInfeedConveyor(
 	i_bReqEnable					:= TRUE, 
 	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, 
 	i_bStaSafetyOk					:= GVL_Area100.g_emSafety.q_bStaSafetyOk, 
@@ -50,7 +49,7 @@ GVL_Area100.g_emLogicExample(
 	q_stStaPackML					=> , 
 	i_stMachineCommands				:= );
 
-GVL_Area100.g_emSafety(
+GVL_Modules.g_emSafety(
 	i_bReqEnable					:= TRUE, 
 	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, 
 	i_bStaSafetyOk					:= TRUE, 

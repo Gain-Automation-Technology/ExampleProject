@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="ST_CommInfeedToLift" Id="{1219a92a-d836-4077-8d49-bca1b0b8e0c8}">
+    <Declaration><![CDATA[TYPE ST_CommInfeedToLift :
+STRUCT
+	bReqExportProduct : BOOL;
+	bBusyWithLift : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

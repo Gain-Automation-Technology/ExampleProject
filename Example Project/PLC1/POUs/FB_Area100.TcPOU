@@ -14,27 +14,27 @@ END_VAR
 // Management
 	
 	// PackML status manager
-	GVL_Area100.g_fbPackMLstatusManager();
+	GVL_Modules.g_fbPackMLstatusManager();
 	
 	// Machine controls manager
-	GVL_Area100.g_fbMachCtrlsManager(
+	GVL_Modules.g_fbMachCtrlsManager(
 		i_eCfgCtrlType				:= E_MachineControlsManager_Type.StartBtnAndStopBtnAndModeSelector,
 		i_nCfgNrOfUsedUnits			:= 1,
-		i_stStackLightPackML_Status	:= GVL_Area100.g_unMachine100.q_stStaPackML,
+		i_stStackLightPackML_Status	:= GVL_Modules.g_unMachine.q_stStaPackML,
 		i_bStaDownStream_NotRunning	:= ,
 		i_bStaUpStream_NotRunning	:= ,
 		i_bStaLowOnMaterials		:= );
 	
 // Units
 	// PLC units
-	GVL_Area100.g_unMachine100(
+	GVL_Modules.g_unMachine(
 		i_bReqEnable				:= TRUE, 
 		i_bReqReset					:= , 
 		i_bReqSimulationOn			:= GVL.g_bCmdSimulationOn,
-		i_stPackML_Command			:= GVL_Area100.g_fbMachCtrlsManager.q_stPackML_Command, 
-		i_itfPackML_StatusManager	:= GVL_Area100.g_fbPackMLstatusManager,
+		i_stPackML_Command			:= GVL_Modules.g_fbMachCtrlsManager.q_stPackML_Command, 
+		i_itfPackML_StatusManager	:= GVL_Modules.g_fbPackMLstatusManager,
 		i_itfAlarmManager			:= ,
-		q_stStaPackML				=> GVL_Area100.g_fbMachCtrlsManager.i_astPackML_Status[1]);
+		q_stStaPackML				=> GVL_Modules.g_fbMachCtrlsManager.i_astPackML_Status[1]);
 ]]></ST>
     </Implementation>
   </POU>

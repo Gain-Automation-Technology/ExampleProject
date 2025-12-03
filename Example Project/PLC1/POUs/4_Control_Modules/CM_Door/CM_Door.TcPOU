@@ -1,0 +1,336 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="CM_Door" Id="{51a6c2a3-e5cd-40e3-9cf2-1a2a160f0bbc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CM_Door EXTENDS FB_CM_Base
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	// Control modules
+	s_cmMotor : CM_MotorDol;
+
+	
+	// in/outputs
+	s_diDoorIsOpen : FB_DigitalInput;
+	s_diDoorIsClosed : FB_DigitalInput;
+	s_diDoorIsBlocked : FB_DigitalInput;
+	
+	// Alarms
+	s_fbAlmDoorIsBlocked : FB_AlarmHandler;
+	s_fbAlmFeedbackBothOn : FB_AlarmHandler;
+	s_fbAlmDoorNotOpen : FB_AlarmHandler;
+	s_fbAlmDoorNotClosed : FB_AlarmHandler;
+	
+	// Internal variables
+	s_bReqCloseDoor : BOOL;
+	s_bReqOpenDoor : BOOL;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Call base 
+SUPER^();]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{fe13b345-e9a1-4eaf-98c1-004f282c4733}" />
+    <Folder Name="Properties" Id="{c0c7bdb1-630e-43e1-b46e-138217ddb26f}" />
+    <Method Name="_m_Alarms" Id="{4e3c8415-7e03-46ed-a488-0b4401f2707d}" FolderPath="Methods\">
+      <Declaration><![CDATA[(* Monitor alarm conditions. *)
+METHOD PROTECTED _m_Alarms
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^._m_Alarms();
+
+s_fbAlmFeedbackBothOn(
+	i_bCmdRaise:= s_diDoorIsOpen.p_bStaValue AND s_diDoorIsClosed.p_bStaValue, 
+	i_sMessage:= , 
+	i_itfAlarmCollector:= p_itfAlarmCollector);
+	
+s_fbAlmDoorIsBlocked(
+	i_bCmdRaise:= NOT s_cmMotor.p_bStaStandstill AND s_diDoorIsBlocked.p_bStaValue, 
+	i_sMessage:= , 
+	i_itfAlarmCollector:= p_itfAlarmCollector);
+	
+s_fbAlmDoorNotOpen.p_itfConfig.p_tmCfgDelay := T#6S;	
+s_fbAlmDoorNotOpen(
+	i_bCmdRaise:= s_cmMotor.p_bStaRunningFwd AND NOT s_diDoorIsOpen.p_bStaValue, 
+	i_sMessage:= , 
+	i_itfAlarmCollector:= p_itfAlarmCollector);
+	
+
+s_fbAlmDoorNotClosed.p_itfConfig.p_tmCfgDelay := T#6S;		
+s_fbAlmDoorNotClosed(
+	i_bCmdRaise:= s_cmMotor.p_bStaRunningRev AND NOT s_diDoorIsClosed.p_bStaValue, 
+	i_sMessage:= , 
+	i_itfAlarmCollector:= p_itfAlarmCollector);
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Init" Id="{ba72ade9-b4ab-418a-b0fb-6872bf767072}" FolderPath="Methods\">
+      <Declaration><![CDATA[(* Initialization, set initial data. *)
+METHOD PROTECTED _m_Init
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base
+SUPER^._m_Init();
+
+// Alarms
+s_fbAlmDoorIsBlocked.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
+s_fbAlmDoorIsBlocked.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
+s_fbAlmDoorIsBlocked.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
+s_fbAlmDoorIsBlocked.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
+s_fbAlmDoorIsBlocked.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.CM_Door_AlmDoorIsBlocked;
+
+s_fbAlmFeedbackBothOn.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
+s_fbAlmFeedbackBothOn.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
+s_fbAlmFeedbackBothOn.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
+s_fbAlmFeedbackBothOn.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
+s_fbAlmFeedbackBothOn.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.CM_Door_AlmFeedbackBothOn;
+
+s_fbAlmDoorNotOpen.p_itfConfig.p_bCfgAutoReset			:= FALSE;                                                
+s_fbAlmDoorNotOpen.p_itfConfig.p_bCfgEnable				:= TRUE;                                                   
+s_fbAlmDoorNotOpen.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
+s_fbAlmDoorNotOpen.p_itfConfig.p_tmCfgDelay				:= T#0S;                                                   
+s_fbAlmDoorNotOpen.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.CM_Door_AlmDoorIsBlocked;
+
+s_fbAlmDoorNotClosed.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
+s_fbAlmDoorNotClosed.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
+s_fbAlmDoorNotClosed.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
+s_fbAlmDoorNotClosed.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
+s_fbAlmDoorNotClosed.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.CM_Door_AlmFeedbackBothOn;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Inputs" Id="{85e57d05-36b2-4239-b277-56c21a91006a}" FolderPath="Methods\">
+      <Declaration><![CDATA[(* Read hardware and module inputs. If applicable, apply filtering, scaling and/or conversion to local variables. *) 
+METHOD PROTECTED _m_Inputs
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base
+SUPER^._m_Inputs();
+
+
+// Call inputs
+s_diDoorIsOpen();
+s_diDoorIsClosed();
+s_diDoorIsBlocked();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Logic" Id="{4e4e018e-2bd5-468d-8498-2e40c1c18691}" FolderPath="Methods\">
+      <Declaration><![CDATA[(* Handle the internal logic of the control module. *)
+METHOD PROTECTED _m_Logic
+VAR_INST
+	s_fbSeqControl : FB_SeqControl;
+	s_eSeq : E_CM_Door_Seq_Logic;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base
+SUPER^._m_Logic();
+
+// Call modules
+_m_Modules();
+
+
+
+// Call sequencer
+s_fbSeqControl(
+	i_bReqStart:= FALSE, 
+	i_rnActSeqStep:= s_eSeq, 
+	i_sActSeqStep:= TO_STRING(s_eSeq));
+
+// Logic
+CASE s_eSeq OF 
+	E_CM_Door_Seq_Logic.Idle:
+		// Go to operational state
+		s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Start);
+		
+	E_CM_Door_Seq_Logic.Start:
+
+		IF NOT p_bStaEnable THEN
+			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
+		ELSE
+			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Operational);
+		END_IF
+	
+	E_CM_Door_Seq_Logic.Disabled:
+		IF p_bStaEnable THEN
+			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Start);
+		END_IF
+	
+		
+	E_CM_Door_Seq_Logic.Operational:
+		// Stop motor when door is open
+		IF s_diDoorIsOpen.p_bStaValue 
+			AND s_cmMotor.p_bStaRunningFwd 
+		THEN
+			m_Stop();
+		END_IF
+		
+		// Stop motor when door is closed
+		IF s_diDoorIsClosed.p_bStaValue 
+			AND s_cmMotor.p_bStaRunningRev 
+		THEN
+			m_Stop();
+		END_IF
+		
+	
+	
+		// Transition
+		IF NOT p_bStaEnable THEN
+			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
+		ELSIF p_eAlarmState >= E_Alarm_Severity.Error THEN
+			// Some error is active, go to error state
+			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Error);
+		END_IF
+
+
+	
+	E_CM_Door_Seq_Logic.Ready:
+		;
+		
+	E_CM_Door_Seq_Logic.Error:
+		// Stop motor
+		m_Stop();
+	
+		// Transition 
+		IF NOT p_bStaEnable THEN
+			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
+		ELSIF p_eAlarmState < E_Alarm_Severity.Error THEN
+			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Start);
+		END_IF
+
+END_CASE
+
+s_fbSeqControl.m_Update(i_sActSeqStep := TO_STRING(s_eSeq));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Modules" Id="{7ecce5be-8e15-4128-8271-9762b409ae6f}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD _m_Modules : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call 
+s_cmMotor(
+	i_bReqEnable:= p_bStaEnable, 
+	i_bReqReset:= , // Can be leaved empty, is automatically done by alarmcollector
+	i_bAlwManualCtrl:= i_bAlwManualCtrl, 
+	i_bReqSimulation:= i_bReqSimulation, 
+	i_itfAlarmCollector_Parent:= );
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Simulation" Id="{c75d15cc-c078-477c-84cc-00bf73a9c03e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Simulation
+VAR_INST
+	s_bSimDoorIsClosed : BOOL;
+	s_bSimDoorIsOpen : BOOL;
+	
+	s_tonSimOpening : TON;
+	s_tonSimClosing : TON;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+s_tonSimOpening(in := s_cmMotor.p_bStaRunningFwd, PT := T#5S);
+s_tonSimClosing(in := s_cmMotor.p_bStaRunningRev, PT := T#5S);
+
+// WHen motor is running for x seconds set simulation status to open. 
+IF s_tonSimOpening.Q THEN
+	s_bSimDoorIsOpen := TRUE;
+END_IF
+
+IF s_tonSimClosing.Q THEN
+	s_bSimDoorIsClosed := TRUE;
+END_IF
+
+// Copy simulation value to IO
+s_diDoorIsOpen.m_Simulation(i_bSimulate := p_bStaSimulation, i_bvalue := s_bSimDoorIsOpen);
+s_diDoorIsClosed.m_Simulation(i_bSimulate := p_bStaSimulation, i_bvalue := s_bSimDoorIsClosed);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="m_CloseDoor" Id="{4001f11f-a707-42ee-a70d-5596e24fe84d}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD m_CloseDoor : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF p_bStaEnable 
+	AND p_eAlarmState < E_Alarm_Severity.Error 
+	AND NOT s_diDoorIsClosed.p_bStaValue 
+THEN
+	// Start motor reverse
+	s_cmMotor.m_StartRev();
+ELSE
+	s_cmMotor.m_Stop();
+END_IF
+
+m_CloseDoor := s_diDoorIsClosed.p_bStaValue;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="m_OpenDoor" Id="{93b71b2c-bb44-4fa0-a26d-27c6e5c1cde3}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD m_OpenDoor : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF p_bStaEnable 
+	AND p_eAlarmState < E_Alarm_Severity.Error 
+	AND NOT s_diDoorIsOpen.p_bStaValue 
+THEN
+	// Start motor reverse
+	s_cmMotor.m_StartFwd();
+ELSE
+	s_cmMotor.m_Stop();
+END_IF
+
+m_OpenDoor := s_diDoorIsOpen.p_bStaValue;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="m_Stop" Id="{0b32cc05-0418-4b21-a350-5bf9dbf4345a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD m_Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_cmMotor.m_Stop();
+
+m_Stop := s_cmMotor.p_bStaStandstill;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="p_bStaDoorBlocked" Id="{93ba0067-bd78-4017-9cb2-3fb021b90fae}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY p_bStaDoorBlocked : BOOL]]></Declaration>
+      <Get Name="Get" Id="{33168c7a-13f9-447a-b466-a5c846e37959}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_bStaDoorBlocked := s_diDoorIsBlocked.p_bStaValue;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_bStaDoorClosed" Id="{8fb4ab6d-81f0-477e-a84b-99d1348b03ee}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY PUBLIC p_bStaDoorClosed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{6e21943a-28df-4947-9f41-d9d14b7895a5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_bStaDoorClosed := s_diDoorIsClosed.p_bStaValue;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="p_bStaDoorOpen" Id="{b6c3dcb8-3e8c-49c9-b1cc-9b80fe31dff3}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY PUBLIC p_bStaDoorOpen : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c1fde751-049e-4874-8e75-11791d5de28b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[p_bStaDoorOpen := s_diDoorIsOpen.p_bStaValue;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>
