@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <GVL Name="GVL_Visu" Id="{b83a4829-5a57-42e1-b02b-16db40162563}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	g_fbMenu :  FB_VisuMenu;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
