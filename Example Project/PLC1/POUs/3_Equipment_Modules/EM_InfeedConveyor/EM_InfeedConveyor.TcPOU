@@ -230,11 +230,17 @@ s_cmBelt(
 	i_bReqEnable:= p_bStaEnable, 
 	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector. 
 	i_bAlwManualCtrl:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // This enables the manual buttons on HMI screen
-	i_bReqSimulation:= s_fbSimulation.q_bStaOn, 
+	i_bReqSimulation:= p_bStaSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);
 	
 // Call door
-s_cmDoor();]]></ST>
+
+s_cmDoor(
+	i_bReqEnable:= p_bStaEnable, 
+	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector.
+	i_bAlwManualCtrl:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
+	i_bReqSimulation:= p_bStaSimulation, 
+	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Outputs" Id="{e05ed731-d883-4196-8e86-005da75e431e}" FolderPath="Basic\">

@@ -1,5 +1,26 @@
 <?xml version="1.0"?>
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
+	<Translations>
+		<Text TxtId="NewEventClass_DisplayText"/>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor]]></Text>
+		</Text>
+	</Translations>
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1652,7 +1673,7 @@ External Setpoint Generation:
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{ED95D0F0-996C-4838-A860-B2CFD238BC82}" PersistentType="true">Alarmen</Name>
+			<Name GUID="{72C2FDC8-FD9F-486D-AA5E-B23086D57E6D}" PersistentType="true">Alarmen</Name>
 			<DisplayName TxtId=""><![CDATA[NewEventClass_DisplayText]]></DisplayName>
 			<EventId>
 				<Name Id="1">CM_Door_AlmDoorIsBlocked</Name>
@@ -1693,6 +1714,7 @@ External Setpoint Generation:
 				<Hide GUID="{B789C9EB-BD27-46E9-97E9-C57A5A8CF8D7}"/>
 				<Hide GUID="{5B8818D1-E086-4D61-B80A-726A2C32F44C}"/>
 				<Hide GUID="{04577265-1445-490B-B6C7-0C243E2243C4}"/>
+				<Hide GUID="{ED95D0F0-996C-4838-A860-B2CFD238BC82}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

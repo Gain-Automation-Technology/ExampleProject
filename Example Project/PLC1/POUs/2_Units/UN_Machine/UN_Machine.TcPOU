@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="UN_Machine" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine EXTENDS FB_UN_Base
+    <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine EXTENDS FB_UN_PackML_Base
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -41,25 +41,12 @@ END_VAR
 GVL_Modules.g_emInfeedConveyor(
 	i_bReqEnable					:= TRUE, 
 	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, 
-	i_bStaSafetyOk					:= GVL_Area100.g_emSafety.q_bStaSafetyOk, 
-	i_bReqSimulationOn				:= s_fbSimulation.q_bStaOn, 
-	i_itfPackML_Parent				:= s_fbPackML, 
-	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, 
-	q_bStaEnabled					=> , 
-	q_stStaPackML					=> , 
-	i_stMachineCommands				:= );
-
-GVL_Modules.g_emSafety(
-	i_bReqEnable					:= TRUE, 
-	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, 
 	i_bStaSafetyOk					:= TRUE, 
-	i_bReqSimulationOn				:= s_fbSimulation.q_bStaOn, 
+	i_bReqSimulation				:= p_bStaSimulation, 
 	i_itfPackML_Parent				:= s_fbPackML, 
 	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, 
-	q_bStaEnabled					=> , 
-	q_stStaPackML					=> , 
-	i_stMachineCommands				:= , 
-	q_bStaSafetyOk					=> );	
+	q_stStaPackML					=> );
+
 ]]></ST>
       </Implementation>
     </Method>

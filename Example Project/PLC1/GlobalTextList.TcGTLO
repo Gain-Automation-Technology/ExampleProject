@@ -1,10 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <GlobalTextList Name="GlobalTextList" Id="{e1d0d5a7-4047-4e63-886a-c028bd7f42e7}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="GlobalTextListObject">
           <l n="TextList" t="ArrayList" cet="TextListRow">
+            <o>
+              <v n="TextID">"354"</v>
+              <v n="TextDefault">"%s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
             <o>
               <v n="TextID">"612"</v>
               <v n="TextDefault">".bAlwStateChange"</v>
@@ -23,6 +28,11 @@
             <o>
               <v n="TextID">"943"</v>
               <v n="TextDefault">"ActSubState"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"581"</v>
+              <v n="TextDefault">"Alarms"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -71,6 +81,16 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"697"</v>
+              <v n="TextDefault">"Hoofdmenu"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"438"</v>
+              <v n="TextDefault">"Infeed"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"39"</v>
               <v n="TextDefault">"InstancePath"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -88,6 +108,11 @@
             <o>
               <v n="TextID">"492"</v>
               <v n="TextDefault">"nActSubState"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"652"</v>
+              <v n="TextDefault">"PackML"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

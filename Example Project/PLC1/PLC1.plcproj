@@ -21,10 +21,6 @@
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="GVLs\GVL_Modules.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -51,6 +47,9 @@
     <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs\ST_CommLiftToInfeed.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs\ST_EM_InfeedConveyor_Hmi.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\3_Equipment_Modules\EM_Safety\EM_Safety.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -58,6 +57,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Control_Modules\CM_Door\_DUTs\E_CM_Door_Seq_Logic.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\4_Control_Modules\CM_Door\_DUTs\ST_CM_Door_Hmi.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\6_TwinCatChecks\CheckBounds.TcPOU">
@@ -90,21 +92,37 @@
     <Compile Include="POUs\6_TwinCatChecks\CheckRangeUnsigned.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_Main.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>false</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="POUs\FB_Area100.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>false</ExcludeFromBuild>
-    </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VISUs\Vis_Machine.TcVIS">
+    <Compile Include="VISUs\HMI_Button.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="VISUs\Header.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="VISUs\Page_Main.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="VISUs\Page_Alarms.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="VISUs\Page_Infeed.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="VISUs\Page_PackML.TcVIS">
+      <SubType>Code</SubType>
+      <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
+    </Compile>
+    <Compile Include="VISUs\Visualization.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
     </Compile>
@@ -146,6 +164,10 @@
     <PlaceholderReference Include="GSBF_Common">
       <DefaultResolution>[GSBF_Common], * (Gain Automation Technology B.V.)</DefaultResolution>
       <Namespace>GSBF_Common</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="GSBF_HMI">
+      <DefaultResolution>[GSBF_HMI], * (Gain Automation Technology B.V.)</DefaultResolution>
+      <Namespace>GSBF_HMI</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="System_VisuElemMeter">
       <DefaultResolution>VisuElemMeter, 4.7.0.0 (System)</DefaultResolution>
@@ -216,6 +238,10 @@
     <PlaceholderReference Include="VisuDialogs">
       <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
       <Namespace>VisuDialogs</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="VisuSymbols">
+      <DefaultResolution>VisuSymbols, 4.5.0.0 (System)</DefaultResolution>
+      <Namespace>VisuSymbols</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,8 @@ VAR
 	s_bReqCloseDoor : BOOL;
 	s_bReqOpenDoor : BOOL;
 	
+	// Hmi
+	s_stHmi : ST_CM_Door_Hmi;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -65,6 +67,64 @@ s_fbAlmDoorNotClosed(
 	i_itfAlarmCollector:= p_itfAlarmCollector);
 	
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Hmi" Id="{c9a45355-c26c-41bc-8f27-39e93e32fe14}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD _m_Hmi : BOOL
+VAR_INPUT
+END_VAR
+VAR_INST
+	s_bStaOpening : BOOL;
+	s_bStaClosing : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+//
+s_stHmi.btnOpenDoor(
+	i_bEnable:= p_bAlwManualCtrl, 
+	i_bProcessState:= s_bStaOpening);
+	
+s_stHmi.btnCloseDoor(
+	i_bEnable:= p_bAlwManualCtrl, 
+	i_bProcessState:= s_bStaClosing);
+
+s_stHmi.btnStopDoor(
+	i_bEnable:= p_bAlwManualCtrl);	
+	
+IF s_stHmi.btnOpenDoor.q_bStateOsr THEN
+	s_bStaOpening := TRUE;
+	s_bStaClosing := FALSE;
+END_IF	
+
+IF s_stHmi.btnCloseDoor.q_bStateOsr THEN
+	s_bStaOpening := FALSE;
+	s_bStaClosing := TRUE;
+END_IF	
+
+
+IF s_stHmi.btnStopDoor.q_bStateOsr OR p_eAlarmState >= E_Alarm_Severity.Error THEN
+	s_bStaOpening := FALSE;
+	s_bStaClosing := FALSE;
+	m_Stop();
+END_IF	
+
+IF s_bStaOpening THEN
+	IF m_OpenDoor() THEN
+		s_bStaOpening := FALSE;
+	END_IF
+END_IF
+
+
+IF s_bStaClosing THEN
+	IF m_CloseDoor() THEN
+		s_bStaClosing := FALSE;
+	END_IF
+END_IF
+
+
+s_stHmi.bStaDoorOpen := p_bStaDoorOpen;
+s_stHmi.bStaDoorCLosed := p_bStaDoorClosed;]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Init" Id="{ba72ade9-b4ab-418a-b0fb-6872bf767072}" FolderPath="Methods\">
@@ -128,10 +188,10 @@ END_VAR]]></Declaration>
         <ST><![CDATA[// Call base
 SUPER^._m_Logic();
 
+_m_Hmi();
+
 // Call modules
 _m_Modules();
-
-
 
 // Call sequencer
 s_fbSeqControl(
@@ -239,10 +299,14 @@ s_tonSimClosing(in := s_cmMotor.p_bStaRunningRev, PT := T#5S);
 // WHen motor is running for x seconds set simulation status to open. 
 IF s_tonSimOpening.Q THEN
 	s_bSimDoorIsOpen := TRUE;
+ELSIF s_cmMotor.p_bStaRunningRev THEN
+	s_bSimDoorIsOpen := FALSE;	
 END_IF
 
 IF s_tonSimClosing.Q THEN
 	s_bSimDoorIsClosed := TRUE;
+ELSIF s_cmMotor.p_bStaRunningFwd THEN
+	s_bSimDoorIsClosed := FALSE;	
 END_IF
 
 // Copy simulation value to IO
