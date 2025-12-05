@@ -2191,7 +2191,7 @@
                     </o>
                     <o>
                       <v n="Id">2477733581L</v>
-                      <v n="Value">"MAIN.s_sHighestActiveAlarm"</v>
+                      <v n="Value">"GVL_Modules.g_fbHmiAlarmList.q_sHighestActiveAlarm"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>

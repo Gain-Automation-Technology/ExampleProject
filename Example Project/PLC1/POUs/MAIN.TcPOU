@@ -1,44 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <POU Name="MAIN" Id="{d8cf606a-bd90-4fc1-9637-3e8daf03509a}" SpecialFunc="None">
+<POU Name="MAIN" Id="{d8cf606a-bd90-4fc1-9637-3e8daf03509a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN 
 VAR
-	s_aitfAlarms : ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF ITF_AlarmHandler; //Result
-	s_asAlarmList :  ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF STRING; //Result
-	s_itfHightesActiveAlarm : ITF_AlarmHandler;
-	s_sHighestActiveAlarm : STRING;
-	s_bAlarmFound : BOOL;
-	i : DINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	// Alarm list
-	// Clea ITF
-	s_itfHightesActiveAlarm := 0;
-	s_sHighestActiveAlarm := '';
-	GVL_Modules.g_unMachine.p_itfAlarmCollector.m_GetActiveAlarms(q_aitfAlarms => s_aitfAlarms);
-	FOR i := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO 
-		IF s_aitfAlarms[i] <> 0 AND_THEN s_aitfAlarms[i].p_bStaRaised THEN
-			IF s_itfHightesActiveAlarm = 0 THEN
-				s_itfHightesActiveAlarm := s_aitfAlarms[i];
-				s_sHighestActiveAlarm := s_aitfAlarms[i].p_sEventText;
-			ELSIF s_aitfAlarms[i].p_eAlarmState > s_itfHightesActiveAlarm.p_eAlarmState 
-			THEN
-				s_itfHightesActiveAlarm := s_aitfAlarms[i];
-				s_sHighestActiveAlarm := s_aitfAlarms[i].p_sEventText;
-			END_IF
-			s_asAlarmList[i] := s_aitfAlarms[i].p_sEventText;
-		ELSE
-			s_asAlarmList[i] := '';
-		END_IF
-	END_FOR
-
-
-
-
+      <ST><![CDATA[// HMI alarm overview
+	GVL_Modules.g_fbHmiAlarmList(i_itfModule := GVL_Modules.g_unMachine);
 
 	// PackML status manager
 	GVL_Modules.g_fbPackMLstatusManager();
+	
 	// Machine controls manager
 	
 	GVL_Modules.g_fbHmiMachCtrlsManager(i_itfModule := GVL_Modules.g_fbMachCtrlsManager);

@@ -411,7 +411,7 @@
                     </o>
                     <o>
                       <v n="Id">72808681L</v>
-                      <v n="Value">"MAIN.s_asAlarmList"</v>
+                      <v n="Value">"GVL_Modules.g_fbHmiAlarmList.q_asAlarmList"</v>
                     </o>
                     <o>
                       <v n="Id">1636817830L</v>
@@ -419,15 +419,15 @@
                     </o>
                     <o>
                       <v n="Id">3854506369L</v>
-                      <v n="Value">"MAIN.s_asAlarmList[INDEX]"</v>
+                      <v n="Value">"GVL_Modules.g_fbHmiAlarmList.q_asAlarmList[INDEX]"</v>
                     </o>
                     <o>
                       <v n="Id">2232123230L</v>
-                      <v n="Value">"MAIN.s_asAlarmList[INDEX]"</v>
+                      <v n="Value">"GVL_Modules.g_fbHmiAlarmList.q_asAlarmList[INDEX]"</v>
                     </o>
                     <o>
                       <v n="Id">2685023577L</v>
-                      <v n="Value">"MAIN.s_asAlarmList[INDEX]"</v>
+                      <v n="Value">"GVL_Modules.g_fbHmiAlarmList.q_asAlarmList[INDEX]"</v>
                     </o>
                     <o>
                       <v n="Id">4036189354L</v>
@@ -481,7 +481,7 @@
                           <v>String</v>
                         </a>
                         <a n="ColumnNames" cet="String">
-                          <v>MAIN.s_asAlarmList[INDEX]</v>
+                          <v>GVL_Modules.g_fbHmiAlarmList.q_asAlarmList[INDEX]</v>
                         </a>
                         <v n="BaseType">true</v>
                         <a n="Bounds" cet="ArrayBound">

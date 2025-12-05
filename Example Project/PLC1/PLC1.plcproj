@@ -29,6 +29,9 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\1_Management_Layer\FB_HMI_AlarmList.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\2_Units\UN_Machine\UN_Machine.TcPOU">
       <SubType>Code</SubType>
     </Compile>

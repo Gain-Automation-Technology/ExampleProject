@@ -7,6 +7,7 @@ VAR_GLOBAL
 // Management
 	g_fbMachCtrlsManager	: FB_MachineControlsManager;
 	g_fbHmiMachCtrlsManager	: FB_HMI_MachineControlsManager_StartStopMode;
+	g_fbHmiAlarmList		: FB_HMI_AlarmList;
 	
 	g_fbPackMLstatusManager	: FB_PackML_StatusManager;
 

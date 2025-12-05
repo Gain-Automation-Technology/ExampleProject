@@ -243,14 +243,6 @@ s_cmDoor(
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="_m_Outputs" Id="{e05ed731-d883-4196-8e86-005da75e431e}" FolderPath="Basic\">
-      <Declaration><![CDATA[(* Set hardware and module outputs. *)
-METHOD PROTECTED _m_Outputs
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="_m_Starting" Id="{f4b3656d-5541-4cdd-bcd6-7f309fb69039}" FolderPath="PackML States\">
       <Declaration><![CDATA[METHOD PROTECTED _m_Starting : BOOL // Return state complete when state is ready
 VAR_INPUT

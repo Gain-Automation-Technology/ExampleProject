@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="FB_HMI_AlarmList" Id="{28f621f1-2517-4966-9914-818b698fd07e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HMI_AlarmList EXTENDS FB_HMI_Base
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	q_asAlarmList			: ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF STRING;
+	q_itfHighestActiveAlarm	: ITF_AlarmHandler;
+	q_sHighestActiveAlarm	: STRING;
+END_VAR
+VAR
+	s_itfUnit				: ITF_UN_Base; // Upgraded interface
+	s_itfAlarmCollector		: ITF_AlarmCollector;
+
+	s_aitfActiveAlarms		: ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF ITF_AlarmHandler;
+	s_nIndex				: UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Upgrade the base-interface
+IF NOT __QUERYINTERFACE(i_itfModule, s_itfUnit) THEN
+	RETURN;
+END_IF
+
+s_itfAlarmCollector := s_itfUnit.p_itfAlarmCollector;
+
+SUPER^();
+]]></ST>
+    </Implementation>
+    <Method Name="m_HmiControl" Id="{52914092-0c81-4469-b262-93733edf7148}">
+      <Declaration><![CDATA[METHOD m_HmiControl
+VAR_INPUT
+	i_bAlwControl	: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^.m_HmiControl(i_bAlwControl := i_bAlwControl);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="m_HmiUpdateStates" Id="{c8929337-1a39-4303-8ffd-429fb1c89962}">
+      <Declaration><![CDATA[METHOD m_HmiUpdateStates
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF s_itfAlarmCollector = 0 THEN
+	q_itfHighestActiveAlarm := 0;
+	q_sHighestActiveAlarm := '';
+	FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
+		q_asAlarmList[s_nIndex] := '';
+	END_FOR
+	RETURN;
+END_IF
+
+SUPER^.m_HmiUpdateStates();
+
+// Reset outputs before (re)building the list
+q_itfHighestActiveAlarm := 0;
+q_sHighestActiveAlarm := '';
+FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
+	q_asAlarmList[s_nIndex] := '';
+END_FOR
+
+s_itfAlarmCollector.m_GetActiveAlarms(q_aitfAlarms => s_aitfActiveAlarms);
+
+FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
+	IF s_aitfActiveAlarms[s_nIndex] <> 0 AND_THEN s_aitfActiveAlarms[s_nIndex].p_bStaRaised THEN
+		IF (q_itfHighestActiveAlarm = 0) OR (s_aitfActiveAlarms[s_nIndex].p_eAlarmState > q_itfHighestActiveAlarm.p_eAlarmState) THEN
+			q_itfHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex];
+			q_sHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex].p_sEventText;
+		END_IF
+
+		q_asAlarmList[s_nIndex] := s_aitfActiveAlarms[s_nIndex].p_sEventText;
+	END_IF
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
