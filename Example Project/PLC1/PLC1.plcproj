@@ -29,7 +29,13 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\1_Management_Layer\FB_HMI_AlarmList.TcPOU">
+    <Compile Include="POUs\1_Management_Layer\ST_HmiAlarmList.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\1_Management_Layer\FB_HMI_AlarmCollector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\2_Units\UN_Machine\DUTs\ST_UN_Machine_Hmi.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\2_Units\UN_Machine\UN_Machine.TcPOU">
@@ -134,6 +140,7 @@
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\1_Management_Layer" />
+    <Folder Include="POUs\1_Management_Layer\_DUTs" />
     <Folder Include="POUs\2_Units">
       <ExcludeFromBuild>false</ExcludeFromBuild>
     </Folder>
@@ -169,7 +176,7 @@
       <Namespace>GSBF_Common</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="GSBF_HMI">
-      <DefaultResolution>[GSBF_HMI], * (Gain Automation Technology B.V.)</DefaultResolution>
+      <DefaultResolution>GSBF_HMI, * (Gain Automation Technology B.V.)</DefaultResolution>
       <Namespace>GSBF_HMI</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="System_VisuElemMeter">

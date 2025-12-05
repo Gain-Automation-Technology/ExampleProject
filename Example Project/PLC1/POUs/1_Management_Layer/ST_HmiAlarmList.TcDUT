@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="ST_HmiAlarmList" Id="{32c735e7-89d0-463c-ab00-690f03812f39}">
+    <Declaration><![CDATA[TYPE ST_HmiAlarmList :
+STRUCT
+	asAlarmList				: ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF STRING;
+	sHighestActiveAlarm		: STRING;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

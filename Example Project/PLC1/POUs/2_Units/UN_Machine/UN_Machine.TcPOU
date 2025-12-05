@@ -7,8 +7,9 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-// Local var
-
+	// HMI
+	s_stHmi : ST_UN_Machine_Hmi;
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -24,12 +25,21 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="_m_Hmi" Id="{e2052703-323d-40e8-9f21-012122f38ffa}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD _m_Hmi : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_stHmi.fbHmiAlarmCollector(i_itfAlarmCollector := s_fbAlarmCollector);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="_m_Logic" Id="{b95711e4-a3f3-4e91-9f55-7c0e3689d897}" FolderPath="Basic\">
       <Declaration><![CDATA[METHOD PROTECTED _m_Logic]]></Declaration>
       <Implementation>
         <ST><![CDATA[SUPER^._m_Logic();
 
-]]></ST>
+_m_Hmi();]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Modules" Id="{c15e282d-b76d-440b-8236-902bb4c31743}" FolderPath="Basic\">

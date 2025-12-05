@@ -1,14 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-<POU Name="MAIN" Id="{d8cf606a-bd90-4fc1-9637-3e8daf03509a}" SpecialFunc="None">
+  <POU Name="MAIN" Id="{d8cf606a-bd90-4fc1-9637-3e8daf03509a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN 
 VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// HMI alarm overview
-	GVL_Modules.g_fbHmiAlarmList(i_itfModule := GVL_Modules.g_unMachine);
-
+      <ST><![CDATA[
 	// PackML status manager
 	GVL_Modules.g_fbPackMLstatusManager();
 	
