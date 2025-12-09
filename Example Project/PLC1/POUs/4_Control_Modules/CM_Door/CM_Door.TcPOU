@@ -70,7 +70,7 @@ s_fbAlmDoorNotClosed(
       </Implementation>
     </Method>
     <Method Name="_m_Hmi" Id="{c9a45355-c26c-41bc-8f27-39e93e32fe14}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD _m_Hmi : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
 VAR_INPUT
 END_VAR
 VAR_INST
@@ -78,19 +78,19 @@ VAR_INST
 	s_bStaClosing : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[SUPER^._m_Hmi();
 
 //
 s_stHmi.btnOpenDoor(
-	i_bEnable:= p_bAlwManualCtrl, 
+	i_bEnable:= p_bEnableHmiControls, 
 	i_bProcessState:= s_bStaOpening);
 	
 s_stHmi.btnCloseDoor(
-	i_bEnable:= p_bAlwManualCtrl, 
+	i_bEnable:= p_bEnableHmiControls, 
 	i_bProcessState:= s_bStaClosing);
 
 s_stHmi.btnStopDoor(
-	i_bEnable:= p_bAlwManualCtrl);	
+	i_bEnable:= p_bEnableHmiControls);	
 	
 IF s_stHmi.btnOpenDoor.q_bStateOsr THEN
 	s_bStaOpening := TRUE;
@@ -275,7 +275,7 @@ END_VAR
 s_cmMotor(
 	i_bReqEnable:= p_bStaEnable, 
 	i_bReqReset:= , // Can be leaved empty, is automatically done by alarmcollector
-	i_bAlwManualCtrl:= i_bAlwManualCtrl, 
+	i_bReqEnableHmiControls:= p_bEnableHmiControls, 
 	i_bReqSimulation:= i_bReqSimulation, 
 	i_itfAlarmCollector_Parent:= );
 ]]></ST>

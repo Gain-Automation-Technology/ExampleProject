@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="FB_HMI_AlarmCollector" Id="{28f621f1-2517-4966-9914-818b698fd07e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_HMI_AlarmCollector EXTENDS FB_HMI_Base
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HMI_AlarmCollector EXTENDS FB_BaseExt
 VAR_INPUT
 	i_itfAlarmCollector		: ITF_AlarmCollector;// Upgraded interface
 END_VAR
@@ -18,12 +18,10 @@ END_VAR
     <Implementation>
       <ST><![CDATA[// Upgrade the base-interface
 SUPER^();
-
-{warning 'Remove after update HMIBase module '}
-m_HmiUpdateStates();]]></ST>
+]]></ST>
     </Implementation>
-    <Method Name="m_HmiUpdateStates" Id="{c8929337-1a39-4303-8ffd-429fb1c89962}">
-      <Declaration><![CDATA[METHOD m_HmiUpdateStates
+    <Method Name="_m_Hmi" Id="{c8929337-1a39-4303-8ffd-429fb1c89962}">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
 VAR_INST
 	s_itfHighestActiveAlarm : ITF_AlarmHandler;
 END_VAR]]></Declaration>
@@ -37,7 +35,7 @@ END_VAR]]></Declaration>
 	RETURN;
 END_IF
 
-SUPER^.m_HmiUpdateStates();
+SUPER^._m_Hmi();
 
 // Reset outputs before (re)building the list
 s_itfHighestActiveAlarm := 0;

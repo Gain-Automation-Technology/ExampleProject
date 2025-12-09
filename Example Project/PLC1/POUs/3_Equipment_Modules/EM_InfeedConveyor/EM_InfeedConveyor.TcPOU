@@ -229,7 +229,7 @@ SUPER^._m_Modules();
 s_cmBelt(
 	i_bReqEnable:= p_bStaEnable, 
 	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector. 
-	i_bAlwManualCtrl:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // This enables the manual buttons on HMI screen
+	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // This enables the manual buttons on HMI screen
 	i_bReqSimulation:= p_bStaSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);
 	
@@ -238,7 +238,7 @@ s_cmBelt(
 s_cmDoor(
 	i_bReqEnable:= p_bStaEnable, 
 	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector.
-	i_bAlwManualCtrl:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
+	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
 	i_bReqSimulation:= p_bStaSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);]]></ST>
       </Implementation>

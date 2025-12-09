@@ -12,7 +12,7 @@ END_VAR
 	
 	// Machine controls manager
 	
-	GVL_Modules.g_fbHmiMachCtrlsManager(i_itfModule := GVL_Modules.g_fbMachCtrlsManager);
+	GVL_Modules.g_fbHmiMachCtrlsManager(i_itfMachineControl := GVL_Modules.g_fbMachCtrlsManager);
 	GVL_Modules.g_fbMachCtrlsManager(
 		i_eCfgCtrlType				:= E_MachineControlsManager_Type.StartBtnAndStopBtnAndModeSelector,
 		i_nCfgNrOfUsedUnits			:= 1,

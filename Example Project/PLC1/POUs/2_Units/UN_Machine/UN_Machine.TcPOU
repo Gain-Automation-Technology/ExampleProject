@@ -26,12 +26,13 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="_m_Hmi" Id="{e2052703-323d-40e8-9f21-012122f38ffa}" FolderPath="Basic\">
-      <Declaration><![CDATA[METHOD _m_Hmi : BOOL
-VAR_INPUT
-END_VAR
+      <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_stHmi.fbHmiAlarmCollector(i_itfAlarmCollector := s_fbAlarmCollector);]]></ST>
+        <ST><![CDATA[SUPER^._m_Hmi();
+
+s_stHmi.fbHmiAlarmCollector(i_itfAlarmCollector := s_fbAlarmCollector);
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Logic" Id="{b95711e4-a3f3-4e91-9f55-7c0e3689d897}" FolderPath="Basic\">
