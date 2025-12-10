@@ -1,51 +1,11 @@
 <?xml version="1.0"?>
 <TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19" ClassName="CNestedPlcProjDef">
 	<Project GUID="{93B59E1E-9B9C-4AF4-8B9D-07523266E926}" Name="PLC1" PrjFilePath="..\..\PLC1\PLC1.plcproj" TmcFilePath="..\..\PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{24C49743-664C-8207-CEDB-35BEA5637297}" TmcPath="PLC1\PLC1.tmc">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F24F6FA9-D76E-D61C-2162-A24A93956F37}" TmcPath="PLC1\PLC1.tmc">
 			<Name>PLC1 Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="2" AreaNo="1">
 				<Name>PlcTask Outputs</Name>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_fbDoStartButtonLight.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_fbDoStopButtonLight.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoHorn.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Red.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Orange.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Blue.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Green.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_White.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
 				<Var>
 					<Name>GVL_Modules.g_emInfeedConveyor.s_cmBelt.s_fbHardware.s_fbStart.Q_bOut</Name>
 					<Comment><![CDATA[  IO var ]]></Comment>
@@ -79,16 +39,6 @@
 			</Vars>
 			<Vars VarGrpType="1">
 				<Name>PlcTask Inputs</Name>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_afbDiBtnStart[1].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Modules.g_fbMachCtrlsManager.s_afbDiBtnStop[1].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
 				<Var>
 					<Name>GVL_Modules.g_emInfeedConveyor.s_cmBelt.s_fbHardware.s_fbThThermOk.I_bIn</Name>
 					<Comment><![CDATA[ IO                           	                	]]></Comment>

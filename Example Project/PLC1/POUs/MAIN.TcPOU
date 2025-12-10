@@ -13,25 +13,17 @@ END_VAR
 	// Machine controls manager
 	
 	GVL_Modules.g_fbHmiMachCtrlsManager(i_itfMachineControl := GVL_Modules.g_fbMachCtrlsManager);
-	GVL_Modules.g_fbMachCtrlsManager(
-		i_eCfgCtrlType				:= E_MachineControlsManager_Type.StartBtnAndStopBtnAndModeSelector,
-		i_nCfgNrOfUsedUnits			:= 1,
-		i_stStackLightPackML_Status	:= GVL_Modules.g_unMachine.q_stStaPackML,
-		i_bStaDownStream_NotRunning	:= ,
-		i_bStaUpStream_NotRunning	:= ,
-		i_bStaLowOnMaterials		:= );
+	GVL_Modules.g_fbMachCtrlsManager(i_itfModule := GVL_Modules.g_unMachine);
 	
 // Units
 	// PLC units
 	
-	GVL_Modules.g_unMachine(
-		i_bReqEnable				:= TRUE, 
-		i_bReqReset					:= GVL_Modules.g_fbHmiMachCtrlsManager.q_bReqReset, 
-		i_bReqSimulationOn			:= TRUE,
-		i_stPackML_Command			:= GVL_Modules.g_fbMachCtrlsManager.q_stPackML_Command, 
-		i_itfPackML_StatusManager	:= GVL_Modules.g_fbPackMLstatusManager,
-		i_itfAlarmManager			:= ,
-		q_stStaPackML				=> GVL_Modules.g_fbMachCtrlsManager.i_astPackML_Status[1]);
+GVL_Modules.g_unMachine(
+	i_bReqEnable				:= TRUE, 
+	i_bReqReset					:= GVL_Modules.g_fbMachCtrlsManager.p_bReset, 
+	i_bReqSimulationOn			:= TRUE,
+	i_itfPackML_StatusManager	:= GVL_Modules.g_fbPackMLstatusManager,
+	i_itfAlarmManager			:= );
 ]]></ST>
     </Implementation>
   </POU>
