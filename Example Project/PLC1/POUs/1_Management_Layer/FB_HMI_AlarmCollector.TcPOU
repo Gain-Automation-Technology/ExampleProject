@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="FB_HMI_AlarmCollector" Id="{28f621f1-2517-4966-9914-818b698fd07e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_HMI_AlarmCollector EXTENDS FB_BaseExt
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HMI_AlarmCollector EXTENDS FB_Base
 VAR_INPUT
 	i_itfAlarmCollector		: ITF_AlarmCollector;// Upgraded interface
 END_VAR
@@ -16,7 +16,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Upgrade the base-interface
+      <ST><![CDATA[// Call base
 SUPER^();
 ]]></ST>
     </Implementation>
@@ -34,8 +34,6 @@ END_VAR]]></Declaration>
 	END_FOR
 	RETURN;
 END_IF
-
-SUPER^._m_Hmi();
 
 // Reset outputs before (re)building the list
 s_itfHighestActiveAlarm := 0;
@@ -60,6 +58,16 @@ FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
 	END_IF
 END_FOR
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="m_Main" Id="{abdcdb20-b816-4ec0-a43d-c5476a90cfd4}">
+      <Declaration><![CDATA[(* Main method of the FB *)
+METHOD m_Main
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^.m_Main();
+
+_m_Hmi();]]></ST>
       </Implementation>
     </Method>
   </POU>

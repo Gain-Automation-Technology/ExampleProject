@@ -3,6 +3,7 @@
   <POU Name="CM_Door" Id="{51a6c2a3-e5cd-40e3-9cf2-1a2a160f0bbc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK CM_Door EXTENDS FB_CM_Base
 VAR_INPUT
+	i_bReqEnableHmiControls : BOOL;
 END_VAR
 VAR_OUTPUT
 END_VAR
@@ -78,19 +79,20 @@ VAR_INST
 	s_bStaClosing : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^._m_Hmi();
+        <ST><![CDATA[
+
 
 //
 s_stHmi.btnOpenDoor(
-	i_bEnable:= p_bEnableHmiControls, 
+	i_bEnable:= i_bReqEnableHmiControls, 
 	i_bProcessState:= s_bStaOpening);
 	
 s_stHmi.btnCloseDoor(
-	i_bEnable:= p_bEnableHmiControls, 
+	i_bEnable:= i_bReqEnableHmiControls, 
 	i_bProcessState:= s_bStaClosing);
 
 s_stHmi.btnStopDoor(
-	i_bEnable:= p_bEnableHmiControls);	
+	i_bEnable:= i_bReqEnableHmiControls);	
 	
 IF s_stHmi.btnOpenDoor.q_bStateOsr THEN
 	s_bStaOpening := TRUE;
@@ -140,13 +142,13 @@ s_fbAlmDoorIsBlocked.p_itfConfig.p_bCfgAutoReset		:= FALSE;
 s_fbAlmDoorIsBlocked.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
 s_fbAlmDoorIsBlocked.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
 s_fbAlmDoorIsBlocked.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
-s_fbAlmDoorIsBlocked.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.CM_Door_AlmDoorIsBlocked;
+s_fbAlmDoorIsBlocked.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTS.Alarmen.CM_Door_AlmDoorIsBlocked;
 
 s_fbAlmFeedbackBothOn.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
 s_fbAlmFeedbackBothOn.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
 s_fbAlmFeedbackBothOn.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
 s_fbAlmFeedbackBothOn.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
-s_fbAlmFeedbackBothOn.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.CM_Door_AlmFeedbackBothOn;
+s_fbAlmFeedbackBothOn.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTS.Alarmen.CM_Door_AlmFeedbackBothOn;
 
 s_fbAlmDoorNotOpen.p_itfConfig.p_bCfgAutoReset			:= FALSE;                                                
 s_fbAlmDoorNotOpen.p_itfConfig.p_bCfgEnable				:= TRUE;                                                   
@@ -275,7 +277,6 @@ END_VAR
 s_cmMotor(
 	i_bReqEnable:= p_bStaEnable, 
 	i_bReqReset:= , // Can be leaved empty, is automatically done by alarmcollector
-	i_bReqEnableHmiControls:= p_bEnableHmiControls, 
 	i_bReqSimulation:= i_bReqSimulation, 
 	i_itfAlarmCollector_Parent:= );
 ]]></ST>

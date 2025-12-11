@@ -11,6 +11,8 @@ END_VAR
 VAR
 	// Control modules
 	s_cmBelt : CM_MotorDol;
+	s_cmHmiBelt : HMI_CM_MotorDol;
+	
 	s_cmDoor : CM_Door;
 	
 	
@@ -179,6 +181,15 @@ _m_Execute := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq)).p_bStaReady;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="_m_Hmi" Id="{68f5ea41-0137-40e2-a684-a2bf13741982}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_cmHmiBelt(
+	s_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // This enables the manual buttons on HMI screen,
+	i_itfCM_MotorDol:= s_cmBelt);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="_m_Init" Id="{363a145b-9dfd-4568-9596-4932824d4f15}" FolderPath="Basic\">
       <Declaration><![CDATA[(* Initialization, set initial data. *)
 METHOD PROTECTED _m_Init
@@ -229,7 +240,6 @@ SUPER^._m_Modules();
 s_cmBelt(
 	i_bReqEnable:= p_bStaEnable, 
 	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector. 
-	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // This enables the manual buttons on HMI screen
 	i_bReqSimulation:= p_bStaSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);
 	
