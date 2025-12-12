@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
-  <DUT Name="E_EM_InfeedConveyor_Seq_Execute" Id="{e602f4c8-8aa5-4c18-9cfc-cb41bfdf5cfd}">
+  <DUT Name="E_EM_InfeedConveyor_Seq_ProductionExecute" Id="{e602f4c8-8aa5-4c18-9cfc-cb41bfdf5cfd}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}
-TYPE E_EM_InfeedConveyor_Seq_Execute :
+TYPE E_EM_InfeedConveyor_Seq_ProductionExecute :
 (
 	Idle := c_nSeqIdle,
 	Start := c_nSeqStart,

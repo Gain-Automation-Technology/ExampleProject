@@ -17,6 +17,21 @@ END_VAR
 ]]></ST>
     </Implementation>
     <Folder Name="Basic" Id="{e89104c0-d33f-460a-aaf2-8953cfda25ab}" />
+    <Folder Name="PackML States" Id="{1d885303-f3d2-4f24-8e9c-f2289cd3da1a}" />
+    <Method Name="_m_Aborted" Id="{f71833b4-00b3-4f3f-b694-481d92187cf9}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Aborted : BOOL (* Return state complete when state is ready*)
+VAR_INPUT
+	(*First cycle of this state*)
+	i_bCmdRestart	: BOOL;
+	i_eActMode	: GSBF_Common.E_PackML_Mode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF s_fbAlarmCollector.p_eAlarmState < E_Alarm_Severity.Critical THEN
+	s_fbPackML.m_ReqClear();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="_m_Alarms" Id="{8fa8464a-636c-46ee-9f13-6e7927953bcd}" FolderPath="Basic\">
       <Declaration><![CDATA[METHOD PROTECTED _m_Alarms
 ]]></Declaration>
@@ -56,9 +71,33 @@ GVL_Modules.g_emInfeedConveyor(
 	i_bReqSimulation				:= p_bStaSimulation, 
 	i_itfPackML_Parent				:= s_fbPackML, 
 	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, 
-	q_stStaPackML					=> );
+	q_stStaPackML					=> ,
+	i_stFromLift					:= GVL_Modules.g_emLift.q_stFromLift);
 
-]]></ST>
+GVL_Modules.g_emLift(
+	i_bReqEnable:= TRUE, 
+	i_bReqReset:= s_fbAlarmCollector.q_bReqReset, 
+	i_bStaSafetyOk:= TRUE, 
+	i_bReqSimulation:= p_bStaSimulation, 
+	i_itfPackML_Parent:= s_fbPackML, 
+	i_itfAlarmCollector_Parent:= s_fbAlarmCollector, 
+	q_stStaPackML=> , 
+	i_stToLift:= GVL_Modules.g_emInfeedConveyor.q_stToLift, 
+	q_stFromLift=> );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Stopped" Id="{05f03b2a-7abf-40a2-b03f-2927d90e9758}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Stopped : BOOL (* Return state complete when state is ready*)
+VAR_INPUT
+	(*First cycle of this state*)
+	i_bCmdRestart	: BOOL;
+	i_eActMode	: GSBF_Common.E_PackML_Mode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF s_fbAlarmCollector.p_eAlarmState < E_Alarm_Severity.Error THEN
+	s_fbPackML.m_ReqReset();
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="m_Main" Id="{5738c138-41a1-473c-badd-a5f9691bbc49}">

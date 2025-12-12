@@ -15,6 +15,7 @@ VAR_GLOBAL
 	
 // Equipment modules
 	g_emInfeedConveyor		: EM_InfeedConveyor;
+	g_emLift 				: EM_Lift;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="E_EM_Lift_Seq_ProductionStarting" Id="{8962b13d-1c8c-43df-9df8-5eb9c48043a2}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_EM_Lift_Seq_ProductionStarting :
+(
+	Idle := c_nSeqIdle,
+	Start := c_nSeqStart,
+	
+	
+	ReferenceDrive,
+	EnableDrive,
+	MoveToStartPos,
+	
+	Ready := c_nSeqReady,
+	Error := c_nSeqError
+
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -294,8 +294,8 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
-s_tonSimOpening(in := s_cmMotor.p_bStaRunningFwd, PT := T#5S);
-s_tonSimClosing(in := s_cmMotor.p_bStaRunningRev, PT := T#5S);
+s_tonSimOpening(in := s_cmMotor.p_bStaRunningFwd, PT := T#1MS);
+s_tonSimClosing(in := s_cmMotor.p_bStaRunningRev, PT := T#5MS);
 
 // WHen motor is running for x seconds set simulation status to open. 
 IF s_tonSimOpening.Q THEN

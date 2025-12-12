@@ -44,10 +44,10 @@
     <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\EM_InfeedConveyor.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs\E_EM_InfeedConveyor_Seq_Execute.TcDUT">
+    <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs\E_EM_InfeedConveyor_Seq_ProductionExecute.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs\E_EM_InfeedConveyor_Seq_Starting.TcDUT">
+    <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs\E_EM_InfeedConveyor_Seq_ProductionStarting.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs\ST_CommInfeedToLift.TcDUT">
@@ -57,6 +57,21 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs\ST_EM_InfeedConveyor_Hmi.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3_Equipment_Modules\EM_Lift\EM_Lift.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3_Equipment_Modules\EM_Lift\_DUTs\E_EM_Lift_Seq_ProductionExecute.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3_Equipment_Modules\EM_Lift\_DUTs\E_EM_Lift_Seq_StopServos.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3_Equipment_Modules\EM_Lift\_DUTs\E_EM_Lift_Seq_ProductionStarting.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\3_Equipment_Modules\EM_Lift\_DUTs\ST_EM_Lift_Hmi.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Control_Modules\CM_Door\CM_Door.TcPOU">
@@ -148,6 +163,8 @@
     </Folder>
     <Folder Include="POUs\3_Equipment_Modules\EM_InfeedConveyor\_DUTs" />
     <Folder Include="POUs\3_Equipment_Modules\EM_InfeedConveyor" />
+    <Folder Include="POUs\3_Equipment_Modules\EM_Lift" />
+    <Folder Include="POUs\3_Equipment_Modules\EM_Lift\_DUTs" />
     <Folder Include="POUs\4_Control_Modules">
       <ExcludeFromBuild>false</ExcludeFromBuild>
     </Folder>

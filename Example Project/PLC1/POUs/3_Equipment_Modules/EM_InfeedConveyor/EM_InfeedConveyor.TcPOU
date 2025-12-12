@@ -9,6 +9,9 @@ VAR_OUTPUT
 	q_stToLift : ST_CommInfeedToLift;
 END_VAR
 VAR
+	// Variables
+	s_stHmi : ST_EM_InfeedConveyor_Hmi;	
+
 	// Control modules
 	s_cmBelt : CM_MotorDol;
 	s_cmHmiBelt : HMI_CM_MotorDol;
@@ -19,11 +22,6 @@ VAR
 	// in/outputs
 	s_diStartConveyor : FB_DigitalInput;
 	s_diEndConveyor : FB_DigitalInput;
-	
-	// Config
-	s_itfConfig						: ITF_CM_Valve_Config := s_fbConfig;	// Configuration struct as an interface
-	{attribute 'hide'}
-	s_fbConfig						: FB_CM_Valve_Config; 
 	
 	// Alarms
 	s_fbAlmDoorOpenWithoutPermission : FB_AlarmHandler;
@@ -40,6 +38,7 @@ SUPER^();]]></ST>
     </Implementation>
     <Folder Name="Basic" Id="{4c6007b4-e453-43fb-83ef-68fa84ee3094}" />
     <Folder Name="PackML States" Id="{3cbf12f9-9c33-48b6-97f7-4beb2ad0199f}" />
+    <Folder Name="Sequencers" Id="{2c33c865-2ad2-4cc9-894b-19e455f11247}" />
     <Method Name="_m_Aborting" Id="{6e493f1a-05d4-40e5-abb9-78f714106cb8}" FolderPath="PackML States\">
       <Declaration><![CDATA[METHOD PROTECTED _m_Aborting : BOOL // Return state complete when state is ready
 VAR_INPUT
@@ -85,107 +84,20 @@ VAR_INPUT
 	i_bCmdRestart	: BOOL;	//First cycle of this state
 	i_eActMode 		: E_PackML_Mode;
 END_VAR
-VAR_INST
-	s_fbSeqControl  : FB_SeqControl;
-	s_eSeq 			: E_EM_InfeedConveyor_Seq_Execute;
-END_VAR]]></Declaration>
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_fbSeqControl(
-	i_bReqStart:= i_bCmdRestart, 
-	i_rnActSeqStep:= s_eSeq, 
-	i_sActSeqStep:= TO_STRING(s_eSeq));
-
-
-// Automatisch programma - Sequencer
-CASE s_eSeq OF
-	E_EM_InfeedConveyor_Seq_Execute.Idle:
-		;
-		
-	E_EM_InfeedConveyor_Seq_Execute.Start:
-		// Choose correct step depening on actual status
-		IF s_cmDoor.p_bStaDoorClosed AND s_diEndConveyor.p_bStaValue THEN
-			// Sensor at end of conveyor
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.WaitUntilLiftReady);
-		ELSIF s_cmDoor.p_bStaDoorOpen THEN
-			// Sensor at end of conveyor
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.RequestLiftReceiving);	
-		ELSE
-			// Sensor at end of conveyor
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.WaitForProduct);	
-		END_IF		
-	
-	E_EM_InfeedConveyor_Seq_Execute.WaitForProduct:
-		IF s_diStartConveyor.p_bStaValue THEN
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.MoveProductToDoor);
-		ELSIF s_diEndConveyor.p_bStaValue THEN
-			// without running belt it' s not possible to detect an product at outfeed conveyor
-			s_fbAlmUnexpectProductEndConveyor.m_CmdRaise();
-			
-			// No transition, this will be done by omac Packml after set the alarm
-		END_IF
-	
-	E_EM_InfeedConveyor_Seq_Execute.MoveProductToDoor:
-		IF NOT s_diEndConveyor.p_bStaValue THEN
-			// Run belt until product is at end of conveyor
-			s_cmBelt.m_StartFwd();
-		ELSE
-			// Product is at end conveyor, stop belt
-			IF s_cmBelt.m_Stop() THEN
-				s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.WaitUntilLiftReady);
-			END_IF
-		END_IF
-	
-	E_EM_InfeedConveyor_Seq_Execute.WaitUntilLiftReady:
-		// Wait in this step until lift is at infeed position
-		IF i_stFromLift.bAtInfeedPos THEN
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.RequestLiftReceiving);
-		END_IF	
-			 
-	E_EM_InfeedConveyor_Seq_Execute.RequestLiftReceiving:
-		q_stToLift.bReqExportProduct := TRUE; 
-		
-		IF i_stFromLift.bReadyForReceiving THEN
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.OpenDoor);
-		END_IF
-		
-	E_EM_InfeedConveyor_Seq_Execute.OpenDoor:
-		IF s_cmDoor.m_OpenDoor() THEN
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.MoveProductInLift);
-		END_IF
-		
-	E_EM_InfeedConveyor_Seq_Execute.MoveProductInLift:
-		// 
-		IF NOT i_stFromLift.bProductReceived THEN
-			// Belt on 
-			s_cmBelt.m_StartFwd();
-		ELSE	
-			// Product in lift, stop conveyor
-			s_cmBelt.m_Stop();
-			
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.CloseDoor);
-		END_IF
-		
-	E_EM_InfeedConveyor_Seq_Execute.CloseDoor:
-		IF s_cmDoor.m_CloseDoor() THEN
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Execute.WaitForProduct);
-		END_IF
-		
-	E_EM_InfeedConveyor_Seq_Execute.Ready:
-		;
-	E_EM_InfeedConveyor_Seq_Execute.Error:
-		;
-END_CASE
-
-_m_Execute := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq)).p_bStaReady;
-
-]]></ST>
+        <ST><![CDATA[IF i_eActMode = E_PackML_Mode.Production THEN
+	_m_Execute := _m_ProductionExecute(i_bCmdRestart := i_bCmdRestart).p_bStaReady;
+ELSE
+	_m_Execute := TRUE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Hmi" Id="{68f5ea41-0137-40e2-a684-a2bf13741982}" FolderPath="Basic\">
       <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_cmHmiBelt(
+        <ST><![CDATA[s_stHmi.fbBelt(
 	s_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // This enables the manual buttons on HMI screen,
 	i_itfCM_MotorDol:= s_cmBelt);]]></ST>
       </Implementation>
@@ -253,15 +165,115 @@ s_cmDoor(
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="_m_Starting" Id="{f4b3656d-5541-4cdd-bcd6-7f309fb69039}" FolderPath="PackML States\">
-      <Declaration><![CDATA[METHOD PROTECTED _m_Starting : BOOL // Return state complete when state is ready
+    <Method Name="_m_ProductionExecute" Id="{899ce89c-8cbc-494d-9671-7fb94edd764e}" FolderPath="Sequencers\">
+      <Declaration><![CDATA[METHOD _m_ProductionExecute : ITF_FB_SeqControl
 VAR_INPUT
-	i_bCmdRestart	: BOOL;	//First cycle of this state
-	i_eActMode 		: E_PackML_Mode;
+	i_bCmdRestart : BOOL;
 END_VAR
 VAR_INST
-	s_fbSeqControl 	: FB_SeqControl;
-	s_eSeq			: E_EM_InfeedConveyor_Seq_Starting;
+	s_fbSeqControl  : FB_SeqControl;
+	s_eSeq 			: E_EM_InfeedConveyor_Seq_ProductionExecute;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_fbSeqControl(
+	i_bReqStart:= i_bCmdRestart, 
+	i_rnActSeqStep:= s_eSeq, 
+	i_sActSeqStep:= TO_STRING(s_eSeq));
+
+
+// Automatisch programma - Sequencer
+CASE s_eSeq OF
+	E_EM_InfeedConveyor_Seq_ProductionExecute.Idle:
+		;
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.Start:
+		// Choose correct step depening on actual status
+		IF s_cmDoor.p_bStaDoorClosed AND s_diEndConveyor.p_bStaValue THEN
+			// Sensor at end of conveyor
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.WaitUntilLiftReady);
+		ELSIF s_cmDoor.p_bStaDoorOpen THEN
+			// Sensor at end of conveyor
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.RequestLiftReceiving);	
+		ELSE
+			// Sensor at end of conveyor
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.WaitForProduct);	
+		END_IF		
+	
+	E_EM_InfeedConveyor_Seq_ProductionExecute.WaitForProduct:
+		IF s_diStartConveyor.p_bStaValue THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.MoveProductToDoor);
+		ELSIF s_diEndConveyor.p_bStaValue THEN
+			// without running belt it' s not possible to detect an product at outfeed conveyor
+			s_fbAlmUnexpectProductEndConveyor.m_CmdRaise();
+			
+			// No transition, this will be done by omac Packml after set the alarm
+		END_IF
+	
+	E_EM_InfeedConveyor_Seq_ProductionExecute.MoveProductToDoor:
+		IF NOT s_diEndConveyor.p_bStaValue THEN
+			// Run belt until product is at end of conveyor
+			s_cmBelt.m_StartFwd();
+		ELSE
+			// Product is at end conveyor, stop belt
+			IF s_cmBelt.m_Stop() THEN
+				s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.WaitUntilLiftReady);
+			END_IF
+		END_IF
+	
+	E_EM_InfeedConveyor_Seq_ProductionExecute.WaitUntilLiftReady:
+		// Wait in this step until lift is at infeed position
+		IF i_stFromLift.bAtInfeedPos THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.RequestLiftReceiving);
+		END_IF	
+			 
+	E_EM_InfeedConveyor_Seq_ProductionExecute.RequestLiftReceiving:
+		q_stToLift.bReqExportProduct := TRUE; 
+		
+		IF i_stFromLift.bReadyForReceiving THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.OpenDoor);
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.OpenDoor:
+		IF s_cmDoor.m_OpenDoor() THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.MoveProductInLift);
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.MoveProductInLift:
+		// 
+		IF NOT i_stFromLift.bProductReceived THEN
+			// Belt on 
+			s_cmBelt.m_StartFwd();
+		ELSE	
+			// Product in lift, stop conveyor
+			s_cmBelt.m_Stop();
+			
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.CloseDoor);
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.CloseDoor:
+		IF s_cmDoor.m_CloseDoor() THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.WaitForProduct);
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.Ready:
+		;
+	E_EM_InfeedConveyor_Seq_ProductionExecute.Error:
+		;
+END_CASE
+
+_m_ProductionExecute := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_ProductionStarting" Id="{df69ba8a-4bf4-4bb5-80e1-e3aac5dfdb6c}" FolderPath="Sequencers\">
+      <Declaration><![CDATA[METHOD _m_ProductionStarting : ITF_FB_SeqControl
+VAR_INPUT
+	i_bCmdRestart : BOOL;
+END_VAR
+VAR_INST
+	s_fbSeqControl  : FB_SeqControl;
+	s_eSeq 			: E_EM_InfeedConveyor_Seq_ProductionStarting;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -271,36 +283,55 @@ s_fbSeqControl(
 	i_sActSeqStep:= TO_STRING(s_eSeq));
 	
 CASE s_eSeq OF 
-	E_EM_InfeedConveyor_Seq_Starting.Idle:
+	E_EM_InfeedConveyor_Seq_ProductionStarting.Idle:
 		;
-	E_EM_InfeedConveyor_Seq_Starting.Start:
+	E_EM_InfeedConveyor_Seq_ProductionStarting.Start:
 		// Check is product is available 
 		IF s_cmDoor.p_bStaDoorBlocked THEN
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Starting.OpenDoor);
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionStarting.OpenDoor);
 		ELSE 
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Starting.CloseDoor);
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionStarting.CloseDoor);
 		END_IF
 		
 		
-	E_EM_InfeedConveyor_Seq_Starting.OpenDoor:
+	E_EM_InfeedConveyor_Seq_ProductionStarting.OpenDoor:
 		// open door
 		IF s_cmDoor.m_OpenDoor() THEN
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Starting.Ready);
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionStarting.Ready);
 		END_IF
-	E_EM_InfeedConveyor_Seq_Starting.CloseDoor:
+	E_EM_InfeedConveyor_Seq_ProductionStarting.CloseDoor:
 
 		// close door
 		IF s_cmDoor.m_CloseDoor() THEN
-			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_Starting.Ready);
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionStarting.Ready);
 		END_IF
 		
-	E_EM_InfeedConveyor_Seq_Starting.Ready:
+	E_EM_InfeedConveyor_Seq_ProductionStarting.Ready:
 		;
-	E_EM_InfeedConveyor_Seq_Starting.Error:
+	E_EM_InfeedConveyor_Seq_ProductionStarting.Error:
 		;
 END_CASE
 
-_m_Starting := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq)).p_bStaReady;]]></ST>
+_m_ProductionStarting := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Starting" Id="{f4b3656d-5541-4cdd-bcd6-7f309fb69039}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Starting : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR
+VAR_INST
+	s_fbSeqControl 	: FB_SeqControl;
+	s_eSeq			: E_EM_InfeedConveyor_Seq_ProductionStarting;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF i_eActMode = E_PackML_Mode.Production THEN
+	_m_Starting := _m_ProductionStarting(i_bCmdRestart := i_bCmdRestart).p_bStaReady;
+ELSE
+	_m_Starting := TRUE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Stopping" Id="{42e1762a-4970-4eed-9383-6883b80d760b}" FolderPath="PackML States\">

@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="EM_Lift" Id="{06a5218e-af25-4987-9907-69e34a47bd46}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK EM_Lift EXTENDS FB_EM_PackML_Base
+VAR_INPUT
+	i_stToLift : ST_CommInfeedToLift;
+END_VAR
+VAR_OUTPUT
+	q_stFromLift : ST_CommLiftToInfeed;
+END_VAR
+VAR
+	// Variables
+	s_stHmi : ST_EM_Lift_Hmi;	
+
+
+	// Control modules
+	s_cmMotorLift : CM_ServoAX8000;	
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Call Super
+// Basemodule calls the following base method by calling SUPER^(): 
+// - m_Main
+
+SUPER^();]]></ST>
+    </Implementation>
+    <Folder Name="Basic" Id="{3cd35c1f-e6b6-4e74-8a75-44f6df3167e6}" />
+    <Folder Name="PackML States" Id="{4f36ecdd-1a19-4667-86f8-991797151aab}" />
+    <Folder Name="Sequencers" Id="{3b18b39a-8ba8-4403-b761-416bd7643d04}" />
+    <Method Name="_m_Aborting" Id="{9d005501-a08d-43f6-9773-498185ae6b04}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Aborting : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Abort and disable servo
+_m_Aborting	:= _m_SeqStopServos(i_bCmdRestart := i_bCmdRestart).p_bStaReady;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Alarms" Id="{20b2fc11-1d6a-4bf9-b31a-4f2b7c96624c}" FolderPath="Basic\">
+      <Declaration><![CDATA[(* Collect alarm conditions from sub-modules. *)
+METHOD PROTECTED _m_Alarms
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* All module alarms are handled in this method *)
+(*==========================================================================================================*)
+// Call base
+SUPER^._m_Alarms();
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Execute" Id="{92f46940-158e-40ce-bda4-70a5dc66dd09}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Execute : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF i_eActMode = E_PackML_Mode.Production THEN
+	_m_Execute := _m_ProductionExecute(i_bCmdRestart := i_bCmdRestart).p_bStaReady;
+ELSE
+	_m_Execute := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Hmi" Id="{53ff0c5b-f318-4827-8d92-c4c6d3db8fb5}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_stHmi.fbMotorLift(
+	s_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
+	i_itfCM_Servo:= s_cmMotorLift,
+	i_eCfgMoveAbs:= E_HMI_CM_SERVO_MoveAbsMode_Direction.MoveToModuloPosShortestWay);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Init" Id="{fc4708b7-7913-420c-8567-9340f24423c0}" FolderPath="Basic\">
+      <Declaration><![CDATA[(* Initialization, set initial data. *)
+METHOD PROTECTED _m_Init
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base
+SUPER^._m_Init();
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Inputs" Id="{a8fd097b-120b-43a0-aeec-30d30a0ff4b0}" FolderPath="Basic\">
+      <Declaration><![CDATA[(* Process unit inputs. *)
+METHOD PROTECTED _m_Inputs
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base 
+SUPER^._m_Inputs();
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Modules" Id="{04fede2c-6f7b-4286-8aa5-b620d996f4c0}" FolderPath="Basic\">
+      <Declaration><![CDATA[(* Call sub-modules (equipment and/or control modules). *)
+METHOD PROTECTED _m_Modules
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base
+SUPER^._m_Modules();
+
+// Call motor lift 
+s_cmMotorLift(
+	i_bReqEnable:= p_bStaEnable, 
+	i_bReqReset:= , // done by alarmcollector 
+	i_bReqSimulation:= p_bStaSimulation, 
+	i_itfAlarmCollector_Parent:= s_fbAlarmCollector, 
+	i_bEmrStopOk:= TRUE, 
+	i_fOverride:= 100, 
+	i_bDisableForward:= FALSE, 
+	i_bDisableReverse:= FALSE, 
+	i_bDisableAxis:= FALSE, 
+	i_bExtReferenceSignal:= );
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_ProductionExecute" Id="{da0b7003-433c-49a0-b9f4-c535c25c6745}" FolderPath="Sequencers\">
+      <Declaration><![CDATA[METHOD _m_ProductionExecute : ITF_FB_SeqControl
+VAR_INPUT
+	i_bCmdRestart : BOOL;
+END_VAR
+VAR_INST
+	s_fbSeqControl  : FB_SeqControl;
+	s_eSeq 			: E_EM_Lift_Seq_ProductionExecute;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_fbSeqControl(
+	i_bReqStart:= i_bCmdRestart, 
+	i_rnActSeqStep:= s_eSeq, 
+	i_sActSeqStep:= TO_STRING(s_eSeq));
+
+
+// Automatisch programma - Sequencer
+CASE s_eSeq OF
+	E_EM_Lift_Seq_ProductionExecute.Idle:
+		;
+		
+	E_EM_Lift_Seq_ProductionExecute.Start:
+		;
+		
+	E_EM_Lift_Seq_ProductionExecute.Ready:
+		;
+	E_EM_Lift_Seq_ProductionExecute.Error:
+		;
+END_CASE
+
+_m_ProductionExecute := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_ProductionStarting" Id="{7e3e0a2b-ef75-4799-af8c-45bb82228525}" FolderPath="Sequencers\">
+      <Declaration><![CDATA[METHOD _m_ProductionStarting : ITF_FB_SeqControl
+VAR_INPUT
+	i_bCmdRestart : BOOL;
+END_VAR
+VAR_INST
+	s_fbSeqControl  : FB_SeqControl;
+	s_eSeq 			: E_EM_Lift_Seq_ProductionStarting;
+	s_stHomingOptions : ST_HomingOptions;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+s_fbSeqControl(
+	i_bReqStart:= i_bCmdRestart, 
+	i_rnActSeqStep:= s_eSeq, 
+	i_sActSeqStep:= TO_STRING(s_eSeq));
+	
+CASE s_eSeq OF 
+	E_EM_Lift_Seq_ProductionStarting.Idle:
+		;
+	E_EM_Lift_Seq_ProductionStarting.Start:
+		IF s_cmMotorLift.p_bStaHomed THEN
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_ProductionStarting.ReferenceDrive);
+		ELSE	
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_ProductionStarting.EnableDrive);
+		END_IF
+	
+	E_EM_Lift_Seq_ProductionStarting.ReferenceDrive:
+		s_stHomingOptions.ClearPositionLag := TRUE;
+		s_stHomingOptions.SearchDirection := MC_Direction.MC_Positive_Direction;
+		s_stHomingOptions.SearchVelocity := 500;
+		s_stHomingOptions.SyncDirection := MC_Direction.MC_Negative_Direction;
+		s_stHomingOptions.SyncVelocity := 100;
+		s_stHomingOptions.ReferenceMode := E_EncoderReferenceMode.ENCODERREFERENCEMODE_DEFAULT;
+		
+		IF s_cmMotorLift.m_Home(
+			i_bCmdExecute:= s_fbSeqControl.p_bStaEntry, 
+			i_bForceReference:= TRUE, 
+			i_eHomingMode:= MC_HomingMode.MC_Direct, 
+			i_eBufferMode:= MC_BufferMode.MC_Aborting, 
+			i_fPosition:= 0.0, 
+			i_stOptions:= s_stHomingOptions, 
+			i_sLogHint:= 'Starting')
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_ProductionStarting.EnableDrive);
+		END_IF
+	E_EM_Lift_Seq_ProductionStarting.EnableDrive:
+		IF s_cmMotorLift.m_PowerOn() THEN
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_ProductionStarting.MoveToStartPos);
+		END_IF
+		
+	E_EM_Lift_Seq_ProductionStarting.MoveToStartPos:
+		IF s_cmMotorLift.m_MoveAbsolute(
+								i_bCmdExecute:= s_fbSeqControl.p_bStaEntry, 
+								i_fAcceleration:= 500, 
+								i_fDeceleration:= 500, 
+								i_fJerk:= 5000, 
+								i_fSpeed:= 100, 
+								i_fPosition:= 100, 
+								i_eBufferMode:= MC_BufferMode.MC_Aborting, 
+								i_sLogHint:= 'Starting, move to startposition')	
+		THEN
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_ProductionStarting.Ready);
+		END_IF
+		
+	E_EM_Lift_Seq_ProductionStarting.Ready:
+		;
+	E_EM_Lift_Seq_ProductionStarting.Error:
+		;
+END_CASE
+
+_m_ProductionStarting := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_SeqStopServos" Id="{28f0a25a-a038-4c5d-9bcb-88bd53c3a175}" FolderPath="Sequencers\">
+      <Declaration><![CDATA[METHOD _m_SeqStopServos : ITF_FB_SeqControl
+VAR_INPUT
+	i_bCmdRestart : BOOL;
+END_VAR
+VAR_INST
+	s_fbSeqControl  : FB_SeqControl;
+	s_eSeq 			: E_EM_Lift_Seq_StopServos;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_fbSeqControl(
+	i_bReqStart:= i_bCmdRestart, 
+	i_rnActSeqStep:= s_eSeq, 
+	i_sActSeqStep:= TO_STRING(s_eSeq));
+
+
+// Automatisch programma - Sequencer
+CASE s_eSeq OF
+	E_EM_Lift_Seq_StopServos.Idle:
+		;
+		
+	E_EM_Lift_Seq_StopServos.Start:
+		// Stop servos fast as possible 
+		IF s_cmMotorLift.m_EmrStop(i_bCmdExecute := s_fbSeqControl.p_bStaEntry) THEN
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_StopServos.PowerOffServo);
+		ELSIF s_fbSeqControl.p_tmStepTime > T#200MS THEN	
+			// not stopped in expected time, escape
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_StopServos.PowerOffServo);
+		END_IF
+		
+	E_EM_Lift_Seq_StopServos.PowerOffServo :	
+		// Stop servos fast as possible 
+		IF s_cmMotorLift.m_PowerOff() THEN
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_StopServos.Ready);
+		ELSIF s_fbSeqControl.p_tmStepTime > T#200MS THEN
+			// not stopped in expected time, escape
+			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_StopServos.Ready);
+		END_IF
+			
+		
+	E_EM_Lift_Seq_StopServos.Ready:
+		;
+	E_EM_Lift_Seq_StopServos.Error:
+		;
+END_CASE
+
+_m_SeqStopServos := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Starting" Id="{f07a129c-3f81-4b87-8017-0abe184ab4b7}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Starting : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR
+VAR_INST
+	s_fbSeqControl 	: FB_SeqControl;
+	s_eSeq			: E_EM_InfeedConveyor_Seq_ProductionStarting;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF i_eActMode = E_PackML_Mode.Production THEN
+	_m_Starting := _m_ProductionStarting(i_bCmdRestart := i_bCmdRestart).p_bStaReady;
+ELSE
+	_m_Starting := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Stopping" Id="{945fae1f-62b1-4e26-8bee-014de5d94a86}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Stopping : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Abort and disable servo
+_m_Stopping	:= _m_SeqStopServos(i_bCmdRestart := i_bCmdRestart).p_bStaReady;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

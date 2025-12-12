@@ -1754,7 +1754,7 @@ External Setpoint Generation:
 					<Name>NC-Task 1 SVB</Name>
 				</SvbTask>
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
-					<Name>EM_LogicExample1_Axis1</Name>
+					<Name>EM_Lift_Servo</Name>
 					<AxisPara>
 						<Dynamic Jerk="22500"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
