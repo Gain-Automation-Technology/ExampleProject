@@ -98,7 +98,7 @@ END_IF]]></ST>
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[s_stHmi.fbBelt(
-	s_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // This enables the manual buttons on HMI screen,
+	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // This enables the manual buttons on HMI screen,
 	i_itfCM_MotorDol:= s_cmBelt);]]></ST>
       </Implementation>
     </Method>

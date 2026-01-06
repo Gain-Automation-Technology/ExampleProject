@@ -73,7 +73,7 @@ END_IF]]></ST>
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[s_stHmi.fbMotorLift(
-	s_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
+	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
 	i_itfCM_Servo:= s_cmMotorLift,
 	i_eCfgMoveAbs:= E_HMI_CM_SERVO_MoveAbsMode_Direction.MoveToModuloPosShortestWay);]]></ST>
       </Implementation>

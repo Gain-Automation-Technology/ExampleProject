@@ -190,7 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="GSBF_Common">
-      <DefaultResolution>[GSBF_Common], * (Gain Automation Technology B.V.)</DefaultResolution>
+      <DefaultResolution>GSBF_Common, * (Gain Automation Technology B.V.)</DefaultResolution>
       <Namespace>GSBF_Common</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="GSBF_HMI">
