@@ -3,7 +3,7 @@
   <DUT Name="ST_EM_InfeedConveyor_Hmi" Id="{1a111e1f-071b-40c4-8320-6501b4237d11}">
     <Declaration><![CDATA[TYPE ST_EM_InfeedConveyor_Hmi :
 STRUCT
-	fbBelt : HMI_CM_MotorDol;
+	fbBelt : HMI_CM_MotorDol; // HMI controls for the infeed belt.
 END_STRUCT
 END_TYPE
 ]]></Declaration>

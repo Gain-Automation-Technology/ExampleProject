@@ -6,13 +6,13 @@
 {attribute 'to_string'}
 TYPE E_EM_Lift_Seq_ProductionExecute :
 (
-	Idle := c_nSeqIdle,
-	Start := c_nSeqStart,
+	Idle := c_nSeqIdle, // Wait for production to start.
+	Start := c_nSeqStart, // Begin production sequence steps.
 
 	
 	
-	Ready := c_nSeqReady,
-	Error := c_nSeqError
+	Ready := c_nSeqReady, // Sequence complete.
+	Error := c_nSeqError // Sequence error handling.
 
 );
 END_TYPE

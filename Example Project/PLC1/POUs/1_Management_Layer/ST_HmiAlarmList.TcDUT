@@ -3,8 +3,8 @@
   <DUT Name="ST_HmiAlarmList" Id="{32c735e7-89d0-463c-ab00-690f03812f39}">
     <Declaration><![CDATA[TYPE ST_HmiAlarmList :
 STRUCT
-	asAlarmList				: ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF STRING;
-	sHighestActiveAlarm		: STRING;
+	asAlarmList				: ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF STRING; // Active alarm texts for HMI list.
+	sHighestActiveAlarm		: STRING; // Highest severity active alarm text.
 END_STRUCT
 END_TYPE
 ]]></Declaration>

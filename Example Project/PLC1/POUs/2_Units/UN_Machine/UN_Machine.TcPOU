@@ -8,12 +8,17 @@ VAR_OUTPUT
 END_VAR
 VAR
 	// HMI
-	s_stHmi : ST_UN_Machine_Hmi;
+	s_stHmi : ST_UN_Machine_Hmi; // HMI structure (status and manual controls).
 	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[SUPER^();
+      <ST><![CDATA[// Call Super
+// Basemodule calls the following base method by calling SUPER^(): 
+// - m_Main
+// Add module-specific cyclic logic before/after SUPER^() if required.
+
+SUPER^();
 ]]></ST>
     </Implementation>
     <Folder Name="Basic" Id="{e89104c0-d33f-460a-aaf2-8953cfda25ab}" />
@@ -27,8 +32,10 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF s_fbAlarmCollector.p_eAlarmState < E_Alarm_Severity.Critical THEN
-	s_fbPackML.m_ReqClear();
+        <ST><![CDATA[// Allow clear when alarms are below critical.
+// Add extra abort handling here if required.
+IF s_fbAlarmCollector.p_eAlarmState < E_Alarm_Severity.Critical THEN
+	s_fbPackML.m_ReqClear(); // Request clear of PackML state.
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -36,7 +43,10 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PROTECTED _m_Alarms
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^._m_Alarms();
+        <ST><![CDATA[// Call base alarm handling.
+SUPER^._m_Alarms();
+
+// Add unit-level alarm conditions here if needed.
 ]]></ST>
       </Implementation>
     </Method>
@@ -44,8 +54,10 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^._m_Hmi();
+        <ST><![CDATA[// Call base HMI handling.
+SUPER^._m_Hmi();
 
+// Expose alarm collector to HMI for diagnostics.
 s_stHmi.fbHmiAlarmCollector(i_itfAlarmCollector := s_fbAlarmCollector);
 ]]></ST>
       </Implementation>
@@ -53,8 +65,11 @@ s_stHmi.fbHmiAlarmCollector(i_itfAlarmCollector := s_fbAlarmCollector);
     <Method Name="_m_Logic" Id="{b95711e4-a3f3-4e91-9f55-7c0e3689d897}" FolderPath="Basic\">
       <Declaration><![CDATA[METHOD PROTECTED _m_Logic]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^._m_Logic();
+        <ST><![CDATA[// Call base logic.
+SUPER^._m_Logic();
 
+// Unit-specific logic goes here (coordination between modules).
+// Call HMI handling as part of the logic cycle.
 _m_Hmi();]]></ST>
       </Implementation>
     </Method>
@@ -62,28 +77,32 @@ _m_Hmi();]]></ST>
       <Declaration><![CDATA[METHOD PROTECTED _m_Modules
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^._m_Modules();
+        <ST><![CDATA[// Call base module handling.
+SUPER^._m_Modules();
 
+// Call infeed conveyor module and link to lift handshake.
 GVL_Modules.g_emInfeedConveyor(
-	i_bReqEnable					:= TRUE, 
-	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, 
-	i_bStaSafetyOk					:= TRUE, 
-	i_bReqSimulation				:= p_bStaSimulation, 
-	i_itfPackML_Parent				:= s_fbPackML, 
-	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, 
-	q_stStaPackML					=> ,
-	i_stFromLift					:= GVL_Modules.g_emLift.q_stFromLift);
+	i_bReqEnable					:= TRUE, // Enable module (replace with safety chain if needed).
+	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, // Reset from alarm collector.
+	i_bStaSafetyOk					:= TRUE, // Safety chain OK (replace with real input).
+	i_bReqSimulation				:= p_bStaSimulation, // Simulation flag from unit.
+	i_itfPackML_Parent				:= s_fbPackML, // PackML parent interface.
+	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, // Alarm collector parent.
+	q_stStaPackML					=> , // Optional PackML status feedback.
+	i_stFromLift					:= GVL_Modules.g_emLift.q_stFromLift); // Lift status to infeed.
 
+// Call lift module and link to infeed handshake.
 GVL_Modules.g_emLift(
-	i_bReqEnable:= TRUE, 
-	i_bReqReset:= s_fbAlarmCollector.q_bReqReset, 
-	i_bStaSafetyOk:= TRUE, 
-	i_bReqSimulation:= p_bStaSimulation, 
-	i_itfPackML_Parent:= s_fbPackML, 
-	i_itfAlarmCollector_Parent:= s_fbAlarmCollector, 
-	q_stStaPackML=> , 
-	i_stToLift:= GVL_Modules.g_emInfeedConveyor.q_stToLift, 
-	q_stFromLift=> );]]></ST>
+	i_bReqEnable:= TRUE, // Enable module (replace with safety chain if needed).
+	i_bReqReset:= s_fbAlarmCollector.q_bReqReset, // Reset from alarm collector.
+	i_bStaSafetyOk:= TRUE, // Safety chain OK (replace with real input).
+	i_bReqSimulation:= p_bStaSimulation, // Simulation flag from unit.
+	i_itfPackML_Parent:= s_fbPackML, // PackML parent interface.
+	i_itfAlarmCollector_Parent:= s_fbAlarmCollector, // Alarm collector parent.
+	q_stStaPackML=> , // Optional PackML status feedback.
+	i_stToLift:= GVL_Modules.g_emInfeedConveyor.q_stToLift, // Infeed commands to lift.
+	q_stFromLift=> ); // Lift status output.
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="_m_Stopped" Id="{05f03b2a-7abf-40a2-b03f-2927d90e9758}" FolderPath="PackML States\">
@@ -95,15 +114,19 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF s_fbAlarmCollector.p_eAlarmState < E_Alarm_Severity.Error THEN
-	s_fbPackML.m_ReqReset();
+        <ST><![CDATA[// Allow reset when alarms are below error level.
+// Add extra stopped-state logic here if required.
+IF s_fbAlarmCollector.p_eAlarmState < E_Alarm_Severity.Error THEN
+	s_fbPackML.m_ReqReset(); // Request PackML reset.
 END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="m_Main" Id="{5738c138-41a1-473c-badd-a5f9691bbc49}">
       <Declaration><![CDATA[METHOD PUBLIC m_Main]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^.m_Main();
+        <ST><![CDATA[// Main entry point for the unit.
+// Use this to wrap additional high-level logic around base behavior.
+SUPER^.m_Main();
 ]]></ST>
       </Implementation>
     </Method>

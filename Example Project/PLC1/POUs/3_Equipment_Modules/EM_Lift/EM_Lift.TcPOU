@@ -3,18 +3,18 @@
   <POU Name="EM_Lift" Id="{06a5218e-af25-4987-9907-69e34a47bd46}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK EM_Lift EXTENDS FB_EM_PackML_Base
 VAR_INPUT
-	i_stToLift : ST_CommInfeedToLift;
+	i_stToLift : ST_CommInfeedToLift; // Command from infeed to lift.
 END_VAR
 VAR_OUTPUT
-	q_stFromLift : ST_CommLiftToInfeed;
+	q_stFromLift : ST_CommLiftToInfeed; // Status from lift to infeed.
 END_VAR
 VAR
 	// Variables
-	s_stHmi : ST_EM_Lift_Hmi;	
+	s_stHmi : ST_EM_Lift_Hmi;	// HMI status and controls.
 
 
 	// Control modules
-	s_cmMotorLift : CM_ServoAX8000;	
+	s_cmMotorLift : CM_ServoAX8000;	// Lift servo axis control.
 	
 END_VAR
 ]]></Declaration>
@@ -22,6 +22,7 @@ END_VAR
       <ST><![CDATA[// Call Super
 // Basemodule calls the following base method by calling SUPER^(): 
 // - m_Main
+// Add module-specific cyclic logic before/after SUPER^() if required.
 
 SUPER^();]]></ST>
     </Implementation>
@@ -36,6 +37,8 @@ VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Abort and disable servo
+// Use stop-sequence to bring the lift axis to a safe state.
+// Add any extra abort actions here (e.g., vent valves, set outputs).
 _m_Aborting	:= _m_SeqStopServos(i_bCmdRestart := i_bCmdRestart).p_bStaReady;]]></ST>
       </Implementation>
     </Method>
@@ -49,6 +52,7 @@ METHOD PROTECTED _m_Alarms
 // Call base
 SUPER^._m_Alarms();
 
+// Add module-specific alarm conditions here and link them to the alarm collector.
 
 ]]></ST>
       </Implementation>
@@ -61,7 +65,9 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF i_eActMode = E_PackML_Mode.Production THEN
+        <ST><![CDATA[// Execute production sequence only in Production mode.
+// For other modes, return TRUE or add mode-specific logic.
+IF i_eActMode = E_PackML_Mode.Production THEN
 	_m_Execute := _m_ProductionExecute(i_bCmdRestart := i_bCmdRestart).p_bStaReady;
 ELSE
 	_m_Execute := TRUE;
@@ -72,7 +78,9 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_stHmi.fbMotorLift(
+        <ST><![CDATA[// Expose lift servo controls to the HMI in Manual mode.
+// Extend this method with extra HMI widgets or status fields as needed.
+s_stHmi.fbMotorLift(
 	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
 	i_itfCM_Servo:= s_cmMotorLift,
 	i_eCfgMoveAbs:= E_HMI_CM_SERVO_MoveAbsMode_Direction.MoveToModuloPosShortestWay);]]></ST>
@@ -86,6 +94,8 @@ METHOD PROTECTED _m_Init
         <ST><![CDATA[// Call base
 SUPER^._m_Init();
 
+// Initialize module-specific parameters and defaults here.
+
 ]]></ST>
       </Implementation>
     </Method>
@@ -96,6 +106,8 @@ METHOD PROTECTED _m_Inputs
       <Implementation>
         <ST><![CDATA[// Call base 
 SUPER^._m_Inputs();
+
+// Map IO or communication inputs to internal variables here.
 
 ]]></ST>
       </Implementation>
@@ -108,18 +120,19 @@ METHOD PROTECTED _m_Modules
         <ST><![CDATA[// Call base
 SUPER^._m_Modules();
 
-// Call motor lift 
+// Call lift servo control module and pass common flags.
+// Adjust override, interlocks, and safety conditions to your machine.
 s_cmMotorLift(
-	i_bReqEnable:= p_bStaEnable, 
-	i_bReqReset:= , // done by alarmcollector 
-	i_bReqSimulation:= p_bStaSimulation, 
+	i_bReqEnable:= p_bStaEnable, // Enable/reset/simulation are typically controlled by PackML/base module.
+	i_bReqReset:= ,				 // done by alarmcollector 
+	i_bReqSimulation:= p_bStaSimulation, 	// Connect alarm collector so servo alarms propagate to the module.
 	i_itfAlarmCollector_Parent:= s_fbAlarmCollector, 
-	i_bEmrStopOk:= TRUE, 
-	i_fOverride:= 100, 
-	i_bDisableForward:= FALSE, 
-	i_bDisableReverse:= FALSE, 
+	i_bEmrStopOk:= TRUE, // Safety chain OK (replace with real E-Stop OK signal if available)
+	i_fOverride:= 100, // Motion override in percent (100 = full speed).
+	i_bDisableForward:= FALSE, // Direction/axis interlocks (set TRUE to block motion).
+	i_bDisableReverse:= FALSE, // Direction/axis interlocks (set TRUE to block motion).
 	i_bDisableAxis:= FALSE, 
-	i_bExtReferenceSignal:= );
+	i_bExtReferenceSignal:= );	// Optional external reference signal (leave empty if unused).
 ]]></ST>
       </Implementation>
     </Method>
@@ -133,26 +146,31 @@ VAR_INST
 	s_eSeq 			: E_EM_Lift_Seq_ProductionExecute;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_fbSeqControl(
+        <ST><![CDATA[// Sequencer bookkeeping (current step and entry handling).
+s_fbSeqControl(
 	i_bReqStart:= i_bCmdRestart, 
 	i_rnActSeqStep:= s_eSeq, 
 	i_sActSeqStep:= TO_STRING(s_eSeq));
 
 
-// Automatisch programma - Sequencer
+// Production sequencer - implement the automatic process here.
 CASE s_eSeq OF
 	E_EM_Lift_Seq_ProductionExecute.Idle:
+		// Wait for start conditions or upstream handshake.
 		;
 		
 	E_EM_Lift_Seq_ProductionExecute.Start:
+		// Add first motion/command steps for the production cycle.
 		;
 		
 	E_EM_Lift_Seq_ProductionExecute.Ready:
+		// Sequence complete; state complete is set automatically to omac.
 		;
 	E_EM_Lift_Seq_ProductionExecute.Error:
 		;
 END_CASE
 
+// Return sequencer status to PackML state handler.
 _m_ProductionExecute := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
 
 ]]></ST>
@@ -170,15 +188,20 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
+// Sequencer bookkeeping (current step and entry handling).
 s_fbSeqControl(
 	i_bReqStart:= i_bCmdRestart, 
 	i_rnActSeqStep:= s_eSeq, 
 	i_sActSeqStep:= TO_STRING(s_eSeq));
 	
+// Production start sequence: home, enable, and move to a known start position.
 CASE s_eSeq OF 
 	E_EM_Lift_Seq_ProductionStarting.Idle:
+		// Wait for start command from PackML.
 		;
 	E_EM_Lift_Seq_ProductionStarting.Start:
+		// Current logic: if axis reports homed, re-run reference; otherwise enable.
+		// Adjust this decision to match your homing policy.
 		IF s_cmMotorLift.p_bStaHomed THEN
 			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_ProductionStarting.ReferenceDrive);
 		ELSE	
@@ -186,6 +209,7 @@ CASE s_eSeq OF
 		END_IF
 	
 	E_EM_Lift_Seq_ProductionStarting.ReferenceDrive:
+		// Configure homing behavior for this axis.
 		s_stHomingOptions.ClearPositionLag := TRUE;
 		s_stHomingOptions.SearchDirection := MC_Direction.MC_Positive_Direction;
 		s_stHomingOptions.SearchVelocity := 500;
@@ -193,6 +217,7 @@ CASE s_eSeq OF
 		s_stHomingOptions.SyncVelocity := 100;
 		s_stHomingOptions.ReferenceMode := E_EncoderReferenceMode.ENCODERREFERENCEMODE_DEFAULT;
 		
+		// Start homing on entry and wait until it completes.
 		IF s_cmMotorLift.m_Home(
 			i_bCmdExecute:= s_fbSeqControl.p_bStaEntry, 
 			i_bForceReference:= TRUE, 
@@ -205,11 +230,13 @@ CASE s_eSeq OF
 			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_ProductionStarting.EnableDrive);
 		END_IF
 	E_EM_Lift_Seq_ProductionStarting.EnableDrive:
+		// Power on the drive before any absolute move commands.
 		IF s_cmMotorLift.m_PowerOn() THEN
 			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_ProductionStarting.MoveToStartPos);
 		END_IF
 		
 	E_EM_Lift_Seq_ProductionStarting.MoveToStartPos:
+		// Move to a defined start position for production.
 		IF s_cmMotorLift.m_MoveAbsolute(
 								i_bCmdExecute:= s_fbSeqControl.p_bStaEntry, 
 								i_fAcceleration:= 500, 
@@ -224,11 +251,13 @@ CASE s_eSeq OF
 		END_IF
 		
 	E_EM_Lift_Seq_ProductionStarting.Ready:
+		// Start sequence complete; ready for Execute state.
 		;
 	E_EM_Lift_Seq_ProductionStarting.Error:
 		;
 END_CASE
 
+// Return sequencer status to PackML state handler.
 _m_ProductionStarting := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
 ]]></ST>
       </Implementation>
@@ -243,42 +272,46 @@ VAR_INST
 	s_eSeq 			: E_EM_Lift_Seq_StopServos;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_fbSeqControl(
+        <ST><![CDATA[// Sequencer bookkeeping (current step and entry handling).
+s_fbSeqControl(
 	i_bReqStart:= i_bCmdRestart, 
 	i_rnActSeqStep:= s_eSeq, 
 	i_sActSeqStep:= TO_STRING(s_eSeq));
 
 
-// Automatisch programma - Sequencer
+// Stop sequence - bring the servo to a safe, powered-off state.
 CASE s_eSeq OF
 	E_EM_Lift_Seq_StopServos.Idle:
+		// Wait for stop request from PackML or safety logic.
 		;
 		
 	E_EM_Lift_Seq_StopServos.Start:
-		// Stop servos fast as possible 
+		// Issue emergency stop to decelerate as fast as possible.
 		IF s_cmMotorLift.m_EmrStop(i_bCmdExecute := s_fbSeqControl.p_bStaEntry) THEN
 			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_StopServos.PowerOffServo);
 		ELSIF s_fbSeqControl.p_tmStepTime > T#200MS THEN	
-			// not stopped in expected time, escape
+			// Not stopped in expected time; continue with power-off.
 			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_StopServos.PowerOffServo);
 		END_IF
 		
 	E_EM_Lift_Seq_StopServos.PowerOffServo :	
-		// Stop servos fast as possible 
+		// Remove drive power after the stop request.
 		IF s_cmMotorLift.m_PowerOff() THEN
 			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_StopServos.Ready);
 		ELSIF s_fbSeqControl.p_tmStepTime > T#200MS THEN
-			// not stopped in expected time, escape
+			// Not powered off in expected time; end sequence anyway.
 			s_fbSeqControl.m_ReqStep(E_EM_Lift_Seq_StopServos.Ready);
 		END_IF
 			
 		
 	E_EM_Lift_Seq_StopServos.Ready:
+		// Stop sequence complete.
 		;
 	E_EM_Lift_Seq_StopServos.Error:
 		;
 END_CASE
 
+// Return sequencer status to PackML state handler.
 _m_SeqStopServos := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq));
 
 ]]></ST>
@@ -295,7 +328,8 @@ VAR_INST
 	s_eSeq			: E_EM_InfeedConveyor_Seq_ProductionStarting;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF i_eActMode = E_PackML_Mode.Production THEN
+        <ST><![CDATA[// PackML Starting: run production-start sequencer in Production mode.
+IF i_eActMode = E_PackML_Mode.Production THEN
 	_m_Starting := _m_ProductionStarting(i_bCmdRestart := i_bCmdRestart).p_bStaReady;
 ELSE
 	_m_Starting := TRUE;
@@ -311,6 +345,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Abort and disable servo
+// PackML Stopping reuses the stop-sequence to safely disable the servo.
 _m_Stopping	:= _m_SeqStopServos(i_bCmdRestart := i_bCmdRestart).p_bStaReady;]]></ST>
       </Implementation>
     </Method>

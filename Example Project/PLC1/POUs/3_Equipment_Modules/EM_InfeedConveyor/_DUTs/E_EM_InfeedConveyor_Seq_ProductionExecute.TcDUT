@@ -6,22 +6,22 @@
 {attribute 'to_string'}
 TYPE E_EM_InfeedConveyor_Seq_ProductionExecute :
 (
-	Idle := c_nSeqIdle,
-	Start := c_nSeqStart,
+	Idle := c_nSeqIdle, // Wait for production start or preconditions.
+	Start := c_nSeqStart, // Select initial step based on sensors/door state.
 	
-	WaitForProduct,
+	WaitForProduct, // Wait for product at start sensor.
 	
-	MoveProductToDoor, 
-	WaitUntilLiftReady,
-	RequestLiftReceiving,
-	OpenDoor,
-	MoveProductInLift,
-	CloseDoor,
+	MoveProductToDoor, // Run belt to move product to end sensor.
+	WaitUntilLiftReady, // Wait for lift at infeed position.
+	RequestLiftReceiving, // Request lift to receive product.
+	OpenDoor, // Open door before transfer.
+	MoveProductInLift, // Run belt until lift confirms receipt.
+	CloseDoor, // Close door after transfer.
 	
 	
 	
-	Ready := c_nSeqReady,
-	Error := c_nSeqError
+	Ready := c_nSeqReady, // Sequence complete.
+	Error := c_nSeqError // Sequence error handling.
 
 );
 END_TYPE

@@ -3,7 +3,7 @@
   <DUT Name="ST_EM_Lift_Hmi" Id="{0ad72c98-9a1e-44d6-8240-055cab49aae8}">
     <Declaration><![CDATA[TYPE ST_EM_Lift_Hmi :
 STRUCT
-	fbMotorLift : HMI_CM_Servo;
+	fbMotorLift : HMI_CM_Servo; // HMI controls for the lift servo.
 END_STRUCT
 END_TYPE
 ]]></Declaration>

@@ -3,32 +3,29 @@
   <POU Name="CM_Door" Id="{51a6c2a3-e5cd-40e3-9cf2-1a2a160f0bbc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK CM_Door EXTENDS FB_CM_Base
 VAR_INPUT
-	i_bReqEnableHmiControls : BOOL;
+	i_bReqEnableHmiControls : BOOL;	// Request to enable HMI control buttons (open/close/stop).
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
 	// Control modules
-	s_cmMotor : CM_MotorDol;
-
+	s_cmMotor : CM_MotorDol; // Door motor (forward=open, reverse=close).
+ 
 	
 	// in/outputs
-	s_diDoorIsOpen : FB_DigitalInput;
-	s_diDoorIsClosed : FB_DigitalInput;
-	s_diDoorIsBlocked : FB_DigitalInput;
+	s_diDoorIsOpen : FB_DigitalInput; // Feedback: door open position.
+	s_diDoorIsClosed : FB_DigitalInput; // Feedback: door closed position.
+	s_diDoorIsBlocked : FB_DigitalInput; // Feedback: door blocked sensor.
 	
 	// Alarms
-	s_fbAlmDoorIsBlocked : FB_AlarmHandler;
-	s_fbAlmFeedbackBothOn : FB_AlarmHandler;
-	s_fbAlmDoorNotOpen : FB_AlarmHandler;
-	s_fbAlmDoorNotClosed : FB_AlarmHandler;
 	
-	// Internal variables
-	s_bReqCloseDoor : BOOL;
-	s_bReqOpenDoor : BOOL;
-	
+	s_fbAlmDoorIsBlocked : FB_AlarmHandler; // Blocked while moving.
+	s_fbAlmFeedbackBothOn : FB_AlarmHandler; // Both open and closed feedback active.
+	s_fbAlmDoorNotOpen : FB_AlarmHandler; // Door did not reach open position.
+	s_fbAlmDoorNotClosed : FB_AlarmHandler;	// Door did not reach closed position.
+
 	// Hmi
-	s_stHmi : ST_CM_Door_Hmi;
+	s_stHmi : ST_CM_Door_Hmi; // HMI structure (buttons + status).
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -42,18 +39,22 @@ SUPER^();]]></ST>
 METHOD PROTECTED _m_Alarms
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^._m_Alarms();
+        <ST><![CDATA[
+SUPER^._m_Alarms();
 
+// Feedback conflict: open and closed at the same time.
 s_fbAlmFeedbackBothOn(
 	i_bCmdRaise:= s_diDoorIsOpen.p_bStaValue AND s_diDoorIsClosed.p_bStaValue, 
 	i_sMessage:= , 
 	i_itfAlarmCollector:= p_itfAlarmCollector);
 	
+// Door blocked while motor runs.
 s_fbAlmDoorIsBlocked(
 	i_bCmdRaise:= NOT s_cmMotor.p_bStaStandstill AND s_diDoorIsBlocked.p_bStaValue, 
 	i_sMessage:= , 
 	i_itfAlarmCollector:= p_itfAlarmCollector);
 	
+// Door should open within delay when running forward.
 s_fbAlmDoorNotOpen.p_itfConfig.p_tmCfgDelay := T#6S;	
 s_fbAlmDoorNotOpen(
 	i_bCmdRaise:= s_cmMotor.p_bStaRunningFwd AND NOT s_diDoorIsOpen.p_bStaValue, 
@@ -61,6 +62,7 @@ s_fbAlmDoorNotOpen(
 	i_itfAlarmCollector:= p_itfAlarmCollector);
 	
 
+// Door should close within delay when running reverse.
 s_fbAlmDoorNotClosed.p_itfConfig.p_tmCfgDelay := T#6S;		
 s_fbAlmDoorNotClosed(
 	i_bCmdRaise:= s_cmMotor.p_bStaRunningRev AND NOT s_diDoorIsClosed.p_bStaValue, 
@@ -82,7 +84,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[
 
 
-//
+// Update HMI buttons with current enable/state.
 s_stHmi.btnOpenDoor(
 	i_bEnable:= i_bReqEnableHmiControls, 
 	i_bProcessState:= s_bStaOpening);
@@ -94,6 +96,7 @@ s_stHmi.btnCloseDoor(
 s_stHmi.btnStopDoor(
 	i_bEnable:= i_bReqEnableHmiControls);	
 	
+// Latch requested direction on rising edge.
 IF s_stHmi.btnOpenDoor.q_bStateOsr THEN
 	s_bStaOpening := TRUE;
 	s_bStaClosing := FALSE;
@@ -104,13 +107,14 @@ IF s_stHmi.btnCloseDoor.q_bStateOsr THEN
 	s_bStaClosing := TRUE;
 END_IF	
 
-
+// Stop request or error cancels movement.
 IF s_stHmi.btnStopDoor.q_bStateOsr OR p_eAlarmState >= E_Alarm_Severity.Error THEN
 	s_bStaOpening := FALSE;
 	s_bStaClosing := FALSE;
 	m_Stop();
 END_IF	
 
+// Execute open/close request until feedback is reached.
 IF s_bStaOpening THEN
 	IF m_OpenDoor() THEN
 		s_bStaOpening := FALSE;
@@ -124,7 +128,7 @@ IF s_bStaClosing THEN
 	END_IF
 END_IF
 
-
+// Publish status to HMI.
 s_stHmi.bStaDoorOpen := p_bStaDoorOpen;
 s_stHmi.bStaDoorCLosed := p_bStaDoorClosed;]]></ST>
       </Implementation>
@@ -195,6 +199,7 @@ _m_Hmi();
 // Call modules
 _m_Modules();
 
+// Sequencer tracks the door state machine.
 // Call sequencer
 s_fbSeqControl(
 	i_bReqStart:= FALSE, 
@@ -210,13 +215,16 @@ CASE s_eSeq OF
 	E_CM_Door_Seq_Logic.Start:
 
 		IF NOT p_bStaEnable THEN
+			// Disabled request takes priority.
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
 		ELSE
+			// Start successful: go operational.
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Operational);
 		END_IF
 	
 	E_CM_Door_Seq_Logic.Disabled:
 		IF p_bStaEnable THEN
+			// Re-enable sequence.
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Start);
 		END_IF
 	
@@ -240,6 +248,7 @@ CASE s_eSeq OF
 	
 		// Transition
 		IF NOT p_bStaEnable THEN
+			// Disabled request wins.
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
 		ELSIF p_eAlarmState >= E_Alarm_Severity.Error THEN
 			// Some error is active, go to error state
@@ -259,6 +268,7 @@ CASE s_eSeq OF
 		IF NOT p_bStaEnable THEN
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
 		ELSIF p_eAlarmState < E_Alarm_Severity.Error THEN
+			// Error cleared: restart sequence.
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Start);
 		END_IF
 
@@ -273,12 +283,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// Call 
+        <ST><![CDATA[// Call motor control module and connect to alarm collector.
 s_cmMotor(
 	i_bReqEnable:= p_bStaEnable, 
 	i_bReqReset:= , // Can be leaved empty, is automatically done by alarmcollector
 	i_bReqSimulation:= i_bReqSimulation, 
-	i_itfAlarmCollector_Parent:= );
+	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);
 ]]></ST>
       </Implementation>
     </Method>
@@ -294,16 +304,18 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 
+// Simulate feedback timing based on motor direction.
 s_tonSimOpening(in := s_cmMotor.p_bStaRunningFwd, PT := T#1MS);
 s_tonSimClosing(in := s_cmMotor.p_bStaRunningRev, PT := T#5MS);
 
-// WHen motor is running for x seconds set simulation status to open. 
+// When motor is running for x seconds set simulation status to open. 
 IF s_tonSimOpening.Q THEN
 	s_bSimDoorIsOpen := TRUE;
 ELSIF s_cmMotor.p_bStaRunningRev THEN
 	s_bSimDoorIsOpen := FALSE;	
 END_IF
 
+// When motor is running reverse long enough set simulation status to closed.
 IF s_tonSimClosing.Q THEN
 	s_bSimDoorIsClosed := TRUE;
 ELSIF s_cmMotor.p_bStaRunningFwd THEN
@@ -321,7 +333,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF p_bStaEnable 
+        <ST><![CDATA[// Run reverse until closed feedback is active.
+IF p_bStaEnable 
 	AND p_eAlarmState < E_Alarm_Severity.Error 
 	AND NOT s_diDoorIsClosed.p_bStaValue 
 THEN
@@ -340,11 +353,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF p_bStaEnable 
+        <ST><![CDATA[// Run forward until open feedback is active.
+IF p_bStaEnable 
 	AND p_eAlarmState < E_Alarm_Severity.Error 
 	AND NOT s_diDoorIsOpen.p_bStaValue 
 THEN
-	// Start motor reverse
+	// Start motor forward
 	s_cmMotor.m_StartFwd();
 ELSE
 	s_cmMotor.m_Stop();
@@ -359,7 +373,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[s_cmMotor.m_Stop();
+        <ST><![CDATA[// Stop motor and report standstill.
+s_cmMotor.m_Stop();
 
 m_Stop := s_cmMotor.p_bStaStandstill;]]></ST>
       </Implementation>

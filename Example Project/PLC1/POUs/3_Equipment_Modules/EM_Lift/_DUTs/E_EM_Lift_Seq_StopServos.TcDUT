@@ -6,15 +6,15 @@
 {attribute 'to_string'}
 TYPE E_EM_Lift_Seq_StopServos :
 (
-	Idle := c_nSeqIdle,
-	Start := c_nSeqStart,
+	Idle := c_nSeqIdle, // Wait for stop request.
+	Start := c_nSeqStart, // Begin stop sequence (triggers EMR stop in logic).
 
-	StopServo,
-	PowerOffServo,
+	StopServo, // Reserved step for explicit stop if sequence is expanded.
+	PowerOffServo, // Remove drive power after stop.
 	
 	
-	Ready := c_nSeqReady,
-	Error := c_nSeqError
+	Ready := c_nSeqReady, // Stop sequence complete.
+	Error := c_nSeqError // Stop sequence error handling.
 
 );
 END_TYPE

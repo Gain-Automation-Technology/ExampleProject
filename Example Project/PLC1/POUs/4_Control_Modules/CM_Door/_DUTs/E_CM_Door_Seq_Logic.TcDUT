@@ -6,14 +6,14 @@
 {attribute 'to_string'}
 TYPE E_CM_Door_Seq_Logic :
 (
-	Idle := c_nSeqIdle,
-	Start := c_nSeqStart,
+	Idle := c_nSeqIdle, // Wait for sequence start.
+	Start := c_nSeqStart, // Decide operational vs disabled based on enable.
 	
-	Disabled,
-	Operational,
+	Disabled, // Module disabled; wait for enable.
+	Operational, // Normal door control logic active.
 	
-	Ready := c_nSeqReady,
-	Error := c_nSeqError
+	Ready := c_nSeqReady, // Placeholder for ready state (unused in current logic).
+	Error := c_nSeqError // Error state; stop motor and wait for clear.
 );
 END_TYPE
 ]]></Declaration>

@@ -6,16 +6,16 @@
 {attribute 'to_string'}
 TYPE E_EM_Lift_Seq_ProductionStarting :
 (
-	Idle := c_nSeqIdle,
-	Start := c_nSeqStart,
+	Idle := c_nSeqIdle, // Wait for PackML start command.
+	Start := c_nSeqStart, // Decide whether to home or enable drive.
 	
 	
-	ReferenceDrive,
-	EnableDrive,
-	MoveToStartPos,
+	ReferenceDrive, // Perform homing/reference procedure.
+	EnableDrive, // Power on servo drive.
+	MoveToStartPos, // Move to defined start position.
 	
-	Ready := c_nSeqReady,
-	Error := c_nSeqError
+	Ready := c_nSeqReady, // Start sequence complete.
+	Error := c_nSeqError // Start sequence error handling.
 
 );
 END_TYPE

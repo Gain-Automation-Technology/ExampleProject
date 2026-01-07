@@ -3,16 +3,16 @@
   <POU Name="FB_HMI_AlarmCollector" Id="{28f621f1-2517-4966-9914-818b698fd07e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_HMI_AlarmCollector EXTENDS FB_Base
 VAR_INPUT
-	i_itfAlarmCollector		: ITF_AlarmCollector;// Upgraded interface
+	i_itfAlarmCollector		: ITF_AlarmCollector; // Alarm collector interface (source of active alarms).
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
 
-	s_stHmi					: ST_HmiAlarmList;
+	s_stHmi					: ST_HmiAlarmList; // HMI alarm list output structure.
 
-	s_aitfActiveAlarms		: ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF ITF_AlarmHandler;
-	s_nIndex				: UINT;
+	s_aitfActiveAlarms		: ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF ITF_AlarmHandler; // Active alarm interfaces.
+	s_nIndex				: UINT; // Loop index for list building.
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -26,7 +26,9 @@ VAR_INST
 	s_itfHighestActiveAlarm : ITF_AlarmHandler;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF i_itfAlarmCollector = 0 THEN
+        <ST><![CDATA[// Build HMI alarm list and highest active alarm from the collector.
+IF i_itfAlarmCollector = 0 THEN
+	// No collector attached: clear outputs and exit.
 	s_itfHighestActiveAlarm := 0;
 	s_stHmi.sHighestActiveAlarm := '';
 	FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
@@ -42,10 +44,12 @@ FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
 	s_stHmi.asAlarmList[s_nIndex] := '';
 END_FOR
 
+// Fetch active alarms from collector into local array.
 i_itfAlarmCollector.m_GetActiveAlarms(q_aitfAlarms => s_aitfActiveAlarms);
 
 FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
 	IF s_aitfActiveAlarms[s_nIndex] <> 0 AND_THEN s_aitfActiveAlarms[s_nIndex].p_bStaRaised THEN
+		// Track highest severity alarm for quick HMI display.
 		IF (s_itfHighestActiveAlarm = 0) THEN
 			s_itfHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex];
 			s_stHmi.sHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex].p_sEventText;
@@ -54,6 +58,7 @@ FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
 			s_stHmi.sHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex].p_sEventText;
 		END_IF
 
+		// Copy alarm text into the list for the HMI.
 		s_stHmi.asAlarmList[s_nIndex] := s_aitfActiveAlarms[s_nIndex].p_sEventText;
 	END_IF
 END_FOR
@@ -65,9 +70,11 @@ END_FOR
 METHOD m_Main
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^.m_Main();
+        <ST><![CDATA[// Main cycle: call base then update HMI alarm data.
+SUPER^.m_Main();
 
-_m_Hmi();]]></ST>
+_m_Hmi(); // Build alarm list for HMI display.
+]]></ST>
       </Implementation>
     </Method>
   </POU>

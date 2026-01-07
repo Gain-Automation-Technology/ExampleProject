@@ -7,23 +7,29 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-	// PackML status manager
-	GVL_Modules.g_fbPackMLstatusManager();
+// Main program cycle: call top-level managers and units in a clear order.
+// Keep this list small; detailed behavior belongs inside the modules.
+
+// PackML status manager
+// Collects and aggregates PackML status for the system.
+GVL_Modules.g_fbPackMLstatusManager();
 	
-	// Machine controls manager
-	
-	GVL_Modules.g_fbHmiMachCtrlsManager(i_itfMachineControl := GVL_Modules.g_fbMachCtrlsManager);
-	GVL_Modules.g_fbMachCtrlsManager(i_itfModule := GVL_Modules.g_unMachine);
+// Machine controls manager
+// HMI manager translates user actions into machine control requests.
+GVL_Modules.g_fbHmiMachCtrlsManager(
+	i_itfMachineControl := GVL_Modules.g_fbMachCtrlsManager); // Link HMI to machine controls.
+// Machine controls manager coordinates PackML state requests for the unit.
+GVL_Modules.g_fbMachCtrlsManager(
+	i_itfModule := GVL_Modules.g_unMachine); // Link controls to the unit interface.
 	
 // Units
-	// PLC units
-	
+// Call each unit FB with system-level flags and managers.
 GVL_Modules.g_unMachine(
-	i_bReqEnable				:= TRUE, 
-	i_bReqReset					:= GVL_Modules.g_fbMachCtrlsManager.p_bReset, 
-	i_bReqSimulationOn			:= TRUE,
-	i_itfPackML_StatusManager	:= GVL_Modules.g_fbPackMLstatusManager,
-	i_itfAlarmManager			:= );
+	i_bReqEnable				:= TRUE, // Master enable for the unit (replace with safety chain if needed).
+	i_bReqReset					:= GVL_Modules.g_fbMachCtrlsManager.p_bReset, // Reset request from machine controls.
+	i_bReqSimulationOn			:= TRUE, // Simulation mode flag (toggle for real hardware).
+	i_itfPackML_StatusManager	:= GVL_Modules.g_fbPackMLstatusManager, // PackML status manager.
+	i_itfAlarmManager			:= ); // Optional alarm manager interface.
 ]]></ST>
     </Implementation>
   </POU>
