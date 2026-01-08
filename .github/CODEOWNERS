@@ -1,22 +1,5 @@
-# Global code owner - Accounts bellow can approve PRs
-* @Gain-Automation-Technology
-* @Aidanvb5
-* @dlkuiper
-* @MarcoConradsGain
-* @GertvLagen
+# Global code owner - Accounts below can approve PRs
+* @MarcoConradsGain @dlkuiper @GertvLagen @Aidanvb5
 
-# Critical: CODEOWNERS and GitHub settings require owner approval
-/.github/CODEOWNERS @Gain-Automation-Technology
-/.github/workflows/ @Gain-Automation-Technology  
+# Critical: GitHub settings require owner approval
 /.github/ @Gain-Automation-Technology
-/GSBF_Common/ @Gain-Automation-Technology  
-/GSBF_License/ @Gain-Automation-Technology
-/GSBF_HMI/ @Gain-Automation-Technology
-/GSBF_Camming/ @Gain-Automation-Technology
-/GSBF_FlyingSaw/ @Gain-Automation-Technology
-/GSBF_XTS/ @Gain-Automation-Technology
-
-# Critical files
-*.yml @Gain-Automation-Technology
-*.ps1 @Gain-Automation-Technology
-*.md @Gain-Automation-Technology
