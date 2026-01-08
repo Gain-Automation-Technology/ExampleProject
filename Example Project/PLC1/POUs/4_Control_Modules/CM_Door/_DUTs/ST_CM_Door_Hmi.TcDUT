@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="ST_CM_Door_Hmi" Id="{99a463e0-b79b-4898-8e1c-a01b7168e299}">
+    <Declaration><![CDATA[TYPE ST_CM_Door_Hmi :
+STRUCT
+	btnCloseDoor : FB_HmiButton; // HMI button: request door close.
+	btnOpenDoor : FB_HmiButton; // HMI button: request door open.
+	btnStopDoor : FB_HmiButton; // HMI button: request door stop.
+	bStaDoorOpen : BOOL; // Status: door open feedback.
+	bStaDoorCLosed : BOOL; // Status: door closed feedback.
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

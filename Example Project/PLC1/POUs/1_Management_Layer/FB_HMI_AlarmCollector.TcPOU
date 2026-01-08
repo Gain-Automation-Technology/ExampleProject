@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="FB_HMI_AlarmCollector" Id="{28f621f1-2517-4966-9914-818b698fd07e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HMI_AlarmCollector EXTENDS FB_Base
+VAR_INPUT
+	i_itfAlarmCollector		: ITF_AlarmCollector; // Alarm collector interface (source of active alarms).
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+
+	s_stHmi					: ST_HmiAlarmList; // HMI alarm list output structure.
+
+	s_aitfActiveAlarms		: ARRAY[1..Param_Alarms.c_nMaxNrOfListEntries] OF ITF_AlarmHandler; // Active alarm interfaces.
+	s_nIndex				: UINT; // Loop index for list building.
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Call base
+SUPER^();
+]]></ST>
+    </Implementation>
+    <Method Name="_m_Hmi" Id="{c8929337-1a39-4303-8ffd-429fb1c89962}">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
+VAR_INST
+	s_itfHighestActiveAlarm : ITF_AlarmHandler;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Build HMI alarm list and highest active alarm from the collector.
+IF i_itfAlarmCollector = 0 THEN
+	// No collector attached: clear outputs and exit.
+	s_itfHighestActiveAlarm := 0;
+	s_stHmi.sHighestActiveAlarm := '';
+	FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
+		s_stHmi.asAlarmList[s_nIndex] := '';
+	END_FOR
+	RETURN;
+END_IF
+
+// Reset outputs before (re)building the list
+s_itfHighestActiveAlarm := 0;
+s_stHmi.sHighestActiveAlarm := '';
+FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
+	s_stHmi.asAlarmList[s_nIndex] := '';
+END_FOR
+
+// Fetch active alarms from collector into local array.
+i_itfAlarmCollector.m_GetActiveAlarms(q_aitfAlarms => s_aitfActiveAlarms);
+
+FOR s_nIndex := 1 TO Param_Alarms.c_nMaxNrOfListEntries DO
+	IF s_aitfActiveAlarms[s_nIndex] <> 0 AND_THEN s_aitfActiveAlarms[s_nIndex].p_bStaRaised THEN
+		// Track highest severity alarm for quick HMI display.
+		IF (s_itfHighestActiveAlarm = 0) THEN
+			s_itfHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex];
+			s_stHmi.sHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex].p_sEventText;
+		ELSIF s_itfHighestActiveAlarm <> 0 AND_THEN (s_aitfActiveAlarms[s_nIndex].p_eAlarmState > s_itfHighestActiveAlarm.p_eAlarmState) THEN
+			s_itfHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex];
+			s_stHmi.sHighestActiveAlarm := s_aitfActiveAlarms[s_nIndex].p_sEventText;
+		END_IF
+
+		// Copy alarm text into the list for the HMI.
+		s_stHmi.asAlarmList[s_nIndex] := s_aitfActiveAlarms[s_nIndex].p_sEventText;
+	END_IF
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="m_Main" Id="{abdcdb20-b816-4ec0-a43d-c5476a90cfd4}">
+      <Declaration><![CDATA[(* Main method of the FB *)
+METHOD m_Main
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Main cycle: call base then update HMI alarm data.
+SUPER^.m_Main();
+
+_m_Hmi(); // Build alarm list for HMI display.
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

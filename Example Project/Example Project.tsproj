@@ -1,5 +1,26 @@
 <?xml version="1.0"?>
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
+	<Translations>
+		<Text TxtId="NewEventClass_DisplayText"/>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor]]></Text>
+		</Text>
+	</Translations>
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1406,38 +1427,82 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{596B4A02-D358-4713-B9C5-CD07CC41698C}" PersistentType="true">Alarmen</Name>
+			<Name GUID="{91F78DB1-4D11-4BD2-B225-D76D7134071A}" PersistentType="true">GSBF_TcAlarm</Name>
+			<DisplayName TxtId=""><![CDATA[Alarms]]></DisplayName>
+			<EventId>
+				<Name Id="0">Event</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} {0} - {1}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<Properties>
+				<Property>
+					<Name>HideNeedlessArgument</Name>
+					<Value>1</Value>
+				</Property>
+			</Properties>
+			<Hides>
+				<Hide GUID="{BB1A0A54-163F-4274-86EF-5D32D7317AC0}"/>
+				<Hide GUID="{DF891FEF-CB53-4E86-878D-9EFE0B39AE46}"/>
+				<Hide GUID="{0D1C6981-29C6-4871-9286-A3111DD079C0}"/>
+				<Hide GUID="{A08F7C8D-1045-4028-8916-34C838453B21}"/>
+				<Hide GUID="{BAE683ED-D56B-4BD7-B55A-7343D51DB894}"/>
+				<Hide GUID="{F5849BF6-FEA8-48A9-96B4-4430D35E59EA}"/>
+				<Hide GUID="{C92A845A-26AA-4838-9CAE-3E512FE58443}"/>
+				<Hide GUID="{E92223C9-4D62-41D4-B085-88AB75D17023}"/>
+				<Hide GUID="{310F84FE-2846-47D0-925E-130652AC2A8B}"/>
+				<Hide GUID="{33333451-066A-4BA9-89B1-4EB968D69F94}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{72C2FDC8-FD9F-486D-AA5E-B23086D57E6D}" PersistentType="true">Alarmen</Name>
 			<DisplayName TxtId=""><![CDATA[NewEventClass_DisplayText]]></DisplayName>
 			<EventId>
-				<Name Id="1">Alarm_1</Name>
-				<DisplayName TxtId=""><![CDATA[{2} - Sensor 1 Tripped {1}]]></DisplayName>
+				<Name Id="1">CM_Door_AlmDoorIsBlocked</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">CM_Door_AlmFeedbackBothOn</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">CM_Door_AlmDoorNotClosed</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">CM_Door_AlmDoorNotOpen</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">EM_InfeedConveyor_AlmDoorOpenWithoutPermission</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
-				<Name Id="2">Alarm_2</Name>
-				<DisplayName TxtId=""><![CDATA[{2} - Sensor 2 Tripped {1}]]></DisplayName>
-				<Severity>Verbose</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="3">Alarm_CommErr</Name>
-				<DisplayName TxtId=""><![CDATA[Safety - Communication error]]></DisplayName>
-				<Severity>Verbose</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="4">Alarm_EmrStop</Name>
-				<DisplayName TxtId=""><![CDATA[Safety - Emergency stop pressed]]></DisplayName>
+				<Name Id="6">EM_InfeedConveyor_AlmUnexpectProductEndConveyor</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<Hides>
 				<Hide GUID="{6D257FC4-A953-489C-B717-98ABDDD81DE7}"/>
 				<Hide GUID="{1292C143-9529-40E7-885F-0AC23B33B82D}"/>
+				<Hide GUID="{596B4A02-D358-4713-B9C5-CD07CC41698C}"/>
+				<Hide GUID="{A6869D72-2B7C-4F6C-A5A2-E11A51D4D71D}"/>
+				<Hide GUID="{D48DD803-BC8A-4F36-B377-09243CC82AEF}"/>
+				<Hide GUID="{B789C9EB-BD27-46E9-97E9-C57A5A8CF8D7}"/>
+				<Hide GUID="{5B8818D1-E086-4D61-B80A-726A2C32F44C}"/>
+				<Hide GUID="{04577265-1445-490B-B6C7-0C243E2243C4}"/>
+				<Hide GUID="{ED95D0F0-996C-4838-A860-B2CFD238BC82}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
-	<Project ProjectGUID="{112B0125-B5D5-4E95-8112-9C62EEEF497C}" Target64Bit="true" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{112B0125-B5D5-4E95-8112-9C62EEEF497C}" TargetNetId="192.168.5.142.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
-			<Settings MaxCpus="2" NonWinCpus="1">
-				<Cpu CpuId="1"/>
+			<Settings MaxCpus="8" NonWinCpus="4">
+				<Cpu CpuId="4"/>
 			</Settings>
 			<Licenses>
 				<Target BkhfOrder="123456" CustomOrder="1"/>
@@ -1470,7 +1535,7 @@ External Setpoint Generation:
 					<Name>NC-Task 1 SVB</Name>
 				</SvbTask>
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
-					<Name>EM_LogicExample1_Axis1</Name>
+					<Name>EM_Lift_Servo</Name>
 					<AxisPara>
 						<Dynamic Jerk="22500"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
@@ -2095,7 +2160,7 @@ External Setpoint Generation:
 			<Project File="PLC1.xti"/>
 		</Plc>
 		<Safety>
-			<Project GUID="{638376E7-1D95-49AA-98B9-635AEA7D73F1}" Name="Safety1" PrjFilePath="SAFETY1\SAFETY1.splcproj" TmcFilePath="SAFETY1\Safety1.tmc" GeneralArchiveSettings="#x000f" TargetArchiveSettings="#x0007" FileArchiveSettings="#x000e">
+			<Project GUID="{638376E7-1D95-49AA-98B9-635AEA7D73F1}" Name="SAFETY1" PrjFilePath="C:\Projects\Gain\ExampleProject\Example Project\SAFETY1\SAFETY1.splcproj" GeneralArchiveSettings="#x000f" TargetArchiveSettings="#x0007" FileArchiveSettings="#x000e">
 				<Instance Id="#x01010080" KeepUnrestoredLinks="2">
 					<Name>Safety1 Instance</Name>
 					<TmcDesc GUID="{72A6D5B8-E98C-4604-8B90-09D1F8AB38A9}">

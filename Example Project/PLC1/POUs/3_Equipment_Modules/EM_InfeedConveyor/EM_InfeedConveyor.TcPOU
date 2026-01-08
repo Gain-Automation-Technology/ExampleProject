@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="EM_InfeedConveyor" Id="{b91e1ca2-13e1-489f-b4dd-6188267ce9c2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK EM_InfeedConveyor EXTENDS FB_EM_PackML_Base
+VAR_INPUT
+	i_stFromLift : ST_CommLiftToInfeed; // Status/handshake from lift to infeed.
+END_VAR
+VAR_OUTPUT
+	q_stToLift : ST_CommInfeedToLift; // Commands/handshake from infeed to lift.
+END_VAR
+VAR
+	// Variables
+	s_stHmi : ST_EM_InfeedConveyor_Hmi;	// HMI structure (status and manual controls).
+
+	// Control modules
+	s_cmBelt : CM_MotorDol; // Belt drive for infeed conveyor.
+	s_cmHmiBelt : HMI_CM_MotorDol; // HMI helper for belt controls.
+	
+	s_cmDoor : CM_Door; // Door control module between conveyor and lift.
+	
+	
+	// in/outputs
+	s_diStartConveyor : FB_DigitalInput; // Sensor at conveyor start (product present).
+	s_diEndConveyor : FB_DigitalInput; // Sensor at conveyor end (near lift).
+	
+	// Alarms
+	s_fbAlmDoorOpenWithoutPermission : FB_AlarmHandler; // Door open while lift not at infeed.
+	s_fbAlmUnexpectProductEndConveyor : FB_AlarmHandler; // Unexpected product detected at end sensor.
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Call Super
+// Basemodule calls the following base method by calling SUPER^(): 
+// - m_Main
+// Add module-specific cyclic logic before/after SUPER^() if required.
+
+SUPER^();]]></ST>
+    </Implementation>
+    <Folder Name="Basic" Id="{4c6007b4-e453-43fb-83ef-68fa84ee3094}" />
+    <Folder Name="PackML States" Id="{3cbf12f9-9c33-48b6-97f7-4beb2ad0199f}" />
+    <Folder Name="Sequencers" Id="{2c33c865-2ad2-4cc9-894b-19e455f11247}" />
+    <Method Name="_m_Aborting" Id="{6e493f1a-05d4-40e5-abb9-78f714106cb8}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Aborting : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Stop door.
+// Aborting should leave the module in a safe, passive state.
+// Add any extra abort actions here (e.g., stop belt, clear outputs).
+_m_Aborting	:= s_cmDoor.m_Stop();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Alarms" Id="{d9a9139d-a6a9-4728-af09-af4bb64a4c8c}" FolderPath="Basic\">
+      <Declaration><![CDATA[(* Collect alarm conditions from sub-modules. *)
+METHOD PROTECTED _m_Alarms
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* All module alarms are handled in this method *)
+(*==========================================================================================================*)
+// Call base
+SUPER^._m_Alarms();
+
+// Add module-specific alarm conditions below.
+
+
+// Door opened while lift is not at infeed position.
+s_fbAlmDoorOpenWithoutPermission(
+	i_bCmdRaise:= NOT i_stFromLift.bAtInfeedPos AND NOT s_cmDoor.p_bStaDoorClosed, 
+	i_sMessage:= , 
+	i_itfAlarmCollector:= p_itfAlarmCollector);
+
+// Unexpected product detected at end sensor (raised explicitly elsewhere).
+s_fbAlmUnexpectProductEndConveyor(
+	i_bCmdRaise:= , // leave empty, this alarm is set by m_Raise 
+	i_sMessage:= , 
+	i_itfAlarmCollector:= p_itfAlarmCollector);
+
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Execute" Id="{25f1b196-7001-475c-ae67-f35a0c685d48}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Execute : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Execute production sequence only in Production mode.
+// For other modes, return TRUE or add mode-specific behavior.
+IF i_eActMode = E_PackML_Mode.Production THEN
+	_m_Execute := _m_ProductionExecute(i_bCmdRestart := i_bCmdRestart).p_bStaReady;
+ELSE
+	_m_Execute := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Hmi" Id="{68f5ea41-0137-40e2-a684-a2bf13741982}" FolderPath="Basic\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Hmi
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Expose belt controls to the HMI in Manual mode.
+// Extend this method with extra HMI controls or status fields as needed.
+s_stHmi.fbBelt(
+	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, // Enable manual HMI buttons in Manual mode.
+	i_itfCM_MotorDol:= s_cmBelt);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Init" Id="{363a145b-9dfd-4568-9596-4932824d4f15}" FolderPath="Basic\">
+      <Declaration><![CDATA[(* Initialization, set initial data. *)
+METHOD PROTECTED _m_Init
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base
+SUPER^._m_Init();
+
+// Configure alarms and initial module parameters here.
+// Alarms
+s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
+s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
+s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
+s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
+s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.EM_InfeedConveyor_AlmDoorOpenWithoutPermission;
+
+s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
+s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
+s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_eCfgSeverity		:= E_Alarm_Severity.Error;                             
+s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
+s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.EM_InfeedConveyor_AlmUnexpectProductEndConveyor;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Inputs" Id="{9ab7a3db-5067-4105-8a8c-69fb471ec0ab}" FolderPath="Basic\">
+      <Declaration><![CDATA[(* Process unit inputs. *)
+METHOD PROTECTED _m_Inputs
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base 
+SUPER^._m_Inputs();
+
+// Map IO or communication inputs to internal status here.
+// Call inputs
+s_diStartConveyor(); // Start sensor at infeed side.
+s_diEndConveyor(); // End sensor at lift side.
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Modules" Id="{c50297d0-3eca-4a82-9b05-b7e815aeb196}" FolderPath="Basic\">
+      <Declaration><![CDATA[(* Call sub-modules (equipment and/or control modules). *)
+METHOD PROTECTED _m_Modules
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Call base
+SUPER^._m_Modules();
+
+// Call belt motor control module.
+s_cmBelt(
+	i_bReqEnable:= p_bStaEnable, 
+	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector. 
+	i_bReqSimulation:= p_bStaSimulation, 
+	i_itfAlarmCollector_Parent:= p_itfAlarmCollector); // Propagate belt alarms to module.
+	
+// Call door control module and pass common flags.
+s_cmDoor(
+	i_bReqEnable:= p_bStaEnable, 
+	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector.
+	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
+	i_bReqSimulation:= p_bStaSimulation, 
+	i_itfAlarmCollector_Parent:= p_itfAlarmCollector); // Propagate door alarms to module.
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_ProductionExecute" Id="{899ce89c-8cbc-494d-9671-7fb94edd764e}" FolderPath="Sequencers\">
+      <Declaration><![CDATA[METHOD _m_ProductionExecute : ITF_FB_SeqControl
+VAR_INPUT
+	i_bCmdRestart : BOOL;
+END_VAR
+VAR_INST
+	s_fbSeqControl  : FB_SeqControl;
+	s_eSeq 			: E_EM_InfeedConveyor_Seq_ProductionExecute;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Sequencer bookkeeping (current step and entry handling).
+s_fbSeqControl(
+	i_bReqStart:= i_bCmdRestart, // Start sequencer on first cycle of state.
+	i_rnActSeqStep:= s_eSeq, // Active step enum.
+	i_sActSeqStep:= TO_STRING(s_eSeq)); // Step name for logging/trace.
+
+
+// Production sequencer - implement the automatic infeed flow here.
+CASE s_eSeq OF
+	E_EM_InfeedConveyor_Seq_ProductionExecute.Idle:
+		// Wait for production to start or for preconditions.
+		// Clear transient outputs here if required (requests, flags).
+		;
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.Start:
+		// Choose initial step based on current conveyor/door state.
+		// This avoids moving product or door unnecessarily at startup.
+		IF s_cmDoor.p_bStaDoorClosed AND s_diEndConveyor.p_bStaValue THEN
+			// Product already at end and door closed: wait for lift.
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.WaitUntilLiftReady); // Product at end, wait for lift.
+		ELSIF s_cmDoor.p_bStaDoorOpen THEN
+			// Door open: request lift to receive immediately.
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.RequestLiftReceiving);	// Door open, request lift now.
+		ELSE
+			// Default: wait for product at start sensor.
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.WaitForProduct);	// Default: wait for product.
+		END_IF		
+	
+	E_EM_InfeedConveyor_Seq_ProductionExecute.WaitForProduct:
+		// Wait until a product arrives at the start sensor.
+		// Add debouncing or filtering here if required by the hardware.
+		IF s_diStartConveyor.p_bStaValue THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.MoveProductToDoor); // Product detected at start.
+		ELSIF s_diEndConveyor.p_bStaValue THEN
+			// Product detected at end without running belt -> unexpected.
+			s_fbAlmUnexpectProductEndConveyor.m_CmdRaise(); // Raise alarm for unexpected product.
+			
+			// No transition; PackML will handle the alarm state.
+		END_IF
+	
+	E_EM_InfeedConveyor_Seq_ProductionExecute.MoveProductToDoor:
+		// Move product towards the door until end sensor is active.
+		// Add jam detection or timeout here if the belt should not run too long.
+		IF NOT s_diEndConveyor.p_bStaValue THEN
+			// Run belt until product is at end of conveyor.
+			s_cmBelt.m_StartFwd(); // Run belt forward.
+		ELSE
+			// Product is at end conveyor, stop belt.
+			IF s_cmBelt.m_Stop() THEN // Stop belt before requesting lift.
+				s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.WaitUntilLiftReady);
+			END_IF
+		END_IF
+	
+	E_EM_InfeedConveyor_Seq_ProductionExecute.WaitUntilLiftReady:
+		// Wait until lift is positioned at infeed.
+		// Add timeout and alarm handling here if required.
+		IF i_stFromLift.bAtInfeedPos THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.RequestLiftReceiving); // Lift in position.
+		END_IF	
+			 
+	E_EM_InfeedConveyor_Seq_ProductionExecute.RequestLiftReceiving:
+		// Handshake: request lift to receive product.
+		q_stToLift.bReqExportProduct := TRUE; // Request lift to receive product.
+		// Keep this request TRUE while in this step; clear it in other steps if needed.
+		
+		// Continue once lift confirms it is ready.
+		IF i_stFromLift.bReadyForReceiving THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.OpenDoor); // Lift ready.
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.OpenDoor:
+		// Open door before transferring product into lift.
+		// Add interlocks here if the door should not open in certain conditions.
+		IF s_cmDoor.m_OpenDoor() THEN // Command door open and wait for feedback.
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.MoveProductInLift);
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.MoveProductInLift:
+		// Drive belt until lift reports product received.
+		// Add timeout or sensor validation to detect mis-transfer.
+		IF NOT i_stFromLift.bProductReceived THEN // Keep feeding until lift confirms receipt.
+			// Belt on.
+			s_cmBelt.m_StartFwd(); // Move product into lift.
+		ELSE	
+			// Product in lift, stop conveyor.
+			s_cmBelt.m_Stop(); // Stop belt once received.
+			
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.CloseDoor); // Secure door after transfer.
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.CloseDoor:
+		// Close door and return to waiting for next product.
+		// Add checks for door blocked or safety conditions if required.
+		IF s_cmDoor.m_CloseDoor() THEN // Command door close and wait for feedback.
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionExecute.WaitForProduct); // Ready for next product.
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionExecute.Ready:
+		// Sequence complete; keep outputs stable.
+		;
+	E_EM_InfeedConveyor_Seq_ProductionExecute.Error:
+		// Handle recoverable errors or trigger alarms here.
+		;
+END_CASE
+
+// Return sequencer status to PackML state handler.
+_m_ProductionExecute := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq)); // Return sequencer status.
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_ProductionStarting" Id="{df69ba8a-4bf4-4bb5-80e1-e3aac5dfdb6c}" FolderPath="Sequencers\">
+      <Declaration><![CDATA[METHOD _m_ProductionStarting : ITF_FB_SeqControl
+VAR_INPUT
+	i_bCmdRestart : BOOL;
+END_VAR
+VAR_INST
+	s_fbSeqControl  : FB_SeqControl;
+	s_eSeq 			: E_EM_InfeedConveyor_Seq_ProductionStarting;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// Sequencer bookkeeping (current step and entry handling).
+s_fbSeqControl(
+	i_bReqStart:= i_bCmdRestart, // Start sequencer on first cycle of state.
+	i_rnActSeqStep:= s_eSeq, // Active step enum.
+	i_sActSeqStep:= TO_STRING(s_eSeq)); // Step name for logging/trace.
+	
+// Production start sequence: set door to a known safe state.
+CASE s_eSeq OF 
+	E_EM_InfeedConveyor_Seq_ProductionStarting.Idle:
+		// Wait for start command from PackML.
+		// Clear transient outputs here if required (requests, flags).
+		;
+	E_EM_InfeedConveyor_Seq_ProductionStarting.Start:
+		// Decide whether door should be opened or closed at startup.
+		// Replace with actual "product present" logic if available.
+		IF s_cmDoor.p_bStaDoorBlocked THEN
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionStarting.OpenDoor); // Door blocked, open at start.
+		ELSE 
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionStarting.CloseDoor); // Otherwise close at start.
+		END_IF
+		
+		
+	E_EM_InfeedConveyor_Seq_ProductionStarting.OpenDoor:
+		// Open door at startup (e.g., product present at door).
+		// Add interlocks or safety checks here if required.
+		IF s_cmDoor.m_OpenDoor() THEN // Command door open and wait for feedback.
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionStarting.Ready); // Startup complete.
+		END_IF
+	E_EM_InfeedConveyor_Seq_ProductionStarting.CloseDoor:
+
+		// Close door at startup (e.g., no product present).
+		// Add interlocks or safety checks here if required.
+		IF s_cmDoor.m_CloseDoor() THEN // Command door close and wait for feedback.
+			s_fbSeqControl.m_ReqStep(E_EM_InfeedConveyor_Seq_ProductionStarting.Ready); // Startup complete.
+		END_IF
+		
+	E_EM_InfeedConveyor_Seq_ProductionStarting.Ready:
+		// Start sequence complete; ready for Execute state.
+		;
+	E_EM_InfeedConveyor_Seq_ProductionStarting.Error:
+		// Handle startup errors or request operator intervention here.
+		;
+END_CASE
+
+// Return sequencer status to PackML state handler.
+_m_ProductionStarting := s_fbSeqControl.m_getResult(TO_STRING(s_eSeq)); // Return sequencer status.
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Starting" Id="{f4b3656d-5541-4cdd-bcd6-7f309fb69039}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Starting : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR
+VAR_INST
+	s_fbSeqControl 	: FB_SeqControl;
+	s_eSeq			: E_EM_InfeedConveyor_Seq_ProductionStarting;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// PackML Starting: run production-start sequencer in Production mode.
+IF i_eActMode = E_PackML_Mode.Production THEN
+	_m_Starting := _m_ProductionStarting(i_bCmdRestart := i_bCmdRestart).p_bStaReady;
+ELSE
+	_m_Starting := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_m_Stopping" Id="{42e1762a-4970-4eed-9383-6883b80d760b}" FolderPath="PackML States\">
+      <Declaration><![CDATA[METHOD PROTECTED _m_Stopping : BOOL // Return state complete when state is ready
+VAR_INPUT
+	i_bCmdRestart	: BOOL;	//First cycle of this state
+	i_eActMode 		: E_PackML_Mode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Stop door.
+// Add belt stop or other safe-state actions if required.
+_m_Stopping	:= s_cmDoor.m_Stop();]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

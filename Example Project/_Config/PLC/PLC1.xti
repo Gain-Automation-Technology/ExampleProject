@@ -983,219 +983,121 @@ External Setpoint Generation:
 		</DataType>
 	</DataTypes>
 	<Project GUID="{93B59E1E-9B9C-4AF4-8B9D-07523266E926}" Name="PLC1" PrjFilePath="..\..\PLC1\PLC1.plcproj" TmcFilePath="..\..\PLC1\PLC1.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{62183258-A4B9-F17E-E26F-F635EC673E40}" TmcPath="PLC1\PLC1.tmc">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{AFBC29A9-DA4E-C301-E8D5-976EDFFAC4A9}" TmcPath="PLC1\PLC1.tmc">
 			<Name>PLC1 Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Vars VarGrpType="2" AreaNo="1">
 				<Name>PlcTask Outputs</Name>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDoStartButtonLight.Q_bOut</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmBelt.s_fbHardware.s_fbStart.Q_bOut</Name>
 					<Comment><![CDATA[  IO var ]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbDoStopButtonLight.Q_bOut</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmBelt.s_fbHardware.s_fbForward.Q_bOut</Name>
 					<Comment><![CDATA[  IO var ]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoHorn.Q_bOut</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmBelt.s_fbHardware.s_fbReverse.Q_bOut</Name>
 					<Comment><![CDATA[  IO var ]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Red.Q_bOut</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_cmMotor.s_fbHardware.s_fbStart.Q_bOut</Name>
 					<Comment><![CDATA[  IO var ]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Orange.Q_bOut</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_cmMotor.s_fbHardware.s_fbForward.Q_bOut</Name>
 					<Comment><![CDATA[  IO var ]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Blue.Q_bOut</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_cmMotor.s_fbHardware.s_fbReverse.Q_bOut</Name>
 					<Comment><![CDATA[  IO var ]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_Green.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_fbStackLight.s_fbDoStackLight_White.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.PlcToNc</Name>
+					<Name>GVL_Modules.g_emLift.s_cmMotorLift.IQ_Axis.PlcToNc</Name>
 					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.PlcToNc</Name>
-					<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbDoMachineX_Start.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbAoMachineX_Speed.Q_nStaValue</Name>
-					<Comment><![CDATA[ IO var ]]></Comment>
+					<Name>GVL_Modules.g_emLift.s_cmMotorLift.s_fbHardware.Q_MrTorque</Name>
+					<Comment><![CDATA[ Requested Torque limit 1000 = 100% ]]></Comment>
 					<Type>INT</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbRedLight.s_fbLight.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbBlueButton.s_fbLight.s_fbLight.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoHorn.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_Red.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_Orange.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_Blue.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_Green.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbStackLight.s_fbDoStackLight_White.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDoSafetyPLC_ErrorAck.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDoSafetyPLC_Reset.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDoSafetyPLC_ResetCommErr.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDoSafetyPLC_Run.Q_bOut</Name>
-					<Comment><![CDATA[  IO var ]]></Comment>
-					<Type>BOOL</Type>
 				</Var>
 			</Vars>
 			<Vars VarGrpType="1">
 				<Name>PlcTask Inputs</Name>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_afbDiBtnStart[1].I_bIn</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmBelt.s_fbHardware.s_fbThThermOk.I_bIn</Name>
 					<Comment><![CDATA[ IO                           	                	]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_fbMachCtrlsManager.s_afbDiBtnStop[1].I_bIn</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmBelt.s_fbHardware.s_fbFbForward.I_bIn</Name>
 					<Comment><![CDATA[ IO                           	                	]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.NcToPlc</Name>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmBelt.s_fbHardware.s_fbFbReverse.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_cmMotor.s_fbHardware.s_fbThThermOk.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_cmMotor.s_fbHardware.s_fbFbForward.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_cmMotor.s_fbHardware.s_fbFbReverse.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_diDoorIsOpen.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_diDoorIsClosed.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_cmDoor.s_diDoorIsBlocked.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_diStartConveyor.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emInfeedConveyor.s_diEndConveyor.I_bIn</Name>
+					<Comment><![CDATA[ IO                           	                	]]></Comment>
+					<Type>BOOL</Type>
+				</Var>
+				<Var>
+					<Name>GVL_Modules.g_emLift.s_cmMotorLift.IQ_Axis.NcToPlc</Name>
 					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.NcToPlc</Name>
-					<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbDiSensorPos1.I_bIn</Name>
+					<Name>GVL_Modules.g_emLift.s_cmMotorLift.s_fbHardware.s_DtReference.I_bIn</Name>
 					<Comment><![CDATA[ IO                           	                	]]></Comment>
 					<Type>BOOL</Type>
 				</Var>
 				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbDiSensorPos2.I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emLogicExample.s_fbBlueButton.s_fbPushButton.I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[1].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[2].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[3].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[4].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[5].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[6].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[7].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[8].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[9].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiEmergencyStopActive[10].I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
-				</Var>
-				<Var>
-					<Name>GVL_Area100.g_emSafety.s_fbSDiSafetyCommErr.I_bIn</Name>
-					<Comment><![CDATA[ IO                           	                	]]></Comment>
-					<Type>BOOL</Type>
+					<Name>GVL_Modules.g_emLift.s_cmMotorLift.s_fbHardware.I_DriveDiagCode</Name>
+					<Comment><![CDATA[ Diagnostic Code ]]></Comment>
+					<Type>UDINT</Type>
 				</Var>
 			</Vars>
 			<UnrestoredVarLinks ImportTime="2025-11-28T14:27:20">
@@ -1248,6 +1150,24 @@ External Setpoint Generation:
 					</OwnerB>
 				</OwnerA>
 			</UnrestoredVarLinks>
+			<UnrestoredVarLinks ImportTime="2025-12-01T14:00:27">
+				<OwnerA Name="OutputSrc" Prefix="TIPC^PLC1^PLC1 Instance" Type="2">
+					<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_Axis1">
+						<Link VarA="GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+					</OwnerB>
+					<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_AxisVM">
+						<Link VarA="GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+					</OwnerB>
+				</OwnerA>
+				<OwnerA Name="InputDst" Prefix="TIPC^PLC1^PLC1 Instance" Type="1">
+					<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_Axis1">
+						<Link VarA="GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+					</OwnerB>
+					<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_AxisVM">
+						<Link VarA="GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+					</OwnerB>
+				</OwnerA>
+			</UnrestoredVarLinks>
 			<Contexts>
 				<Context>
 					<Id>0</Id>
@@ -1266,13 +1186,9 @@ External Setpoint Generation:
 	</Project>
 	<Mappings>
 		<OwnerA Name="PLC1 Instance">
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_Axis1">
-				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample.s_cmAxis1.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
-			</OwnerB>
-			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_LogicExample1_AxisVM">
-				<Link VarA="PlcTask Inputs^GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^GVL_Area100.g_emLogicExample.s_cmVirtualMaster.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^EM_Lift_Servo">
+				<Link VarA="PlcTask Inputs^GVL_Modules.g_emLift.s_cmMotorLift.IQ_Axis.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL_Modules.g_emLift.s_cmMotorLift.IQ_Axis.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>
