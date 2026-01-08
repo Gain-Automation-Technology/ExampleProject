@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="CheckLRangeUnsigned" Id="{70c7f2c4-5290-4802-9686-5c71ee93d2f1}" SpecialFunc="CheckLRangeUnsigned">
+    <Declaration><![CDATA[// CheckLRangeUnsigned checks subrange types of the type LWORD, ULINT.
+// The purpose of this monitoring function is to deal with range bound violations as appropriate.
+// Implicitly generated code : DO NOT EDIT
+FUNCTION CheckLRangeUnsigned : ULINT
+VAR_INPUT
+	value, lower, upper: ULINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Implicitly generated code : Only an Implementation suggestion
+{noflow}
+IF (value < lower) THEN
+	CheckLRangeUnsigned := lower;
+	GVL_TwinCatChecks.CheckRange_ULINT_TooLow := GVL_TwinCatChecks.CheckRange_ULINT_TooLow + 1;
+ELSIF(value > upper) THEN
+	CheckLRangeUnsigned := upper;
+	GVL_TwinCatChecks.CheckRange_ULINT_TooHigh := GVL_TwinCatChecks.CheckRange_ULINT_TooHigh + 1;
+ELSE
+	CheckLRangeUnsigned := value;
+END_IF
+{flow}]]></ST>
+    </Implementation>
+    <LineIds Name="CheckLRangeUnsigned">
+      <LineId Id="7" Count="2" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="12" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

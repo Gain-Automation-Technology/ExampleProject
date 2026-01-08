@@ -1,0 +1,4 @@
+[submodule "GSBF_Common"]
+	path = GSBF_Common
+	url = https://github.com/Gain-Automation-Technology/GSBF_Common.git
+	branch = development

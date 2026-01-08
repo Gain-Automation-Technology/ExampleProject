@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="E_EM_Lift_Seq_StopServos" Id="{1cf1b98e-e34a-4483-901c-bd44650462ff}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_EM_Lift_Seq_StopServos :
+(
+	Idle := c_nSeqIdle, // Wait for stop request.
+	Start := c_nSeqStart, // Begin stop sequence (triggers EMR stop in logic).
+
+	StopServo, // Reserved step for explicit stop if sequence is expanded.
+	PowerOffServo, // Remove drive power after stop.
+	
+	
+	Ready := c_nSeqReady, // Stop sequence complete.
+	Error := c_nSeqError // Stop sequence error handling.
+
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

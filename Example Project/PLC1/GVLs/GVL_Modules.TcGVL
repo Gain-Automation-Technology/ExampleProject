@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <GVL Name="GVL_Modules" Id="{12fdd4e2-fcb3-4f87-af33-035e124890b0}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+// Management
+	g_fbMachCtrlsManager	: FB_MachineControlsManager;
+	g_fbHmiMachCtrlsManager	: FB_HMI_MachineControlsManager_StartStopMode;
+	g_fbPackMLstatusManager	: FB_PackML_StatusManager;
+
+	
+// Units
+	g_unMachine				: UN_Machine;
+	
+// Equipment modules
+	g_emInfeedConveyor		: EM_InfeedConveyor;
+	g_emLift 				: EM_Lift;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

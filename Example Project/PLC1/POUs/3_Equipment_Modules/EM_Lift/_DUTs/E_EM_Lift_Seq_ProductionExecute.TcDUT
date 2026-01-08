@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="E_EM_Lift_Seq_ProductionExecute" Id="{9ed95578-29ed-4af7-95b5-3b7ddfb260b1}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_EM_Lift_Seq_ProductionExecute :
+(
+	Idle := c_nSeqIdle, // Wait for production to start.
+	Start := c_nSeqStart, // Begin production sequence steps.
+
+	
+	
+	Ready := c_nSeqReady, // Sequence complete.
+	Error := c_nSeqError // Sequence error handling.
+
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

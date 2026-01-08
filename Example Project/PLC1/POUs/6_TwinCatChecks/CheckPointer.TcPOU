@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+  <POU Name="CheckPointer" Id="{ec5acd4d-8f34-48f0-afc8-f41aaaaf9cb1}" SpecialFunc="CheckPointer">
+    <Declaration><![CDATA[// This Function is used to monitor the memory acces of pointers during runtime.
+// The purpose of the CheckPointer function is to check whether the transferred pointer points to a valid memory address, and whether the orientation of the referenced memory area matches the type of variable to which the pointer points.
+// If both conditions are met, the pointer itself is returned. Otherwise, the function should perform proper error handling.
+// Implicitly generated code : DO NOT EDIT
+FUNCTION CheckPointer : POINTER TO BYTE
+VAR_INPUT 
+	ptToTest : POINTER TO BYTE; // Destination address of the pointer
+	iSize : DINT;		        // Size of the type the pointer points to. (e.g: 20 for POINTER TO ARRAY [0..9] OF INT) 
+	iGran : DINT;		        // Granularity of the pointer access. This is the size of the biggest non-structured data type in the type the pointer points to. (e.g: 2 for POINTER TO ARRAY [0..9] OF INT)
+	bWrite: BOOL;		        // Indicates read or write Access. TRUE = write access.
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// No standard way of implementation. Fill your own code here
+{noflow}
+CheckPointer := ptToTest;
+{flow}]]></ST>
+    </Implementation>
+    <LineIds Name="CheckPointer">
+      <LineId Id="12" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <DUT Name="E_EM_Lift_Seq_ProductionStarting" Id="{8962b13d-1c8c-43df-9df8-5eb9c48043a2}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_EM_Lift_Seq_ProductionStarting :
+(
+	Idle := c_nSeqIdle, // Wait for PackML start command.
+	Start := c_nSeqStart, // Decide whether to home or enable drive.
+	
+	
+	ReferenceDrive, // Perform homing/reference procedure.
+	EnableDrive, // Power on servo drive.
+	MoveToStartPos, // Move to defined start position.
+	
+	Ready := c_nSeqReady, // Start sequence complete.
+	Error := c_nSeqError // Start sequence error handling.
+
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
