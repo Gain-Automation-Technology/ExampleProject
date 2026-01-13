@@ -3,8 +3,8 @@
 The Example Project is a **practical demonstration of the Gain Standard Beckhoff Framework (GSBF)**. With this project, you see directly how GSBF helps you build machines faster, more professionally, and with less risk.
 
 **How GSBF is used in this project:**
-- Architecture built around **PackML** — a proven design pattern for industrial control
-- **Reusable Control Modules** — infeed conveyor and lift that you can use as templates in your own projects
+- Architecture built around **PackML** a proven design pattern for industrial control
+- **Reusable Control Modules** infeed conveyor and lift that you can use as templates in your own projects
 - Module communication with handshake signals
 - Best practices for alarms, safety, and status feedback across all layers
 
