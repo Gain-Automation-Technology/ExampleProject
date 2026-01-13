@@ -1,19 +1,19 @@
-# Introduction 
+# Introduction
 
-Het Example Project is een **praktische demonstratie van het Gain Standard Beckhoff Framework (GSBF)**. Met dit project zie je direct hoe GSBF helpt om sneller, professioneler en met minder risico's machines te bouwen.
+The Example Project is a **practical demonstration of the Gain Standard Beckhoff Framework (GSBF)**. With this project, you see directly how GSBF helps you build machines faster, more professionally, and with less risk.
 
-**In dit project wordt GSBF gebruikt voor:**
-- De architectuur rondom **PackML** — proven design pattern voor industrial control
-- **Reusable Control Modules** — infeed conveyor en lift die je direct als template kunt gebruiken
-- Module-communicatie met handshake-signalen
-- Best practices voor alarms, safety en statusfeedback door alle lagen
+**How GSBF is used in this project:**
+- Architecture built around **PackML** — a proven design pattern for industrial control
+- **Reusable Control Modules** — infeed conveyor and lift that you can use as templates in your own projects
+- Module communication with handshake signals
+- Best practices for alarms, safety, and status feedback across all layers
 
-Het project demonstreert de volledige keten van management- en statuslagen tot equipment en control modules, inclusief de typische PLC-structuur (GVL's, POUs, DUTs) en een eenvoudige HMI-laag. 
+The project demonstrates the complete chain from management and status layers to equipment and control modules, including the typical PLC structure (GVL's, POUs, DUTs) and a simple HMI layer.
 
-Functioneel modelleert het een basislijn met een infeed-conveyor en een lift, waar een product via handshake-signalen wordt overgedragen. Het project is bewust overzichtelijk gehouden zodat het als startpunt kan dienen voor eigen machines en draait standaard in simulatie om zonder hardware te testen.
+Functionally, it models a baseline with an infeed conveyor and a lift, where a product is transferred via handshake signals. The project is intentionally kept straightforward so it can serve as a starting point for your own machines and runs in **simulation mode by default** — no hardware needed.
 
 ---
 
-# Download
+## Download
 [ExampleProject.zip](https://github.com/user-attachments/files/24582457/ExampleProject-main.zip)
 
