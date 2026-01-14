@@ -122,12 +122,17 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="m_Main" Id="{5738c138-41a1-473c-badd-a5f9691bbc49}">
-      <Declaration><![CDATA[METHOD PUBLIC m_Main]]></Declaration>
+      <Declaration><![CDATA[METHOD PUBLIC m_Main
+VAR_INST
+	s_fbAlarmToPackMl : FB_AlarmToPackML;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Main entry point for the unit.
 // Use this to wrap additional high-level logic around base behavior.
 SUPER^.m_Main();
-]]></ST>
+
+
+s_fbAlarmToPackMl(i_eAlarmState:= p_itfAlarmCollector.p_eAlarmState, i_itfPackML_Command:= s_fbPackML);]]></ST>
       </Implementation>
     </Method>
   </POU>
