@@ -14,6 +14,6 @@ Functionally, it models a baseline with an infeed conveyor and a lift, where a p
 
 ---
 
-## Download
+# Download
 [ExampleProject.zip](https://github.com/user-attachments/files/24582457/ExampleProject-main.zip)
 
