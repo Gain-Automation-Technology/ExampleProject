@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <Visu Name="Page_PackML" Id="{5ee60e36-1577-47fa-97ab-d010842c2d34}">
     <XmlArchive>
       <Data>

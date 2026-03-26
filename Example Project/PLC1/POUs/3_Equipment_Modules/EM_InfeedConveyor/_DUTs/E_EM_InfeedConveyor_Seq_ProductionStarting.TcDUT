@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <DUT Name="E_EM_InfeedConveyor_Seq_ProductionStarting" Id="{e77eeb17-635c-4c25-9f7b-9964de46f283}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}

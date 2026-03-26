@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="CheckRangeUnsigned" Id="{4c06b31a-b349-46de-911a-22f1cfb3aa51}" SpecialFunc="CheckRangeUnsigned">
     <Declaration><![CDATA[// CheckRangeUnsigned checks subrange types of the type BYTE, WORD, DWORD, USINT, UINT, UDINT.
 // The purpose of this monitoring function is to deal with range bound violations as appropriate.
@@ -22,15 +22,5 @@ ELSE
 END_IF
 {flow}]]></ST>
     </Implementation>
-    <LineIds Name="CheckRangeUnsigned">
-      <LineId Id="14" Count="0" />
-      <LineId Id="3" Count="1" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="7" Count="2" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
