@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="UN_Machine" Id="{21e30d72-cc39-422e-8114-15c7abc2b847}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK UN_Machine EXTENDS FB_UN_PackML_Base
 VAR_INPUT
@@ -85,7 +85,7 @@ GVL_Modules.g_emInfeedConveyor(
 	i_bReqEnable					:= TRUE, // Enable module (replace with safety chain if needed).
 	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, // Reset from alarm collector.
 	i_bStaSafetyOk					:= TRUE, // Safety chain OK (replace with real input).
-	i_bReqSimulation				:= p_bStaSimulation, // Simulation flag from unit.
+	i_bReqSimulation				:= p_bReqSimulation, // Simulation flag from unit.
 	i_itfPackML_Parent				:= s_fbPackML, // PackML parent interface.
 	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, // Alarm collector parent.
 	q_stStaPackML					=> , // Optional PackML status feedback.
@@ -96,7 +96,7 @@ GVL_Modules.g_emLift(
 	i_bReqEnable:= TRUE, // Enable module (replace with safety chain if needed).
 	i_bReqReset:= s_fbAlarmCollector.q_bReqReset, // Reset from alarm collector.
 	i_bStaSafetyOk:= TRUE, // Safety chain OK (replace with real input).
-	i_bReqSimulation:= p_bStaSimulation, // Simulation flag from unit.
+	i_bReqSimulation:= p_bReqSimulation, // Simulation flag from unit.
 	i_itfPackML_Parent:= s_fbPackML, // PackML parent interface.
 	i_itfAlarmCollector_Parent:= s_fbAlarmCollector, // Alarm collector parent.
 	q_stStaPackML=> , // Optional PackML status feedback.

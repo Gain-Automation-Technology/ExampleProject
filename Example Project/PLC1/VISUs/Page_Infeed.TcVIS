@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <Visu Name="Page_Infeed" Id="{fa9497d4-317f-4852-864b-de4603a02a9c}">
     <XmlArchive>
       <Data>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="EM_InfeedConveyor" Id="{b91e1ca2-13e1-489f-b4dd-6188267ce9c2}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK EM_InfeedConveyor EXTENDS FB_EM_PackML_Base
 VAR_INPUT
@@ -159,17 +159,17 @@ SUPER^._m_Modules();
 
 // Call belt motor control module.
 s_cmBelt(
-	i_bReqEnable:= p_bStaEnable, 
+	i_bReqEnable:= p_bReqEnable, 
 	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector. 
-	i_bReqSimulation:= p_bStaSimulation, 
+	i_bReqSimulation:= p_bReqSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector); // Propagate belt alarms to module.
 	
 // Call door control module and pass common flags.
 s_cmDoor(
-	i_bReqEnable:= p_bStaEnable, 
+	i_bReqEnable:= p_bReqEnable, 
 	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector.
 	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
-	i_bReqSimulation:= p_bStaSimulation, 
+	i_bReqSimulation:= p_bReqSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector); // Propagate door alarms to module.
 ]]></ST>
       </Implementation>

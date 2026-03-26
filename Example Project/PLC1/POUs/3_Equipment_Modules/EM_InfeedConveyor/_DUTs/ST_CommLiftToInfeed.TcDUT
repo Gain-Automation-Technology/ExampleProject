@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <DUT Name="ST_CommLiftToInfeed" Id="{69a07fb2-ca8a-4689-a717-c131aaa3ba9d}">
     <Declaration><![CDATA[TYPE ST_CommLiftToInfeed :
 STRUCT

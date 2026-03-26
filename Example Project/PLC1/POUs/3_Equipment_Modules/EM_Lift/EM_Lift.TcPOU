@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="EM_Lift" Id="{06a5218e-af25-4987-9907-69e34a47bd46}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK EM_Lift EXTENDS FB_EM_PackML_Base
 VAR_INPUT
@@ -123,9 +123,9 @@ SUPER^._m_Modules();
 // Call lift servo control module and pass common flags.
 // Adjust override, interlocks, and safety conditions to your machine.
 s_cmMotorLift(
-	i_bReqEnable:= p_bStaEnable, // Enable/reset/simulation are typically controlled by PackML/base module.
+	i_bReqEnable:= p_bReqEnable, // Enable/reset/simulation are typically controlled by PackML/base module.
 	i_bReqReset:= ,				 // done by alarmcollector 
-	i_bReqSimulation:= p_bStaSimulation, 	// Connect alarm collector so servo alarms propagate to the module.
+	i_bReqSimulation:= p_bReqSimulation, 	// Connect alarm collector so servo alarms propagate to the module.
 	i_itfAlarmCollector_Parent:= s_fbAlarmCollector, 
 	i_bEmrStopOk:= TRUE, // Safety chain OK (replace with real E-Stop OK signal if available)
 	i_fOverride:= 100, // Motion override in percent (100 = full speed).

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1">
   <DUT Name="E_EM_Lift_Seq_StopServos" Id="{1cf1b98e-e34a-4483-901c-bd44650462ff}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}

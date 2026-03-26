@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="CheckLRangeSigned" Id="{d0bde371-4393-4132-adff-6bacf7265b97}" SpecialFunc="CheckLRangeSigned">
     <Declaration><![CDATA[// CheckLRangeSigned checks subrange types of the type LINT.
 // The purpose of this monitoring function is to deal with range bound violations as appropriate.
@@ -22,14 +22,5 @@ ELSE
 END_IF
 {flow}]]></ST>
     </Implementation>
-    <LineIds Name="CheckLRangeSigned">
-      <LineId Id="7" Count="2" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="10" Count="1" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="12" Count="2" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

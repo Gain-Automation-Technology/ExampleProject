@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="CheckPointer" Id="{ec5acd4d-8f34-48f0-afc8-f41aaaaf9cb1}" SpecialFunc="CheckPointer">
     <Declaration><![CDATA[// This Function is used to monitor the memory acces of pointers during runtime.
 // The purpose of the CheckPointer function is to check whether the transferred pointer points to a valid memory address, and whether the orientation of the referenced memory area matches the type of variable to which the pointer points.
@@ -19,11 +19,5 @@ END_VAR
 CheckPointer := ptToTest;
 {flow}]]></ST>
     </Implementation>
-    <LineIds Name="CheckPointer">
-      <LineId Id="12" Count="0" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

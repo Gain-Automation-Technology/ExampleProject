@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.10">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="CheckDivLReal" Id="{def89982-b626-40dd-a80c-bb5bca7a1aa5}" SpecialFunc="CheckDivReal64">
     <Declaration><![CDATA[// This Function is used to avoid division by 0.
 // If you integrate these functions in the PLC project, they are called before each division that occurs in the code.
@@ -19,13 +19,5 @@ ELSE
 END_IF;
 {flow}]]></ST>
     </Implementation>
-    <LineIds Name="CheckDivLReal">
-      <LineId Id="13" Count="0" />
-      <LineId Id="3" Count="1" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="5" Count="2" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
