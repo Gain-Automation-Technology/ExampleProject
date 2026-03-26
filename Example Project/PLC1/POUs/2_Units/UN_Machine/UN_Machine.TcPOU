@@ -85,7 +85,7 @@ GVL_Modules.g_emInfeedConveyor(
 	i_bReqEnable					:= TRUE, // Enable module (replace with safety chain if needed).
 	i_bReqReset						:= s_fbAlarmCollector.q_bReqReset, // Reset from alarm collector.
 	i_bStaSafetyOk					:= TRUE, // Safety chain OK (replace with real input).
-	i_bReqSimulation				:= p_bStaSimulation, // Simulation flag from unit.
+	i_bReqSimulation				:= p_bReqSimulation, // Simulation flag from unit.
 	i_itfPackML_Parent				:= s_fbPackML, // PackML parent interface.
 	i_itfAlarmCollector_Parent		:= s_fbAlarmCollector, // Alarm collector parent.
 	q_stStaPackML					=> , // Optional PackML status feedback.
@@ -96,7 +96,7 @@ GVL_Modules.g_emLift(
 	i_bReqEnable:= TRUE, // Enable module (replace with safety chain if needed).
 	i_bReqReset:= s_fbAlarmCollector.q_bReqReset, // Reset from alarm collector.
 	i_bStaSafetyOk:= TRUE, // Safety chain OK (replace with real input).
-	i_bReqSimulation:= p_bStaSimulation, // Simulation flag from unit.
+	i_bReqSimulation:= p_bReqSimulation, // Simulation flag from unit.
 	i_itfPackML_Parent:= s_fbPackML, // PackML parent interface.
 	i_itfAlarmCollector_Parent:= s_fbAlarmCollector, // Alarm collector parent.
 	q_stStaPackML=> , // Optional PackML status feedback.

@@ -27,9 +27,9 @@ GVL_Modules.g_fbMachCtrlsManager(
 GVL_Modules.g_unMachine(
 	i_bReqEnable				:= TRUE, // Master enable for the unit (replace with safety chain if needed).
 	i_bReqReset					:= GVL_Modules.g_fbMachCtrlsManager.p_bReset, // Reset request from machine controls.
-	i_bReqSimulationOn			:= TRUE, // Simulation mode flag (toggle for real hardware).
-	i_itfPackML_StatusManager	:= GVL_Modules.g_fbPackMLstatusManager, // PackML status manager.
-	i_itfAlarmManager			:= ); // Optional alarm manager interface.
+	i_bReqSimulation			:= TRUE, // Simulation mode flag (toggle for real hardware).
+	i_itfPackML_Parent			:= GVL_Modules.g_fbPackMLstatusManager, // PackML status manager.
+	i_itfAlarmCollector_Parent	:= ); // Optional alarm manager interface.
 ]]></ST>
     </Implementation>
   </POU>

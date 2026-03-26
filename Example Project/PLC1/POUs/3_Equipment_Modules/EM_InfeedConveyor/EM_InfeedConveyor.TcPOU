@@ -159,17 +159,17 @@ SUPER^._m_Modules();
 
 // Call belt motor control module.
 s_cmBelt(
-	i_bReqEnable:= p_bStaEnable, 
+	i_bReqEnable:= p_bReqEnable, 
 	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector. 
-	i_bReqSimulation:= p_bStaSimulation, 
+	i_bReqSimulation:= p_bReqSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector); // Propagate belt alarms to module.
 	
 // Call door control module and pass common flags.
 s_cmDoor(
-	i_bReqEnable:= p_bStaEnable, 
+	i_bReqEnable:= p_bReqEnable, 
 	i_bReqReset:= , // Add extra reset command, normally reset is done by alarmcollector.
 	i_bReqEnableHmiControls:= s_fbPackML.p_eActMode = E_PackML_Mode.Manual, 
-	i_bReqSimulation:= p_bStaSimulation, 
+	i_bReqSimulation:= p_bReqSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector); // Propagate door alarms to module.
 ]]></ST>
       </Implementation>

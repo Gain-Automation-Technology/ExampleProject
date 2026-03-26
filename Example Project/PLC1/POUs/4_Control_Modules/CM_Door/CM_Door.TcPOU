@@ -214,7 +214,7 @@ CASE s_eSeq OF
 		
 	E_CM_Door_Seq_Logic.Start:
 
-		IF NOT p_bStaEnable THEN
+		IF NOT p_bReqEnable THEN
 			// Disabled request takes priority.
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
 		ELSE
@@ -223,7 +223,7 @@ CASE s_eSeq OF
 		END_IF
 	
 	E_CM_Door_Seq_Logic.Disabled:
-		IF p_bStaEnable THEN
+		IF p_bReqEnable THEN
 			// Re-enable sequence.
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Start);
 		END_IF
@@ -247,7 +247,7 @@ CASE s_eSeq OF
 	
 	
 		// Transition
-		IF NOT p_bStaEnable THEN
+		IF NOT p_bReqEnable THEN
 			// Disabled request wins.
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
 		ELSIF p_eAlarmState >= E_Alarm_Severity.Error THEN
@@ -265,7 +265,7 @@ CASE s_eSeq OF
 		m_Stop();
 	
 		// Transition 
-		IF NOT p_bStaEnable THEN
+		IF NOT p_bReqEnable THEN
 			s_fbSeqControl.m_ReqStep(E_CM_Door_Seq_Logic.Disabled);
 		ELSIF p_eAlarmState < E_Alarm_Severity.Error THEN
 			// Error cleared: restart sequence.
@@ -285,7 +285,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[// Call motor control module and connect to alarm collector.
 s_cmMotor(
-	i_bReqEnable:= p_bStaEnable, 
+	i_bReqEnable:= p_bReqEnable, 
 	i_bReqReset:= , // Can be leaved empty, is automatically done by alarmcollector
 	i_bReqSimulation:= i_bReqSimulation, 
 	i_itfAlarmCollector_Parent:= p_itfAlarmCollector);
@@ -323,8 +323,8 @@ ELSIF s_cmMotor.p_bStaRunningFwd THEN
 END_IF
 
 // Copy simulation value to IO
-s_diDoorIsOpen.m_Simulation(i_bSimulate := p_bStaSimulation, i_bvalue := s_bSimDoorIsOpen);
-s_diDoorIsClosed.m_Simulation(i_bSimulate := p_bStaSimulation, i_bvalue := s_bSimDoorIsClosed);]]></ST>
+s_diDoorIsOpen.m_Simulation(i_bSimulate := p_bReqSimulation, i_bvalue := s_bSimDoorIsOpen);
+s_diDoorIsClosed.m_Simulation(i_bSimulate := p_bReqSimulation, i_bvalue := s_bSimDoorIsClosed);]]></ST>
       </Implementation>
     </Method>
     <Method Name="m_CloseDoor" Id="{4001f11f-a707-42ee-a70d-5596e24fe84d}" FolderPath="Methods\">
@@ -334,7 +334,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Run reverse until closed feedback is active.
-IF p_bStaEnable 
+IF p_bReqEnable 
 	AND p_eAlarmState < E_Alarm_Severity.Error 
 	AND NOT s_diDoorIsClosed.p_bStaValue 
 THEN
@@ -354,7 +354,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Run forward until open feedback is active.
-IF p_bStaEnable 
+IF p_bReqEnable 
 	AND p_eAlarmState < E_Alarm_Severity.Error 
 	AND NOT s_diDoorIsOpen.p_bStaValue 
 THEN
