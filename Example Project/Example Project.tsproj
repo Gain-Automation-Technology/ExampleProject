@@ -1,7 +1,18 @@
 <?xml version="1.0"?>
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
 	<Translations>
-		<Text TxtId="NewEventClass_DisplayText"/>
+		<Text TxtId="Custom_EventText_CM_MotorDol">
+			<Text LcId="1033"><![CDATA[Custom event text CM_MotorDol]]></Text>
+		</Text>
+		<Text TxtId="Custom_EventText_CM_MotorDol_AlmThermal">
+			<Text LcId="1033"><![CDATA[Custom event text AlmThermal]]></Text>
+		</Text>
+		<Text TxtId="Custom_EventText_CM_MotorDol_AlmFeedbackFwd">
+			<Text LcId="1033"><![CDATA[Custom event text AlmFeedbackFwd]]></Text>
+		</Text>
+		<Text TxtId="Custom_EventText_CM_MotorDol_AlmFeedbackRev">
+			<Text LcId="1033"><![CDATA[Custom event text AlmFeedbackRev]]></Text>
+		</Text>
 		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing">
 			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing]]></Text>
 		</Text>
@@ -1427,79 +1438,77 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{91F78DB1-4D11-4BD2-B225-D76D7134071A}" PersistentType="true">GSBF_TcAlarm</Name>
-			<DisplayName TxtId=""><![CDATA[Alarms]]></DisplayName>
+			<Name GUID="{3F545D0F-02AF-408B-8D61-65C3D0149306}" Namespace="GSBF_Common" PersistentType="true">CM_MotorDol_EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[Custom_EventText_CM_MotorDol]]></DisplayName>
+			<Comment TxtId=""><![CDATA[This class override the eventclass of GSBF_Common]]></Comment>
 			<EventId>
-				<Name Id="0">Event</Name>
-				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} {0} - {1}]]></DisplayName>
-				<Severity>Verbose</Severity>
+				<Name Id="1">AlmThermal</Name>
+				<DisplayName TxtId=""><![CDATA[Custom_EventText_CM_MotorDol_AlmThermal]]></DisplayName>
+				<Severity>Error</Severity>
 			</EventId>
-			<Properties>
-				<Property>
-					<Name>HideNeedlessArgument</Name>
-					<Value>1</Value>
-				</Property>
-			</Properties>
+			<EventId>
+				<Name Id="2">AlmFeedbackFwd</Name>
+				<DisplayName TxtId=""><![CDATA[Custom_EventText_CM_MotorDol_AlmFeedbackFwd]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">AlmFeedbackRev</Name>
+				<DisplayName TxtId=""><![CDATA[Custom_EventText_CM_MotorDol_AlmFeedbackRev]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
 			<Hides>
-				<Hide GUID="{BB1A0A54-163F-4274-86EF-5D32D7317AC0}"/>
-				<Hide GUID="{DF891FEF-CB53-4E86-878D-9EFE0B39AE46}"/>
-				<Hide GUID="{0D1C6981-29C6-4871-9286-A3111DD079C0}"/>
-				<Hide GUID="{A08F7C8D-1045-4028-8916-34C838453B21}"/>
-				<Hide GUID="{BAE683ED-D56B-4BD7-B55A-7343D51DB894}"/>
-				<Hide GUID="{F5849BF6-FEA8-48A9-96B4-4430D35E59EA}"/>
-				<Hide GUID="{C92A845A-26AA-4838-9CAE-3E512FE58443}"/>
-				<Hide GUID="{E92223C9-4D62-41D4-B085-88AB75D17023}"/>
-				<Hide GUID="{310F84FE-2846-47D0-925E-130652AC2A8B}"/>
-				<Hide GUID="{33333451-066A-4BA9-89B1-4EB968D69F94}"/>
+				<Hide GUID="{5016A059-6B29-401F-969D-D5C50E097BD9}"/>
+				<Hide GUID="{0D16DCE4-AA22-4797-999E-7B241827A220}"/>
+				<Hide GUID="{A0F965E3-253F-41F1-9A34-C68DD8464454}"/>
+				<Hide GUID="{5AB951D6-70BD-4708-9A9F-7405C61EECA1}"/>
+				<Hide GUID="{10B17241-9F2E-449F-A22D-486706D88B1A}"/>
+				<Hide GUID="{44D2656A-9D9C-48C7-A1C7-4560EE304F8B}"/>
+				<Hide GUID="{6FEE3E92-6E6B-469F-BB0D-754990F74DDF}"/>
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{72C2FDC8-FD9F-486D-AA5E-B23086D57E6D}" PersistentType="true">Alarmen</Name>
-			<DisplayName TxtId=""><![CDATA[NewEventClass_DisplayText]]></DisplayName>
+			<Name GUID="{F4401045-F9E5-48EB-95BD-EF07F17C6B33}" PersistentType="true">CM_Door_EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[CM_Door]]></DisplayName>
 			<EventId>
-				<Name Id="1">CM_Door_AlmDoorIsBlocked</Name>
+				<Name Id="1">AlmDoorIsBlocked</Name>
 				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing]]></DisplayName>
 				<Severity>Error</Severity>
 			</EventId>
 			<EventId>
-				<Name Id="2">CM_Door_AlmFeedbackBothOn</Name>
+				<Name Id="2">AlmFeedbackBothOn</Name>
 				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active]]></DisplayName>
 				<Severity>Error</Severity>
 			</EventId>
 			<EventId>
-				<Name Id="3">CM_Door_AlmDoorNotClosed</Name>
+				<Name Id="3">AlmDoorNotClosed</Name>
 				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time]]></DisplayName>
 				<Severity>Error</Severity>
 			</EventId>
 			<EventId>
-				<Name Id="4">CM_Door_AlmDoorNotOpen</Name>
+				<Name Id="4">AlmDoorNotOpen</Name>
 				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time]]></DisplayName>
 				<Severity>Error</Severity>
 			</EventId>
+		</DataType>
+		<DataType>
+			<Name GUID="{C9441C6F-33AA-4941-830D-ED590E891143}" PersistentType="true">EM_InfeedConveyor_EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[EventClass4_DisplayText]]></DisplayName>
 			<EventId>
-				<Name Id="5">EM_InfeedConveyor_AlmDoorOpenWithoutPermission</Name>
+				<Name Id="5">AlmDoorOpenWithoutPermission</Name>
 				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<EventId>
-				<Name Id="6">EM_InfeedConveyor_AlmUnexpectProductEndConveyor</Name>
+				<Name Id="6">AlmUnexpectProductEndConveyor</Name>
 				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor]]></DisplayName>
 				<Severity>Verbose</Severity>
 			</EventId>
 			<Hides>
-				<Hide GUID="{6D257FC4-A953-489C-B717-98ABDDD81DE7}"/>
-				<Hide GUID="{1292C143-9529-40E7-885F-0AC23B33B82D}"/>
-				<Hide GUID="{596B4A02-D358-4713-B9C5-CD07CC41698C}"/>
-				<Hide GUID="{A6869D72-2B7C-4F6C-A5A2-E11A51D4D71D}"/>
-				<Hide GUID="{D48DD803-BC8A-4F36-B377-09243CC82AEF}"/>
-				<Hide GUID="{B789C9EB-BD27-46E9-97E9-C57A5A8CF8D7}"/>
-				<Hide GUID="{5B8818D1-E086-4D61-B80A-726A2C32F44C}"/>
-				<Hide GUID="{04577265-1445-490B-B6C7-0C243E2243C4}"/>
-				<Hide GUID="{ED95D0F0-996C-4838-A860-B2CFD238BC82}"/>
+				<Hide GUID="{CCE31E8E-0A7A-46AE-8D25-7BCA9BFE1568}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
-	<Project ProjectGUID="{112B0125-B5D5-4E95-8112-9C62EEEF497C}" TargetNetId="192.168.5.142.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{112B0125-B5D5-4E95-8112-9C62EEEF497C}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
 			<Settings MaxCpus="8" NonWinCpus="4">
 				<Cpu CpuId="4"/>
@@ -1512,6 +1521,9 @@ External Setpoint Generation:
 					<Name>PlcTask</Name>
 				</Task>
 			</Tasks>
+			<TypeSystem>
+				<AdditionalTmcFile Name="CustomEvents" File="Resources\CustomEvents.tmc"/>
+			</TypeSystem>
 			<AdditionalProjectFiles>
 				<File>_AML\Project.aml</File>
 				<File>_AML\TwinCAT.AMLDataExchange.log</File>
@@ -2180,4 +2192,7 @@ External Setpoint Generation:
 			<Device File="Device 1 (EtherCAT).xti" Id="1"/>
 		</Io>
 	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{05000010-2001-0850-3000-040300205008}" Id="#x02030010" Watchdog="14000000040000000400000004000000"/>
+	</Mappings>
 </TcSmProject>

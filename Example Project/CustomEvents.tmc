@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<TcModuleClass>
+	<Translations>
+		<Text TxtId="Custom_EventText_CM_MotorDol">
+			<Text LcId="1033"><![CDATA[Custom event text CM_MotorDol]]></Text>
+		</Text>
+		<Text TxtId="Custom_EventText_CM_MotorDol_AlmThermal">
+			<Text LcId="1033"><![CDATA[Custom event text AlmThermal]]></Text>
+		</Text>
+		<Text TxtId="Custom_EventText_CM_MotorDol_AlmFeedbackFwd">
+			<Text LcId="1033"><![CDATA[Custom event text AlmFeedbackFwd]]></Text>
+		</Text>
+		<Text TxtId="Custom_EventText_CM_MotorDol_AlmFeedbackRev">
+			<Text LcId="1033"><![CDATA[Custom event text AlmFeedbackRev]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position]]></Text>
+		</Text>
+		<Text TxtId="{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor">
+			<Text LcId="1033"><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor]]></Text>
+		</Text>
+	</Translations>
+	<DataTypes>
+		<DataType>
+			<Name GUID="{3F545D0F-02AF-408B-8D61-65C3D0149306}" Namespace="GSBF_Common" PersistentType="true">CM_MotorDol_EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[Custom_EventText_CM_MotorDol]]></DisplayName>
+			<Comment TxtId=""><![CDATA[This class override the eventclass of GSBF_Common]]></Comment>
+			<EventId>
+				<Name Id="1">AlmThermal</Name>
+				<DisplayName TxtId=""><![CDATA[Custom_EventText_CM_MotorDol_AlmThermal]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">AlmFeedbackFwd</Name>
+				<DisplayName TxtId=""><![CDATA[Custom_EventText_CM_MotorDol_AlmFeedbackFwd]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">AlmFeedbackRev</Name>
+				<DisplayName TxtId=""><![CDATA[Custom_EventText_CM_MotorDol_AlmFeedbackRev]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{5016A059-6B29-401F-969D-D5C50E097BD9}"/>
+				<Hide GUID="{0D16DCE4-AA22-4797-999E-7B241827A220}"/>
+				<Hide GUID="{A0F965E3-253F-41F1-9A34-C68DD8464454}"/>
+				<Hide GUID="{5AB951D6-70BD-4708-9A9F-7405C61EECA1}"/>
+				<Hide GUID="{10B17241-9F2E-449F-A22D-486706D88B1A}"/>
+				<Hide GUID="{44D2656A-9D9C-48C7-A1C7-4560EE304F8B}"/>
+				<Hide GUID="{6FEE3E92-6E6B-469F-BB0D-754990F74DDF}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{F4401045-F9E5-48EB-95BD-EF07F17C6B33}" PersistentType="true">CM_Door_EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[CM_Door]]></DisplayName>
+			<EventId>
+				<Name Id="1">AlmDoorIsBlocked</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door was blocked during opening or closing]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">AlmFeedbackBothOn</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Feedback open and close both active]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">AlmDoorNotClosed</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not closed in expected time]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">AlmDoorNotOpen</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is not open in expected time]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+		</DataType>
+		<DataType>
+			<Name GUID="{C9441C6F-33AA-4941-830D-ED590E891143}" PersistentType="true">EM_InfeedConveyor_EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[EventClass4_DisplayText]]></DisplayName>
+			<EventId>
+				<Name Id="5">AlmDoorOpenWithoutPermission</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Door is open while lift is not at infeed position]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">AlmUnexpectProductEndConveyor</Name>
+				<DisplayName TxtId=""><![CDATA[{11}{10}{9}{8}{7}{6}{5}{4}{3}{2} - Unexpect product at end conveyor]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+		</DataType>
+	</DataTypes>
+</TcModuleClass>
