@@ -19,6 +19,8 @@ LineIDs.dbg.bak
 # as soon as shared data types (via tmc), C++ or in general TcCom-Module are used, the TMC file has to be part of the repository
 *.tmc
 *.tmcRefac
+# include specific tmc files:
+!**/CustomEvents.tmc 
 
 # TwinCAT project files
 *.tsproj.bak

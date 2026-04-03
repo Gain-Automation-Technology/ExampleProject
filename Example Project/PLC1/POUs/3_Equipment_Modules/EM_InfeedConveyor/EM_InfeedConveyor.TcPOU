@@ -124,13 +124,13 @@ s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_bCfgAutoReset		:= FALSE;
 s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
 s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
 s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
-s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.EM_InfeedConveyor_AlmDoorOpenWithoutPermission;
+s_fbAlmDoorOpenWithoutPermission.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.EM_InfeedConveyor_EventClass.AlmDoorOpenWithoutPermission;
 
 s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
 s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
 s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_eCfgSeverity		:= E_Alarm_Severity.Error;                             
 s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
-s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.EM_InfeedConveyor_AlmUnexpectProductEndConveyor;
+s_fbAlmUnexpectProductEndConveyor.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.EM_InfeedConveyor_EventClass.AlmUnexpectProductEndConveyor;
 ]]></ST>
       </Implementation>
     </Method>

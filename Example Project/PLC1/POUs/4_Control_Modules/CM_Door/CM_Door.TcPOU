@@ -146,25 +146,25 @@ s_fbAlmDoorIsBlocked.p_itfConfig.p_bCfgAutoReset		:= FALSE;
 s_fbAlmDoorIsBlocked.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
 s_fbAlmDoorIsBlocked.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
 s_fbAlmDoorIsBlocked.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
-s_fbAlmDoorIsBlocked.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTS.Alarmen.CM_Door_AlmDoorIsBlocked;
+s_fbAlmDoorIsBlocked.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTS.CM_Door_EventClass.AlmDoorIsBlocked;
 
 s_fbAlmFeedbackBothOn.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
 s_fbAlmFeedbackBothOn.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
 s_fbAlmFeedbackBothOn.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
 s_fbAlmFeedbackBothOn.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
-s_fbAlmFeedbackBothOn.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTS.Alarmen.CM_Door_AlmFeedbackBothOn;
+s_fbAlmFeedbackBothOn.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTS.CM_Door_EventClass.AlmFeedbackBothOn;
 
 s_fbAlmDoorNotOpen.p_itfConfig.p_bCfgAutoReset			:= FALSE;                                                
 s_fbAlmDoorNotOpen.p_itfConfig.p_bCfgEnable				:= TRUE;                                                   
 s_fbAlmDoorNotOpen.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
 s_fbAlmDoorNotOpen.p_itfConfig.p_tmCfgDelay				:= T#0S;                                                   
-s_fbAlmDoorNotOpen.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.CM_Door_AlmDoorIsBlocked;
+s_fbAlmDoorNotOpen.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.CM_Door_EventClass.AlmDoorIsBlocked;
 
 s_fbAlmDoorNotClosed.p_itfConfig.p_bCfgAutoReset		:= FALSE;                                                
 s_fbAlmDoorNotClosed.p_itfConfig.p_bCfgEnable			:= TRUE;                                                   
 s_fbAlmDoorNotClosed.p_itfConfig.p_eCfgSeverity			:= E_Alarm_Severity.Error;                             
 s_fbAlmDoorNotClosed.p_itfConfig.p_tmCfgDelay			:= T#0S;                                                   
-s_fbAlmDoorNotClosed.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.Alarmen.CM_Door_AlmFeedbackBothOn;
+s_fbAlmDoorNotClosed.p_itfConfig.p_stCfgEventEntry		:= TC_EVENTs.CM_Door_EventClass.AlmFeedbackBothOn;
 ]]></ST>
       </Implementation>
     </Method>
